@@ -2145,10 +2145,20 @@ Progress will continue from where the previous session left off.""")
             issue_number=issue_number,
             session_id=context.session_id,
         )
-        # Publish session start metric
-        mode = "enhancement" if is_enhancement else "full_build"
-        metrics_publisher.publish_session_started(mode=mode)
-        print(f"📊 CloudWatch metrics enabled (namespace: ClaudeCodeAgent)")
+        if metrics_publisher.enabled:
+            # Publish session start metric
+            mode = "enhancement" if is_enhancement else "full_build"
+            metrics_publisher.publish_session_started(mode=mode)
+            print(f"📊 CloudWatch metrics enabled (namespace: ClaudeCodeAgent, issue={issue_number})")
+        else:
+            print(f"⚠️ MetricsPublisher initialized but DISABLED!")
+            print(f"   CLOUDWATCH_METRICS_ENABLED={os.environ.get('CLOUDWATCH_METRICS_ENABLED', 'not set')}")
+            print(f"   Metrics will NOT be published to CloudWatch")
+    else:
+        print(f"⚠️ CloudWatch metrics NOT available:")
+        print(f"   METRICS_AVAILABLE={METRICS_AVAILABLE}")
+        print(f"   MetricsPublisher class loaded: {MetricsPublisher is not None}")
+        print(f"   Metrics will NOT be published to CloudWatch")
 
     # Track cumulative commits for metrics
     total_commits_pushed = 0
@@ -2585,8 +2595,19 @@ Commits should reference this issue: `Ref: #{issue_number}`
                     **token_stats
                 }
                 print(json.dumps(token_log))
-        except Exception:
-            pass  # Non-critical
+                # Debug: Log parsed stats for first 2 minutes to help diagnose zero-value issues
+                if elapsed < 120:
+                    print(f"📊 token_stats.json: api_calls={token_stats.get('api_calls', 0)}, "
+                          f"input={token_stats.get('input_tokens', 0)}, "
+                          f"output={token_stats.get('output_tokens', 0)}, "
+                          f"cost=${token_stats.get('total_cost_usd', 0.0):.4f}")
+            else:
+                # Log when file doesn't exist (helps debug timing issues)
+                if elapsed < 120:
+                    print(f"⚠️ /tmp/token_stats.json not found yet (elapsed={int(elapsed)}s)")
+        except Exception as e:
+            # Don't silently swallow - log the error so we can debug metrics issues
+            print(f"⚠️ Error reading token_stats.json: {e}")
 
         # Publish CloudWatch custom metrics
         if metrics_publisher:

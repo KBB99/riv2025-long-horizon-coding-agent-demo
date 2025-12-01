@@ -487,10 +487,10 @@ function handler(event) {
         title: 'Total Commits',
         metrics: [new cloudwatch.Metric({
           namespace: 'ClaudeCodeAgent',
-          metricName: 'TotalCommits',
+          metricName: 'CommitsPushed',  // Use CommitsPushed Sum instead of TotalCommits Max
           dimensionsMap: { Environment: environment, IssueNumber: '${issueNumber}' },
-          statistic: 'Maximum',
-          period: cdk.Duration.minutes(1),
+          statistic: 'Sum',  // Sum across all sessions gives accurate total
+          period: cdk.Duration.hours(24),  // Look back 24 hours for full session coverage
         })],
         width: 8,
         height: 4,
