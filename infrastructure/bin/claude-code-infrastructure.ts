@@ -2,7 +2,7 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { ClaudeCodeStack } from '../lib/claude-code-stack';
-// import { DemoViewerStack } from '../lib/demo-viewer-stack';
+import { DemoViewerStack } from '../lib/demo-viewer-stack';
 
 const app = new cdk.App();
 
@@ -34,15 +34,14 @@ new ClaudeCodeStack(app, `${projectName}-${environment}`, {
 });
 
 // Demo Viewer Stack - Read-only access for laptops without SSO
-// TODO: Re-enable when demo-viewer-stack.ts is created
-// new DemoViewerStack(app, `${projectName}-demo-viewer`, {
-//   env,
-//   description: 'Read-only demo viewer access for Claude Code Agent',
-//   projectName,
-//   environment,
-//   tags: {
-//     Project: projectName,
-//     Environment: environment,
-//     ManagedBy: 'CDK',
-//   },
-// });
+new DemoViewerStack(app, `${projectName}-demo-viewer`, {
+  env,
+  description: 'Read-only demo viewer access for Claude Code Agent',
+  projectName,
+  environment,
+  tags: {
+    Project: projectName,
+    Environment: environment,
+    ManagedBy: 'CDK',
+  },
+});

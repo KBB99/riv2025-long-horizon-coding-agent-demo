@@ -1,5 +1,5 @@
 // Copyright 2025-present Anthropic PBC.
-// Licensed under Apache 2.0
+// Licensed under [LICENSE TBD]
 
 import * as cdk from 'aws-cdk-lib';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
@@ -487,10 +487,10 @@ function handler(event) {
         title: 'Total Commits',
         metrics: [new cloudwatch.Metric({
           namespace: 'ClaudeCodeAgent',
-          metricName: 'CommitsPushed',  // Use CommitsPushed Sum instead of TotalCommits Max
+          metricName: 'TotalCommits',
           dimensionsMap: { Environment: environment, IssueNumber: '${issueNumber}' },
-          statistic: 'Sum',  // Sum across all sessions gives accurate total
-          period: cdk.Duration.hours(24),  // Look back 24 hours for full session coverage
+          statistic: 'Maximum',
+          period: cdk.Duration.minutes(1),
         })],
         width: 8,
         height: 4,

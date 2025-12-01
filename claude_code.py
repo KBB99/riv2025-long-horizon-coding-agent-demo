@@ -1,5 +1,5 @@
 # Copyright 2025-present Anthropic PBC.
-# Licensed under Apache 2.0
+# Licensed under [LICENSE TBD]
 
 # #!/usr/bin/env python3
 """Claude Code Multi-Project Implementation.
@@ -913,14 +913,8 @@ async def log_agent_response(
                 "api_calls": token_tracker.totals.api_calls,
             }
             Path("/tmp/token_stats.json").write_text(json.dumps(token_export))
-            # Debug: Log first few writes to help diagnose metrics issues
-            if token_tracker.totals.api_calls <= 5:
-                print(f"📊 Wrote token_stats.json: api_calls={token_tracker.totals.api_calls}, "
-                      f"input={token_tracker.totals.input_tokens}, "
-                      f"output={token_tracker.totals.output_tokens}")
-        except Exception as e:
-            # Don't silently swallow - log the error so we can debug metrics issues
-            print(f"⚠️ Error writing token_stats.json: {e}")
+        except Exception:
+            pass  # Non-critical - dashboard metrics export
 
     # Return status
     if prompt_too_long_detected:
