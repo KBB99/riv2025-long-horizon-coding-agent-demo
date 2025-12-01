@@ -5,7 +5,7 @@ on:
     types: [closed]
 
 permissions:
-  issues: read
+  issues: write
   contents: read
 
 env:
