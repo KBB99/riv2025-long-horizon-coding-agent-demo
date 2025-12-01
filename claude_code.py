@@ -947,9 +947,6 @@ async def handle_session_terminating_error(
     raise RuntimeError(f"Session terminated due to {error_type}")
 
 
-# Removed: compact_conversation_for_buffer_error and remove_large_images_from_conversation
-# These are replaced with session termination to maintain Thyme-style clean slate approach
-
 
 def _create_claude_client(
     args: argparse.Namespace,
@@ -1666,7 +1663,6 @@ async def main() -> None:
     args = parse_arguments()
 
     # Setup
-    # SessionManager.cleanup_previous_servers()
     # Use PROJECT_ROOT environment variable if set (for Docker/AWS deployment)
     current_dir = os.environ.get('PROJECT_ROOT', os.getcwd())
 

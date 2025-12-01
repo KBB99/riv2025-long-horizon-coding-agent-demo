@@ -183,23 +183,6 @@ class SessionManager:
         )
 
     @staticmethod
-    def cleanup_previous_servers() -> None:
-        """Kill any lingering dev servers from previous runs."""
-        builtins.print("Cleaning up any previous dev servers...")
-
-        # Kill any lingering Express servers
-        os.system('pkill -f "node server/index.js" 2>/dev/null')
-        os.system('pkill -f "node server.js" 2>/dev/null')
-
-        # Kill any lingering Vite dev servers
-        os.system('pkill -f "vite" 2>/dev/null')
-
-        # Optional: Kill any lingering Playwright processes
-        os.system('pkill -f "playwright" 2>/dev/null')
-
-        builtins.print("Cleanup complete - all previous servers terminated")
-
-    @staticmethod
     def initialize_git_repo(generation_dir: Path) -> None:
         """Initialize git repository for new session.
 
