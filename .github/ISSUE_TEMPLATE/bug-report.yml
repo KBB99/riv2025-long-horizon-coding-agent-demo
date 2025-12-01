@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug or issue with the antodo task manager
+description: Report a bug or issue with the application
 title: "[BUG] "
 labels: ["bug", "needs-approval"]
 body:

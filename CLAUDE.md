@@ -83,9 +83,7 @@ pnpm lint
 ### Creating Build Plans
 
 Build plans go in `prompts/` directory:
-- `prompts/BUILD_PLAN.md` - Default build plan
-- `prompts/antodo/BUILD_PLAN.md` - Todo app build plan
-- `prompts/canopy/BUILD_PLAN.md` - Pokemon game build plan
+- `prompts/canopy/BUILD_PLAN.md` - Canopy project management app
 
 ### Testing Agent Locally
 
@@ -97,7 +95,7 @@ export ANTHROPIC_API_KEY=your-key
 docker-compose up
 
 # Or run directly
-python claude_code.py --project pokemon --model claude-opus-4-5-20251101
+python claude_code.py --project canopy --model claude-opus-4-5-20251101
 ```
 
 ### GitHub Actions Workflows

@@ -1,5 +1,5 @@
 name: Feature Request
-description: Request a new feature for the antodo task manager
+description: Request a new feature for the application
 title: "[FEATURE] "
 labels: ["feature-request", "needs-approval"]
 body:
