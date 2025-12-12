@@ -107,4 +107,4 @@ gh api repos/OWNER/REPO/labels -f name="tests-failed" -f color="D93F0B" -f descr
 
 ## License
 
-MIT
+Apache 2.0
