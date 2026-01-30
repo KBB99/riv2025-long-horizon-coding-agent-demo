@@ -1199,7 +1199,7 @@ Deployment state is stored as a single atomic JSON object in SSM.
 To check deployment state, run:
   `aws ssm get-parameter --name /claude-code/infra/deploy-state --query Parameter.Value --output text`
 
-This returns a JSON object like: {"status":"succeeded","commit":"abc123","timestamp":"2025-...","apiUrl":"https://..."}
+This returns a JSON object like: {{"status":"succeeded","commit":"abc123","timestamp":"2025-...","apiUrl":"https://..."}}
 Parse with jq:
   STATUS=$(aws ssm get-parameter --name /claude-code/infra/deploy-state --query Parameter.Value --output text | jq -r '.status')
   API_URL=$(aws ssm get-parameter --name /claude-code/infra/deploy-state --query Parameter.Value --output text | jq -r '.apiUrl')
