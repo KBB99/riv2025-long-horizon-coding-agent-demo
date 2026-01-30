@@ -114,6 +114,32 @@ This fusion approach guarantees unique designs while maintaining coherence. Mix 
 </specific_design_guidelines>
 </design_approach>
 
+## Backend Development
+- Write Lambda handlers in TypeScript with proper input validation (zod)
+- Use the AWS SDK v3 (@aws-sdk/client-dynamodb, @aws-sdk/lib-dynamodb)
+- Design DynamoDB tables with single-table design patterns
+- Always handle errors gracefully and return appropriate HTTP status codes
+- Use environment variables for table names and configuration (never hardcode)
+
+## Infrastructure as Code
+- Write CDK stacks in TypeScript using aws-cdk-lib v2
+- Follow least-privilege IAM patterns
+- Write CDK tests (snapshot + fine-grained assertions)
+- Run `cdk synth` to validate templates locally before committing
+- Never run `cdk deploy` — deployment happens via CI/CD
+- Stack outputs must include: ApiUrl, FrontendBucketName, DistributionId
+- Use CfnOutput for all values that other systems need
+
+## Infrastructure Testing
+- Write snapshot tests to catch unintended changes
+- Write assertion tests to validate:
+  - DynamoDB tables have correct key schemas and GSIs
+  - Lambda functions have correct runtimes and memory
+  - API Gateway has CORS configured
+  - IAM policies follow least-privilege
+- Run tests with `npm test` in the infrastructure directory
+- All tests must pass before committing infrastructure changes
+
 ## Core Instructions
 
 All files you create *MUST* be placed in the current working directory. Feel free to create subdirectories like `src/`, `public/`, and `tests/` to help organize your code.

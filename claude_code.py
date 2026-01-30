@@ -565,6 +565,15 @@ You are enhancing an EXISTING application. Your task is to implement the feature
 - Frontend MUST use port: {frontend_port}
 - Backend MUST use port: {backend_port}
 
+### 5b. Infrastructure (for full-stack projects)
+If the project has an infrastructure/ directory:
+- Check and update CDK stack if the feature requires new resources (new DynamoDB GSI, new Lambda endpoint, etc.)
+- Run `npx cdk synth` to validate the CDK template compiles
+- Run `npm test` in infrastructure/ to ensure CDK tests pass
+- Add new Lambda handlers in backend/ if new API endpoints are needed
+- Update the API client in frontend/src/api/ for new endpoints
+- NEVER run `cdk deploy` — deployment happens via CI/CD
+
 ### 6. Test Verification (CRITICAL - ENFORCED BY SYSTEM)
 For EACH test in tests.json, you MUST follow this exact process:
 
@@ -1172,6 +1181,38 @@ CRITICAL PORT CONFIGURATION:
 - You MUST configure backend server to use port: {args.backend_port}
 - Never use default ports (5173, 3000) as they may conflict with other running apps
 
+INFRASTRUCTURE SETUP (for full-stack projects):
+If the BUILD_PLAN specifies a full-stack architecture with infrastructure/:
+1. Set up the monorepo structure FIRST: frontend/, backend/, infrastructure/
+2. Write the CDK stack early (infrastructure/lib/) — it defines DynamoDB, Lambda, API Gateway
+3. Write CDK tests (infrastructure/test/) — snapshot + assertion tests
+4. Run `npx cdk synth` to validate the template compiles (NEVER run `cdk deploy`)
+5. Write Lambda handlers in backend/src/handlers/
+6. Create the API client layer in frontend/src/api/
+7. Commit and PUSH the infrastructure code early — CI/CD will deploy it asynchronously
+8. Continue working on backend handlers and frontend while infrastructure deploys
+9. NEVER run `cdk deploy` yourself — deployment happens via CI/CD only
+
+INFRASTRUCTURE DEPLOYMENT IS ASYNC:
+After you push infrastructure code, CI/CD deploys it in the background.
+Deployment state is stored as a single atomic JSON object in SSM.
+To check deployment state, run:
+  `aws ssm get-parameter --name /claude-code/infra/deploy-state --query Parameter.Value --output text`
+
+This returns a JSON object like: {"status":"succeeded","commit":"abc123","timestamp":"2025-...","apiUrl":"https://..."}
+Parse with jq:
+  STATUS=$(aws ssm get-parameter --name /claude-code/infra/deploy-state --query Parameter.Value --output text | jq -r '.status')
+  API_URL=$(aws ssm get-parameter --name /claude-code/infra/deploy-state --query Parameter.Value --output text | jq -r '.apiUrl')
+  DEPLOY_COMMIT=$(aws ssm get-parameter --name /claude-code/infra/deploy-state --query Parameter.Value --output text | jq -r '.commit')
+
+  - status="deploying" → deployment is in progress. Keep working on other tasks and check again later.
+  - status="succeeded" → infrastructure is live! Use the apiUrl field to verify: `curl -s $API_URL/projects`
+  - status="failed" → deployment failed. Check your CDK code for errors, fix, commit, and push again.
+  - ParameterNotFound → no deployment has been attempted yet. Push your infrastructure code first.
+
+After verifying the API is live, record the deploy commit in claude-progress.txt as "last verified deploy commit: <sha>".
+This lets you detect when infrastructure has been redeployed (see continuation session instructions).
+
 """
             message += """
 You absolutely must start by writing a detailed testing plan in tests.json. This should include at least 200 extremely detailed end-to-end tests that must be completed using Playwright CLI for screenshots and manual verification. The JSON file should be an array of objects in this format:
@@ -1262,6 +1303,36 @@ CRITICAL PORT CONFIGURATION:
 - Verify these ports are correctly configured before starting any servers
 
 You absolutely must start by reading the claude-progress.txt and tests.json files and the git history to see how many tests have been completed and what work is remaining. DO NOT UNDER ANY CIRCUMSTANCES remove test cases from claude-progress.txt. You should only check a box for a unit test when it's perfectly done.
+
+**INFRASTRUCTURE VERIFICATION (for full-stack projects)**:
+If the project has an infrastructure/ directory:
+1. Check CDK test results: `cd infrastructure && npm test`
+2. Verify CDK synthesis: `cd infrastructure && npx cdk synth`
+3. **Check deployment state from CI/CD**:
+   Deployment state is a single atomic JSON object in SSM. Fetch and parse it:
+   ```
+   DEPLOY_STATE=$(aws ssm get-parameter --name /claude-code/infra/deploy-state --query Parameter.Value --output text)
+   STATUS=$(echo "$DEPLOY_STATE" | jq -r '.status')
+   DEPLOY_COMMIT=$(echo "$DEPLOY_STATE" | jq -r '.commit')
+   API_URL=$(echo "$DEPLOY_STATE" | jq -r '.apiUrl')
+   ```
+
+   - status="succeeded" → Infrastructure is deployed. Now check for CHANGES:
+     a. Read claude-progress.txt for "last verified deploy commit: <sha>"
+     b. **If DEPLOY_COMMIT DIFFERS from your last verified commit** (or you have no record):
+        Infrastructure has been redeployed since your last verification.
+        You MUST rerun E2E tests to check for regressions:
+        - Verify API is reachable: `curl -s $API_URL/projects`
+        - Run all API E2E tests
+        - If regressions found, fix the backend/infrastructure code, commit, and push
+        - Update claude-progress.txt with the new "last verified deploy commit: <sha>"
+     c. If deploy commit matches your last verified commit, infra hasn't changed — skip E2E re-verification
+   - status="deploying" → Deployment in progress. Continue other work and check again later.
+   - status="failed" → Deployment failed. Check CDK code for errors, fix, commit, push.
+   - ParameterNotFound → No deployment attempted yet. Push infrastructure code if not done.
+
+4. If infrastructure tests are failing, fix them before moving to other work
+5. NEVER run `cdk deploy` — deployment happens via CI/CD only
 
 **CHECK FOR WIP COMMITS**: Run `git log --oneline -5` to check recent commits. If you see a commit starting with "wip:" (e.g., "wip: Session timeout approaching"), this means the previous session was interrupted by a timeout and created an automatic work-in-progress commit. This WIP commit contains all uncommitted work from the previous session. You should:
 1. Review what was being worked on from the WIP commit message

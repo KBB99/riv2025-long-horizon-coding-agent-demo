@@ -293,8 +293,12 @@ def scan_and_install_hooks(build_dir: Path, github_repo: str, branch_name: str) 
 
     try:
         # Find all .git directories under build_dir
+        # Skip node_modules to avoid scanning nested workspace dependencies
         for git_dir in build_dir.rglob(".git"):
             if not git_dir.is_dir():
+                continue
+            # Skip .git dirs inside node_modules (monorepo workspace deps)
+            if "node_modules" in git_dir.parts:
                 continue
 
             git_dir_str = str(git_dir)

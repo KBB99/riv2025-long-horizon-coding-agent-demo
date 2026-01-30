@@ -53,6 +53,18 @@ COPY state_management.txt .
 # Install Claude Code CLI (required by Claude Agent SDK)
 RUN npm install -g @anthropic-ai/claude-code
 
+# AWS CDK CLI for infrastructure synthesis and testing
+RUN npm install -g aws-cdk
+
+# AWS CLI v2 for deployment verification
+RUN apt-get update && apt-get install -y unzip \
+    && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+    && unzip awscliv2.zip && ./aws/install && rm -rf aws awscliv2.zip \
+    && rm -rf /var/lib/apt/lists/*
+
+# esbuild for Lambda bundling in CDK
+RUN npm install -g esbuild
+
 # Install Playwright for browser automation (screenshots, testing)
 RUN npx playwright install chromium
 

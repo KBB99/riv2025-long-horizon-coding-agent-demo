@@ -1,6 +1,12 @@
 name: Deploy App Preview
 
 on:
+  # Called by deploy-infrastructure.yml after CDK deploy
+  workflow_call:
+    inputs:
+      issue_number:
+        type: string
+        required: false
   # Triggered by harness when issue is complete
   workflow_dispatch:
     inputs:
@@ -44,9 +50,9 @@ jobs:
         id: extract
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INPUT_ISSUE_NUMBER: ${{ github.event.inputs.issue_number }}
+          INPUT_ISSUE_NUMBER: ${{ inputs.issue_number || github.event.inputs.issue_number }}
         run: |
-          # Check if triggered via workflow_dispatch with issue_number input
+          # Check if triggered via workflow_dispatch or workflow_call with issue_number input
           if [ -n "$INPUT_ISSUE_NUMBER" ]; then
             ISSUE_NUMBER="$INPUT_ISSUE_NUMBER"
             echo "Issue number from workflow_dispatch: $ISSUE_NUMBER"
@@ -130,9 +136,32 @@ jobs:
             sed -i "s|<BrowserRouter>|<BrowserRouter basename=\"${BASE_PATH}\">|g" src/main.tsx
           fi
 
+      - name: Resolve API URL from infrastructure stack
+        if: steps.check.outputs.exists == 'true'
+        id: api-url
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ env.AWS_REGION }}
+        run: |
+          # Check if infrastructure stack exists and get API URL
+          API_URL=$(aws cloudformation describe-stacks \
+            --stack-name canopy-app-stack \
+            --query 'Stacks[0].Outputs[?OutputKey==`ApiUrl`].OutputValue' \
+            --output text 2>/dev/null || echo "")
+          if [ -n "$API_URL" ] && [ "$API_URL" != "None" ]; then
+            echo "Found API URL: $API_URL"
+          else
+            API_URL=""
+            echo "No infrastructure stack found, building without API URL"
+          fi
+          echo "api_url=$API_URL" >> $GITHUB_OUTPUT
+
       - name: Build application
         if: steps.check.outputs.exists == 'true'
         working-directory: ${{ steps.check.outputs.app_dir }}
+        env:
+          VITE_API_URL: ${{ steps.api-url.outputs.api_url }}
         run: npm run build
 
       - name: Configure AWS credentials

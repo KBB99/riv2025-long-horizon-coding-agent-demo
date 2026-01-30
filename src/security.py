@@ -137,6 +137,10 @@ class SecurityValidator:
                 file_path_resolved.relative_to(project_root_resolved)
                 return True, ""
             except ValueError:
+                # Allow CDK output directory (cdk.out/) which may be outside
+                # the immediate project root but under the workspace
+                if "cdk.out" in str(file_path_resolved):
+                    return True, ""
                 # Path is outside project root
                 return (
                     False,
@@ -343,6 +347,45 @@ class SecurityValidator:
         tests_json_result = SecurityValidator._validate_tests_json_bash_command(command)
         if tests_json_result:  # Non-empty means blocked
             return tests_json_result
+
+        # CDK command validation - allow synth/diff/test, block deploy/destroy
+        if first_word == "cdk":
+            blocked_cdk_subcommands = ["deploy", "destroy", "bootstrap"]
+            for subcmd in blocked_cdk_subcommands:
+                if subcmd in command:
+                    print(f"🚨 BLOCKED: cdk {subcmd} — infrastructure deployment happens via CI/CD")
+                    return {
+                        "hookSpecificOutput": {
+                            "hookEventName": "PreToolUse",
+                            "permissionDecision": "deny",
+                            "permissionDecisionReason": f"cdk {subcmd} is blocked — infrastructure deployment happens via CI/CD, not the agent",
+                        }
+                    }
+
+        # AWS CLI validation - allow read-only, block mutations
+        if first_word == "aws":
+            allowed_aws_patterns = [
+                r"aws\s+cloudformation\s+describe-stacks",
+                r"aws\s+cloudformation\s+list-stacks",
+                r"aws\s+apigateway\s+get-rest-apis",
+                r"aws\s+apigatewayv2\s+get-apis",
+                r"aws\s+lambda\s+get-function",
+                r"aws\s+lambda\s+list-functions",
+                r"aws\s+dynamodb\s+describe-table",
+                r"aws\s+dynamodb\s+list-tables",
+                r"aws\s+sts\s+get-caller-identity",
+                r"aws\s+ssm\s+get-parameter",
+            ]
+            if not any(re.match(pat, command) for pat in allowed_aws_patterns):
+                print(f"🚨 BLOCKED: {command}")
+                print("   Only read-only AWS CLI commands are allowed")
+                return {
+                    "hookSpecificOutput": {
+                        "hookEventName": "PreToolUse",
+                        "permissionDecision": "deny",
+                        "permissionDecisionReason": "Only read-only AWS CLI commands are allowed (describe/list/get). Mutations happen via CI/CD.",
+                    }
+                }
 
         # Block git init - creates nested repos that break commit tracking
         if first_word == "git":

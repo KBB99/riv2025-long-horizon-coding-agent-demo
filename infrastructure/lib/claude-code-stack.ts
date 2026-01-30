@@ -237,6 +237,35 @@ export class ClaudeCodeStack extends cdk.Stack {
       ],
     });
 
+    // Read-only infrastructure verification policy for AgentCore runtime
+    // Allows agent to verify infrastructure deployments via AWS CLI
+    new iam.ManagedPolicy(this, 'AgentCoreInfraReadPolicy', {
+      description: 'Allows AgentCore execution role to verify infrastructure deployments (read-only)',
+      statements: [
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'cloudformation:DescribeStacks',
+            'cloudformation:ListStacks',
+            'apigateway:GET',
+            'apigatewayv2:GetApis',
+            'lambda:GetFunction',
+            'lambda:ListFunctions',
+            'dynamodb:DescribeTable',
+            'dynamodb:ListTables',
+          ],
+          resources: ['*'],
+        }),
+      ],
+      roles: [
+        iam.Role.fromRoleName(
+          this,
+          'AgentCoreExecutionRoleForInfra',
+          'AmazonBedrockAgentCoreSDKRuntime-us-west-2-f3ae55dcc2'
+        ),
+      ],
+    });
+
     // CloudWatch metrics policy for AgentCore runtime
     new iam.ManagedPolicy(this, 'AgentCoreCloudWatchPolicy', {
       // Let CDK auto-generate name to avoid replacement conflicts
@@ -436,6 +465,87 @@ function handler(event) {
           effect: iam.Effect.ALLOW,
           actions: ['sts:AssumeRole', 'sts:TagSession'],
           resources: [githubPreviewDeployRole.roleArn],
+        }),
+      ],
+    });
+
+    // ========================================================================
+    // IAM Role for GitHub Actions Infrastructure Deployment (CDK)
+    // ========================================================================
+    const infraDeployRole = new iam.Role(this, 'GitHubInfraDeployRole', {
+      roleName: `${projectName}-github-infra-deploy`,
+      description: 'Role for GitHub Actions to deploy agent-written CDK infrastructure',
+      assumedBy: new iam.AccountPrincipal(cdk.Stack.of(this).account),
+      maxSessionDuration: cdk.Duration.hours(1),
+    });
+
+    infraDeployRole.assumeRolePolicy?.addStatements(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        principals: [new iam.AccountPrincipal(cdk.Stack.of(this).account)],
+        actions: ['sts:TagSession'],
+      })
+    );
+
+    // Scoped allowlist: only these services can be provisioned
+    infraDeployRole.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        // CloudFormation (required for CDK)
+        'cloudformation:*',
+        // Lambda
+        'lambda:*',
+        // API Gateway (HTTP API)
+        'apigateway:*',
+        'apigatewayv2:*',
+        // DynamoDB
+        'dynamodb:*',
+        // IAM (scoped to stack-created roles)
+        'iam:CreateRole', 'iam:DeleteRole', 'iam:AttachRolePolicy',
+        'iam:DetachRolePolicy', 'iam:PutRolePolicy', 'iam:DeleteRolePolicy',
+        'iam:GetRole', 'iam:GetRolePolicy', 'iam:PassRole', 'iam:TagRole',
+        'iam:UntagRole', 'iam:UpdateRole', 'iam:ListRolePolicies',
+        'iam:ListAttachedRolePolicies', 'iam:CreatePolicy', 'iam:DeletePolicy',
+        'iam:GetPolicy', 'iam:GetPolicyVersion', 'iam:ListPolicyVersions',
+        'iam:CreatePolicyVersion', 'iam:DeletePolicyVersion',
+        // S3 (for CDK assets + app deployment)
+        's3:*',
+        // CloudFront
+        'cloudfront:*',
+        // CloudWatch Logs (Lambda creates log groups)
+        'logs:*',
+        // SSM (for CDK parameters)
+        'ssm:GetParameter', 'ssm:PutParameter', 'ssm:DeleteParameter',
+        // STS (CDK asset publishing)
+        'sts:AssumeRole',
+        // ECR (if Lambda uses container images)
+        'ecr:*',
+      ],
+      resources: ['*'],  // Scoped by service, not resource ARN (CDK creates dynamic names)
+    }));
+
+    // DENY expensive/dangerous services explicitly
+    infraDeployRole.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.DENY,
+      actions: [
+        'rds:*', 'ec2:RunInstances', 'ec2:CreateNatGateway',
+        'ecs:CreateCluster', 'ecs:CreateService',
+        'elasticache:*', 'redshift:*', 'opensearch:*',
+        'sagemaker:*', 'bedrock:*',
+      ],
+      resources: ['*'],
+    }));
+
+    // Allow GitHub Actions user to assume the infra deploy role
+    new iam.Policy(this, 'GitHubActionsUserInfraDeployPolicy', {
+      policyName: 'AllowAssumeInfraDeployRole',
+      users: [githubActionsUser],
+      statements: [
+        new iam.PolicyStatement({
+          sid: 'AllowAssumeInfraDeployRole',
+          effect: iam.Effect.ALLOW,
+          actions: ['sts:AssumeRole', 'sts:TagSession'],
+          resources: [infraDeployRole.roleArn],
         }),
       ],
     });
@@ -735,6 +845,12 @@ function handler(event) {
       value: githubPreviewDeployRole.roleArn,
       description: 'IAM role ARN for GitHub Actions preview deployment',
       exportName: `${projectName}-github-preview-deploy-role`,
+    });
+
+    new cdk.CfnOutput(this, 'GitHubInfraDeployRoleArn', {
+      value: infraDeployRole.roleArn,
+      description: 'IAM role ARN for GitHub Actions infrastructure deployment',
+      exportName: `${projectName}-github-infra-deploy-role`,
     });
 
     new cdk.CfnOutput(this, 'DashboardUrl', {

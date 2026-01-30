@@ -3,17 +3,21 @@
 
   <overview>
     Build a fully functional JIRA-like project management application with issues, sprints, Kanban boards, epics,
-    dashboards, and powerful filtering. The application runs entirely in the browser with no server required,
-    using IndexedDB for persistence.
+    dashboards, and powerful filtering. The application uses a serverless full-stack architecture with a React
+    frontend, AWS Lambda backend, API Gateway, and DynamoDB for persistence.
 
     Canopy helps teams manage software projects with agile methodologies. Users can create projects, manage
     backlogs, plan sprints, track issues on Kanban boards, and visualize progress through dashboards and reports.
     The interface should feel professional and polished, with a distinctive forest-inspired color palette that
     avoids typical AI-generated aesthetics.
 
-    CRITICAL: This is a pure static web application. There is NO server, NO backend, NO API endpoints.
-    All data lives in the browser's IndexedDB. The built output (`npm run build`) produces static HTML, CSS,
-    and JS files in the dist/ folder. Deployment is handled separately via CI/CD.
+    ARCHITECTURE: This is a full-stack serverless application structured as a monorepo:
+    - Frontend: React SPA deployed to S3 + CloudFront
+    - Backend: Lambda handlers behind API Gateway (HTTP API)
+    - Database: DynamoDB with single-table design
+    - Infrastructure: AWS CDK stack defining all resources
+    The frontend uses VITE_API_URL env var to reach the API. It should fall back to local
+    mode (IndexedDB via Dexie) if the API is unavailable, for local development.
   </overview>
 
   <technology_stack>
@@ -25,16 +29,18 @@
       <state_management>React Context + useReducer for complex state, Dexie for persistent state</state_management>
     </frontend_application>
     <data_layer>
-      <database>Dexie.js v4 wrapping IndexedDB for structured data persistence</database>
-      <reactive_queries>useLiveQuery() hook for reactive data that auto-updates across tabs</reactive_queries>
-      <note>NO server, NO SQLite, NO API - all data lives in browser IndexedDB</note>
-      <export>JSON export/import for data portability and backup</export>
-      <search>MiniSearch for fast client-side full-text search with BM25 ranking</search>
+      <database>Amazon DynamoDB for structured data persistence (single-table design)</database>
+      <api>AWS Lambda + API Gateway (HTTP API) for RESTful backend</api>
+      <api_client>fetch-based API client with React Query for caching and optimistic updates</api_client>
+      <search>Server-side DynamoDB query + GSI for filtering; client-side MiniSearch for instant search UX</search>
+      <fallback>Dexie.js v4 wrapping IndexedDB as fallback when API is unavailable (local dev mode)</fallback>
+      <note>Frontend uses VITE_API_URL env var to reach the API. Falls back to local mode (IndexedDB) if API is unavailable.</note>
     </data_layer>
     <build_output>
-      <build_command>`npm run build` produces static `dist/` folder</build_command>
-      <output>HTML, CSS, JS files only - no server runtime needed</output>
-      <note>Deployment handled via CI/CD pipeline, not by the agent</note>
+      <frontend_build>npm run build in frontend/ produces dist/ folder</frontend_build>
+      <backend_build>esbuild bundles Lambda handlers (handled by CDK)</backend_build>
+      <infrastructure_build>cdk synth produces CloudFormation template</infrastructure_build>
+      <note>Deployment handled via CI/CD: GHA runs cdk deploy + S3 sync</note>
     </build_output>
     <libraries>
       <dnd>@dnd-kit/core v6.3.1 + @dnd-kit/sortable for drag-and-drop Kanban boards</dnd>
@@ -45,6 +51,83 @@
       <markdown>React Markdown for rich text descriptions</markdown>
     </libraries>
   </technology_stack>
+
+  <infrastructure>
+    <cdk_stack>
+      The application infrastructure is defined as an AWS CDK TypeScript stack.
+      The agent MUST write this stack as part of the generated code.
+
+      Required resources:
+      - DynamoDB table (single-table design with GSIs for access patterns)
+      - Lambda function (Node.js 20, bundled with esbuild)
+      - API Gateway HTTP API (with CORS configured for the frontend origin)
+      - S3 bucket for frontend static assets
+      - CloudFront distribution for frontend (with SPA routing)
+      - IAM roles with least-privilege policies
+
+      Stack outputs (CfnOutput):
+      - ApiUrl: The API Gateway endpoint URL
+      - FrontendBucketName: S3 bucket for frontend
+      - DistributionId: CloudFront distribution ID
+      - DistributionDomain: CloudFront domain name
+    </cdk_stack>
+
+    <cdk_testing>
+      Infrastructure tests are REQUIRED. Write in the infrastructure/test/ directory.
+
+      Test types:
+      1. Snapshot test: `cdk synth` output matches known-good template
+      2. Assertion tests: Verify specific resource properties
+         - DynamoDB table has correct key schema and GSIs
+         - Lambda has correct runtime, memory, timeout settings
+         - API Gateway has CORS configured correctly
+         - IAM roles follow least-privilege
+      3. Run tests with: `cd infrastructure && npm test`
+      4. Validate synthesis with: `cd infrastructure && npx cdk synth`
+    </cdk_testing>
+
+    <dynamodb_design>
+      Single-table design with composite keys:
+      - PK: PROJ#{projectId} | ISSUE#{issueId} | SPRINT#{sprintId} | USER#{userId}
+      - SK: METADATA | ISSUE#{issueId} | COMMENT#{commentId} | ACTIVITY#{timestamp}
+
+      Global Secondary Indexes:
+      - GSI1: For queries by project + status (PK=projectId, SK=status#sortOrder)
+      - GSI2: For queries by assignee (PK=assigneeId, SK=updatedAt)
+      - GSI3: For queries by sprint (PK=sprintId, SK=sortOrder)
+    </dynamodb_design>
+  </infrastructure>
+
+  <api_specification>
+    Base URL: Provided via VITE_API_URL environment variable at build time.
+
+    Endpoints:
+    POST   /projects              Create project
+    GET    /projects              List projects
+    GET    /projects/{id}         Get project
+    PUT    /projects/{id}         Update project
+    DELETE /projects/{id}         Delete project
+
+    POST   /projects/{id}/issues  Create issue
+    GET    /projects/{id}/issues  List issues (with query params for filtering)
+    GET    /issues/{id}           Get issue
+    PUT    /issues/{id}           Update issue
+    DELETE /issues/{id}           Delete issue
+    POST   /issues/{id}/comments  Add comment
+    PUT    /issues/bulk           Bulk update issues
+
+    POST   /projects/{id}/sprints Create sprint
+    GET    /projects/{id}/sprints List sprints
+    PUT    /sprints/{id}          Update sprint (start/complete)
+
+    GET    /projects/{id}/board   Get board configuration
+    PUT    /boards/{id}           Update board
+
+    GET    /search?q={query}&amp;project={id}  Full-text search
+
+    All endpoints return JSON. Errors use standard HTTP status codes.
+    CORS: Allow origin from CloudFront domain.
+  </api_specification>
 
   <prerequisites>
     <environment_setup>
@@ -1481,42 +1564,53 @@
 
   <key_implementation_notes>
     <critical_paths>
-      - Dexie database schema and indexes are foundation - get right first
+      - Monorepo structure and CDK stack are foundation - set up first
+      - DynamoDB single-table design and GSIs - get right before writing handlers
+      - Lambda handlers with proper error handling and validation
+      - API client layer with React Query for caching
       - Drag and drop on board is core UX - must be smooth
       - Issue detail panel performance - many re-renders possible
       - Filter query parser - complex but important for power users
       - Sprint state transitions - need clear rules
-      - Cross-tab reactivity - useLiveQuery makes this easier
+      - Fallback to IndexedDB when API unavailable (local dev)
     </critical_paths>
 
     <recommended_implementation_order>
-      1. Project setup: Vite + React + Tailwind CSS v4
-      2. Dexie database schema and initialization
-      3. Basic routing structure (React Router)
-      4. Global layout: header, sidebar, main content area
-      5. Project CRUD and project selector
-      6. Issue CRUD with basic fields
-      7. Board view with columns and drag-and-drop
-      8. Issue detail panel
-      9. Backlog view with drag-and-drop
-      10. Sprint management (create, start, complete)
-      11. Sprint planning (drag to sprint)
-      12. Labels and components management
-      13. Epic management and issue linking
-      14. Search and filtering (MiniSearch integration)
-      15. JQL-like filter parser
-      16. Reports: burndown chart, velocity chart
-      17. Dashboard home page
-      18. User preferences and theme switching
-      19. Export/import functionality
-      20. Keyboard shortcuts throughout
-      21. Animations and polish
-      22. Dark theme completion
-      23. Performance optimization
-      24. Final testing and bug fixes
+      1. Project setup: monorepo with frontend/, backend/, infrastructure/
+      2. CDK stack: DynamoDB table, Lambda, API Gateway (deploy first so URLs are available)
+      3. CDK tests: snapshot + assertion tests
+      4. Backend Lambda handlers: CRUD for projects, issues, sprints
+      5. API client layer in frontend (fetch + React Query)
+      6. Basic routing structure (React Router)
+      7. Global layout: header, sidebar, main content area
+      8. Project CRUD and project selector
+      9. Issue CRUD with basic fields
+      10. Board view with columns and drag-and-drop
+      11. Issue detail panel
+      12. Backlog view with drag-and-drop
+      13. Sprint management (create, start, complete)
+      14. Sprint planning (drag to sprint)
+      15. Labels and components management
+      16. Epic management and issue linking
+      17. Search and filtering (MiniSearch integration)
+      18. JQL-like filter parser
+      19. Reports: burndown chart, velocity chart
+      20. Dashboard home page
+      21. User preferences and theme switching
+      22. Export/import functionality
+      23. Keyboard shortcuts throughout
+      24. Animations and polish
+      25. Dark theme completion
+      26. Performance optimization
+      27. E2E tests against deployed API
+      28. Final testing and bug fixes
     </recommended_implementation_order>
 
     <dexie_schema>
+      NOTE: This Dexie schema is used as a FALLBACK for local development when the API is unavailable.
+      The primary data store is DynamoDB (see infrastructure/dynamodb_design section above).
+      The frontend should detect if VITE_API_URL is set and use the API client; otherwise fall back to Dexie.
+
       ```javascript
       import Dexie from 'dexie';
 
@@ -1540,6 +1634,61 @@
       export default db;
       ```
     </dexie_schema>
+
+    <monorepo_structure>
+      The generated-app/ directory MUST be structured as a monorepo:
+
+      ```
+      generated-app/
+      ├── frontend/                    # React/Vite app
+      │   ├── src/
+      │   │   ├── api/                # API client layer
+      │   │   │   ├── client.ts       # fetch wrapper using VITE_API_URL
+      │   │   │   ├── projects.ts     # project CRUD API calls
+      │   │   │   ├── issues.ts       # issue CRUD API calls
+      │   │   │   └── sprints.ts      # sprint CRUD API calls
+      │   │   ├── hooks/              # React Query hooks wrapping API calls
+      │   │   ├── components/         # UI components
+      │   │   └── ...
+      │   ├── package.json
+      │   └── vite.config.ts
+      ├── backend/                    # Lambda handlers (TypeScript)
+      │   ├── src/
+      │   │   ├── handlers/
+      │   │   │   ├── projects.ts     # CRUD for projects
+      │   │   │   ├── issues.ts       # CRUD for issues
+      │   │   │   ├── sprints.ts      # CRUD for sprints
+      │   │   │   ├── boards.ts       # Board management
+      │   │   │   ├── comments.ts     # Comments CRUD
+      │   │   │   └── search.ts       # Full-text search
+      │   │   ├── lib/
+      │   │   │   ├── db.ts           # DynamoDB client + table helpers
+      │   │   │   ├── types.ts        # Shared TypeScript types
+      │   │   │   └── validation.ts   # Input validation (zod)
+      │   │   └── index.ts            # Lambda entry point
+      │   ├── package.json
+      │   └── tsconfig.json
+      ├── infrastructure/             # CDK stack (agent-written)
+      │   ├── lib/
+      │   │   └── canopy-stack.ts     # API GW + Lambda + DynamoDB + S3/CF
+      │   ├── test/
+      │   │   └── canopy-stack.test.ts
+      │   ├── bin/
+      │   │   └── canopy.ts           # CDK app entry point
+      │   ├── cdk.json
+      │   ├── jest.config.js
+      │   ├── tsconfig.json
+      │   └── package.json
+      ├── e2e/                        # End-to-end tests
+      │   ├── tests/
+      │   │   ├── api.spec.ts         # API endpoint tests
+      │   │   └── app.spec.ts         # Full UI + API E2E tests
+      │   └── playwright.config.ts
+      ├── package.json                # Workspace root (npm workspaces)
+      ├── claude-progress.txt
+      └── tests.json
+      ```
+    </monorepo_structure>
 
     <filter_query_parsing>
       - Tokenize query string into tokens

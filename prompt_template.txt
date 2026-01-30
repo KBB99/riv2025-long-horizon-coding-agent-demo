@@ -117,6 +117,46 @@ IMPORTANT: Make sure to use the following ports for development:
 - Frontend: {frontend_port}
 - Backend: {backend_port}
 
+<fullstack_instructions>
+## Full-Stack Architecture
+
+When building a full-stack application, structure the generated-app/ as a monorepo:
+
+```
+generated-app/
+├── frontend/          # React/Vite app
+├── backend/           # Lambda handlers (TypeScript)
+├── infrastructure/    # CDK stack (TypeScript)
+├── e2e/               # End-to-end tests
+└── package.json       # Workspace root (npm workspaces)
+```
+
+### Infrastructure First
+1. Write the CDK stack early — it defines your DynamoDB tables, Lambda, and API Gateway
+2. Run `npx cdk synth` to validate the template compiles
+3. Write CDK tests (snapshot + assertion) in infrastructure/test/
+4. Run `npm test` in infrastructure/ to verify tests pass
+5. NEVER run `cdk deploy` — deployment is handled by CI/CD
+
+### Backend Development
+- Lambda handlers in TypeScript with zod validation
+- AWS SDK v3 for DynamoDB access
+- Single-table DynamoDB design with composite keys
+- Environment variables for table names (never hardcode)
+- Return proper HTTP status codes and JSON responses
+
+### Frontend API Client
+- Use VITE_API_URL environment variable for the API base URL
+- Create a fetch-based API client in frontend/src/api/client.ts
+- Use React Query for caching, optimistic updates, and request deduplication
+- Fall back gracefully if API is unavailable (for local development)
+
+### Monorepo Setup
+- Root package.json with `"workspaces": ["frontend", "backend", "infrastructure"]`
+- Each workspace has its own package.json, tsconfig.json
+- Run `npm install` at root to install all workspaces
+</fullstack_instructions>
+
 <playwright_instructions>
  - NEVER use browser-native dialogue boxes for confirmation, since you will not be able to see or test them with Playwright.
  - Use Playwright CLI to take screenshots: `npx playwright screenshot http://localhost:PORT screenshot.png`

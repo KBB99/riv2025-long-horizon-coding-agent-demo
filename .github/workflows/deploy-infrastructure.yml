@@ -1,0 +1,206 @@
+name: Deploy Infrastructure
+
+on:
+  push:
+    branches: [agent-runtime]
+    paths: ['generated-app/infrastructure/**']
+  workflow_dispatch:
+    inputs:
+      issue_number:
+        description: 'Issue number'
+        required: false
+        default: ''
+
+permissions:
+  issues: write
+  contents: read
+  id-token: write
+
+env:
+  AWS_REGION: us-west-2
+  NODE_VERSION: '20'
+
+# Cancel any in-progress deploy for the same branch
+concurrency:
+  group: infra-deploy-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-infrastructure:
+    runs-on: ubuntu-latest
+    outputs:
+      api_url: ${{ steps.deploy.outputs.api_url }}
+      issue_number: ${{ steps.extract-issue.outputs.issue_number }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract issue number
+        id: extract-issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_ISSUE_NUMBER: ${{ github.event.inputs.issue_number }}
+        run: |
+          if [ -n "$INPUT_ISSUE_NUMBER" ]; then
+            ISSUE_NUMBER="$INPUT_ISSUE_NUMBER"
+            echo "Issue number from workflow_dispatch: $ISSUE_NUMBER"
+          else
+            BRANCH_NAME="${GITHUB_REF_NAME}"
+            if [[ "$BRANCH_NAME" == issue-* ]]; then
+              ISSUE_NUMBER="${BRANCH_NAME#issue-}"
+            else
+              ISSUE_NUMBER=$(gh issue list --label "agent-building" --state open --limit 1 --json number --jq '.[0].number // empty')
+              if [ -z "$ISSUE_NUMBER" ]; then
+                ISSUE_NUMBER=$(gh issue list --label "agent-complete" --state open --limit 1 --json number --jq '.[0].number // empty')
+              fi
+              if [ -z "$ISSUE_NUMBER" ]; then
+                ISSUE_NUMBER=$(gh issue list --label "agent-complete" --state closed --limit 1 --json number --jq '.[0].number // empty')
+              fi
+              if [ -z "$ISSUE_NUMBER" ]; then
+                echo "No issue found with agent labels, using 'latest'"
+                ISSUE_NUMBER="latest"
+                echo "skip_comment=true" >> $GITHUB_OUTPUT
+              fi
+            fi
+            echo "Issue number from branch: $ISSUE_NUMBER"
+          fi
+          echo "issue_number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+
+      - name: Check infrastructure directory exists
+        id: check
+        run: |
+          if [ -d "generated-app/infrastructure" ] && [ -f "generated-app/infrastructure/package.json" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Found infrastructure in generated-app/infrastructure/"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "No infrastructure directory found, skipping deployment"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.exists == 'true'
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install CDK dependencies
+        if: steps.check.outputs.exists == 'true'
+        working-directory: generated-app/infrastructure
+        run: npm ci
+
+      - name: Run CDK tests
+        if: steps.check.outputs.exists == 'true'
+        working-directory: generated-app/infrastructure
+        run: npm test
+
+      - name: CDK Synth (validate template)
+        if: steps.check.outputs.exists == 'true'
+        working-directory: generated-app/infrastructure
+        run: npx cdk synth
+
+      - name: Configure AWS credentials
+        if: steps.check.outputs.exists == 'true'
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ secrets.AWS_INFRA_DEPLOY_ROLE_ARN }}
+          role-session-name: infra-deploy
+          aws-region: ${{ env.AWS_REGION }}
+          role-duration-seconds: 3600
+          role-skip-session-tagging: true
+
+      - name: CDK Diff
+        if: steps.check.outputs.exists == 'true'
+        id: diff
+        working-directory: generated-app/infrastructure
+        run: |
+          npx cdk diff 2>&1 | tee /tmp/cdk-diff.txt || true
+          {
+            echo "diff<<EOF"
+            cat /tmp/cdk-diff.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Post diff to issue
+        if: steps.check.outputs.exists == 'true' && steps.extract-issue.outputs.issue_number != 'latest' && steps.extract-issue.outputs.skip_comment != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ steps.extract-issue.outputs.issue_number }}
+          DIFF: ${{ steps.diff.outputs.diff }}
+        run: |
+          BODY=$(printf '<details><summary>CDK Diff</summary>\n\n```\n%s\n```\n</details>' "$DIFF")
+          gh issue comment "$ISSUE_NUMBER" --body "$BODY"
+
+      - name: Signal deploy started
+        if: steps.check.outputs.exists == 'true'
+        run: |
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          STATE=$(jq -nc --arg c "${{ github.sha }}" --arg t "$TIMESTAMP" \
+            '{status:"deploying",commit:$c,timestamp:$t,apiUrl:""}')
+          aws ssm put-parameter \
+            --name "/claude-code/infra/deploy-state" \
+            --value "$STATE" \
+            --type String \
+            --overwrite
+          echo "Signaled deploy-state: $STATE"
+
+      - name: CDK Deploy
+        if: steps.check.outputs.exists == 'true'
+        id: deploy
+        working-directory: generated-app/infrastructure
+        run: |
+          npx cdk deploy --require-approval never --outputs-file /tmp/cdk-outputs.json 2>&1
+          API_URL=$(jq -r '.[].ApiUrl // empty' /tmp/cdk-outputs.json)
+          echo "api_url=$API_URL" >> $GITHUB_OUTPUT
+
+      - name: Signal deploy succeeded
+        if: steps.check.outputs.exists == 'true' && steps.deploy.outputs.api_url != ''
+        env:
+          API_URL: ${{ steps.deploy.outputs.api_url }}
+          ISSUE_NUMBER: ${{ steps.extract-issue.outputs.issue_number }}
+        run: |
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          STATE=$(jq -nc --arg s "succeeded" --arg c "${{ github.sha }}" --arg t "$TIMESTAMP" --arg u "$API_URL" \
+            '{status:$s,commit:$c,timestamp:$t,apiUrl:$u}')
+
+          aws ssm put-parameter --name "/claude-code/infra/deploy-state" \
+            --value "$STATE" --type String --overwrite
+
+          echo "Deploy succeeded: $STATE"
+
+          # Also write issue-specific state for multi-issue tracking
+          if [ "$ISSUE_NUMBER" != "latest" ]; then
+            aws ssm put-parameter \
+              --name "/claude-code/infra/issue-${ISSUE_NUMBER}/deploy-state" \
+              --value "$STATE" --type String --overwrite
+          fi
+
+      - name: Signal deploy failed
+        if: failure() && steps.check.outputs.exists == 'true'
+        run: |
+          TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          STATE=$(jq -nc --arg s "failed" --arg c "${{ github.sha }}" --arg t "$TIMESTAMP" \
+            '{status:$s,commit:$c,timestamp:$t,apiUrl:""}')
+
+          aws ssm put-parameter --name "/claude-code/infra/deploy-state" \
+            --value "$STATE" --type String --overwrite
+          echo "Deploy FAILED: $STATE"
+
+      - name: Post deployment status to issue
+        if: steps.check.outputs.exists == 'true' && steps.extract-issue.outputs.issue_number != 'latest' && steps.extract-issue.outputs.skip_comment != 'true' && steps.deploy.outputs.api_url != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ steps.extract-issue.outputs.issue_number }}
+          API_URL: ${{ steps.deploy.outputs.api_url }}
+        run: |
+          BODY=$(printf '## Infrastructure Deployed\n\n| Resource | Value |\n|----------|-------|\n| **API URL** | %s |\n| **Stack** | `canopy-app-stack` |\n\n---\n*Deployed via CDK on push to `agent-runtime` branch*' "$API_URL")
+          gh issue comment "$ISSUE_NUMBER" --body "$BODY"
+
+  # Trigger frontend redeploy with API URL
+  trigger-frontend-deploy:
+    needs: deploy-infrastructure
+    if: needs.deploy-infrastructure.outputs.api_url != ''
+    uses: ./.github/workflows/deploy-preview.yml
+    with:
+      issue_number: ${{ needs.deploy-infrastructure.outputs.issue_number }}
+    secrets: inherit

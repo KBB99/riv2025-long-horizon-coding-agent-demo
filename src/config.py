@@ -71,6 +71,9 @@ ALLOWED_BASH_COMMANDS = [
     "playwright",
     "python3",
     "google-chrome",
+    "cdk",      # CDK synth, diff, test (NOT deploy)
+    "aws",      # Read-only verification (describe-stacks, etc.)
+    "esbuild",  # Lambda bundling
 ]
 
 # Special command patterns
