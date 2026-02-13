@@ -45,6 +45,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # For workflow_dispatch/workflow_call, checkout agent-runtime where the generated app lives
+          ref: ${{ github.event_name == 'push' && github.ref || 'agent-runtime' }}
 
       - name: Extract issue number
         id: extract
