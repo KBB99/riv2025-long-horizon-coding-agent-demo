@@ -990,38 +990,50 @@ def _create_claude_client(
     # For Docker/AWS deployment: explicitly set CLI path if in containerized environment
     cli_path = "/usr/local/bin/claude" if os.path.exists("/usr/local/bin/claude") else None
 
-    return ClaudeSDKClient(
-        options=ClaudeAgentOptions(
-            model=args.model,
-            system_prompt=system_prompt,
-            cli_path=cli_path,  # Explicitly set for Docker compatibility
-            allowed_tools=[
-                "think",
-                "Read",
-                "Glob",
-                "Grep",
-                "Write",
-                "Edit",
-                "MultiEdit",
-                "Bash",
+    # Build environment variables for the SDK subprocess
+    sdk_env = {}
+    if os.environ.get("CLAUDE_CODE_USE_BEDROCK") == "1":
+        sdk_env["CLAUDE_CODE_USE_BEDROCK"] = "1"
+        sdk_env["AWS_REGION"] = os.environ.get("AWS_REGION", "us-east-1")
+
+    options_kwargs = dict(
+        model=args.model,
+        system_prompt=system_prompt,
+        cli_path=cli_path,  # Explicitly set for Docker compatibility
+        allowed_tools=[
+            "think",
+            "Read",
+            "Glob",
+            "Grep",
+            "Write",
+            "Edit",
+            "MultiEdit",
+            "Bash",
+        ],
+        disallowed_tools=[],
+        mcp_servers={},
+        hooks={
+            "PreToolUse": [
+                HookMatcher(
+                    matcher="*", hooks=[universal_path_security_hook_wrapper]
+                ),
             ],
-            disallowed_tools=[],
-            mcp_servers={},
-            hooks={
-                "PreToolUse": [
-                    HookMatcher(
-                        matcher="*", hooks=[universal_path_security_hook_wrapper]
-                    ),
-                ],
-                "PostToolUse": [
-                    HookMatcher(matcher="Bash", hooks=[cd_enforcement_hook_wrapper]),
-                    HookMatcher(matcher="Read", hooks=[track_read_hook_wrapper]),
-                ],
-            },
-            max_turns=10000,
-            cwd=str(generation_dir),
-            add_dirs=[str(generation_dir / "prompts")],
-        )
+            "PostToolUse": [
+                HookMatcher(matcher="Bash", hooks=[cd_enforcement_hook_wrapper]),
+                HookMatcher(matcher="Read", hooks=[track_read_hook_wrapper]),
+            ],
+        },
+        max_turns=10000,
+        cwd=str(generation_dir),
+        add_dirs=[str(generation_dir / "prompts")],
+    )
+
+    # Pass Bedrock env vars if configured
+    if sdk_env:
+        options_kwargs["env"] = sdk_env
+
+    return ClaudeSDKClient(
+        options=ClaudeAgentOptions(**options_kwargs)
     )
 
 

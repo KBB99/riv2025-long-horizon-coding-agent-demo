@@ -17,7 +17,7 @@ permissions:
   id-token: write
 
 env:
-  AWS_REGION: us-west-2
+  AWS_REGION: us-east-1
   NODE_VERSION: '20'
 
 # Cancel any in-progress deploy for the same branch

@@ -25,7 +25,7 @@ from botocore.exceptions import ClientError, BotoCoreError
 class AgentInvoker:
     """Handles AgentCore Runtime invocation with retry logic and streaming."""
 
-    def __init__(self, agent_arn: str, region: str = 'us-west-2', max_retries: int = 3):
+    def __init__(self, agent_arn: str, region: str = 'us-east-1', max_retries: int = 3):
         self.agent_arn = agent_arn
         self.region = region
         self.max_retries = max_retries
@@ -166,7 +166,7 @@ class AgentInvoker:
                 print("\n✅ Invocation accepted - agent running asynchronously")
                 print("   The agent will process the request in the background.")
                 print("   Monitor CloudWatch logs for execution progress:")
-                print(f"   https://us-west-2.console.aws.amazon.com/cloudwatch/home?region=us-west-2#gen-ai-observability")
+                print(f"   https://us-east-1.console.aws.amazon.com/cloudwatch/home?region=us-east-1#gen-ai-observability")
 
             print("-" * 80)
 
@@ -184,7 +184,7 @@ def parse_args():
     parser.add_argument(
         '--agent-arn',
         required=True,
-        help='AgentCore Runtime ARN (e.g., arn:aws:bedrock-agentcore:us-west-2:123456789012:runtime/agent-id)'
+        help='AgentCore Runtime ARN (e.g., arn:aws:bedrock-agentcore:us-east-1:123456789012:runtime/agent-id)'
     )
 
     parser.add_argument(
@@ -201,8 +201,8 @@ def parse_args():
 
     parser.add_argument(
         '--region',
-        default='us-west-2',
-        help='AWS region (default: us-west-2)'
+        default='us-east-1',
+        help='AWS region (default: us-east-1)'
     )
 
     parser.add_argument(

@@ -2,8 +2,8 @@
 # Provides repeatable IaC for launching and managing the agent
 
 # AWS Configuration
-AWS_PROFILE ?= aws-riv-2025
-AWS_REGION ?= us-west-2
+AWS_PROFILE ?= default
+AWS_REGION ?= us-east-1
 export AWS_PROFILE
 export AWS_REGION
 
@@ -13,14 +13,14 @@ STACK_NAME ?= claude-code-$(ENVIRONMENT)
 
 # AgentCore runtime (from .bedrock_agentcore.yaml or environment)
 # Set these via environment variables or override on command line
-AGENT_RUNTIME_ID ?= YOUR_AGENT_RUNTIME_ID
-EXECUTION_ROLE_ARN ?= arn:aws:iam::YOUR_ACCOUNT_ID:role/YOUR_EXECUTION_ROLE
+AGENT_RUNTIME_ID ?= claude_code_reinvent-1eBYMO7kHw
+EXECUTION_ROLE_ARN ?= arn:aws:iam::669298908997:role/claude-code-agentcore-role
 
 # Agent configuration (environment variables)
 PUSH_INTERVAL_SECONDS ?= 300
 SCREENSHOT_INTERVAL_SECONDS ?= 300
 SESSION_DURATION_HOURS ?= 1.0
-DEFAULT_MODEL ?= claude-opus-4-5-20251101
+DEFAULT_MODEL ?= us.anthropic.claude-sonnet-4-5-20250929-v1:0
 PROJECT_NAME ?= canopy
 
 # OpenTelemetry Configuration
@@ -45,14 +45,14 @@ AGENT_NAME ?= antodo_agent
 OTEL_RESOURCE_ATTRIBUTES = service.name=$(AGENT_NAME),aws.log.group.names=/aws/bedrock-agentcore/runtimes/$(AGENT_RUNTIME_ID)
 OTEL_EXPORTER_OTLP_LOGS_HEADERS = x-aws-log-group=/aws/bedrock-agentcore/runtimes/$(AGENT_RUNTIME_ID),x-aws-log-stream=runtime-logs,x-aws-metric-namespace=bedrock-agentcore
 
-# Get dynamic values from CloudFormation outputs (explicitly use us-west-2 where the stack lives)
-CF_REGION := us-west-2
+# Get dynamic values from CloudFormation outputs
+CF_REGION := us-east-1
 SCREENSHOT_BUCKET := $(shell aws cloudformation describe-stacks --stack-name $(STACK_NAME) --region $(CF_REGION) --profile $(AWS_PROFILE) --query "Stacks[0].Outputs[?OutputKey=='ScreenshotsBucketName'].OutputValue" --output text 2>/dev/null)
 SCREENSHOT_CDN_DOMAIN := $(shell aws cloudformation describe-stacks --stack-name $(STACK_NAME) --region $(CF_REGION) --profile $(AWS_PROFILE) --query "Stacks[0].Outputs[?OutputKey=='ScreenshotsCdnDomain'].OutputValue" --output text 2>/dev/null)
 ECR_URI := $(shell aws cloudformation describe-stacks --stack-name $(STACK_NAME) --region $(CF_REGION) --profile $(AWS_PROFILE) --query "Stacks[0].Outputs[?OutputKey=='EcrRepositoryUri'].OutputValue" --output text 2>/dev/null)
 
 # GitHub configuration
-GITHUB_REPO ?= anthropics/riv2025-long-horizon-coding-agent-demo
+GITHUB_REPO ?= KBB99/riv2025-long-horizon-coding-agent-demo
 
 .PHONY: help launch launch-local deploy-infra status destroy show-config update-runtime-env get-runtime cleanup-test stop-session
 
@@ -132,6 +132,8 @@ launch:
 		--env "SCREENSHOT_CDN_DOMAIN=$(SCREENSHOT_CDN_DOMAIN)" \
 		--env "SESSION_DURATION_HOURS=$(SESSION_DURATION_HOURS)" \
 		--env "DEFAULT_MODEL=$(DEFAULT_MODEL)" \
+		--env "CLAUDE_CODE_USE_BEDROCK=1" \
+		--env "AWS_REGION=$(AWS_REGION)" \
 		--env "CLAUDE_CODE_ENABLE_TELEMETRY=$(CLAUDE_CODE_ENABLE_TELEMETRY)" \
 		--env "AGENT_OBSERVABILITY_ENABLED=$(AGENT_OBSERVABILITY_ENABLED)" \
 		--env "OTEL_PYTHON_DISTRO=$(OTEL_PYTHON_DISTRO)" \
@@ -153,6 +155,8 @@ launch-local:
 		--env "SCREENSHOT_CDN_DOMAIN=$(SCREENSHOT_CDN_DOMAIN)" \
 		--env "SESSION_DURATION_HOURS=$(SESSION_DURATION_HOURS)" \
 		--env "DEFAULT_MODEL=$(DEFAULT_MODEL)" \
+		--env "CLAUDE_CODE_USE_BEDROCK=1" \
+		--env "AWS_REGION=$(AWS_REGION)" \
 		--env "CLAUDE_CODE_ENABLE_TELEMETRY=$(CLAUDE_CODE_ENABLE_TELEMETRY)" \
 		--env "AGENT_OBSERVABILITY_ENABLED=$(AGENT_OBSERVABILITY_ENABLED)" \
 		--env "OTEL_PYTHON_DISTRO=$(OTEL_PYTHON_DISTRO)" \

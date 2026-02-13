@@ -38,7 +38,7 @@ class MetricsPublisher:
         self._total_commits = 0  # Track cumulative commits for the session
 
         if self.enabled:
-            region = os.environ.get("AWS_REGION", "us-west-2")
+            region = os.environ.get("AWS_REGION", "us-east-1")
             self.client = boto3.client("cloudwatch", region_name=region)
         else:
             self.client = None

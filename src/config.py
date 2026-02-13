@@ -3,7 +3,7 @@
 from typing import Any
 
 # Model defaults
-DEFAULT_MODEL = "claude-opus-4-5-20251101"
+DEFAULT_MODEL = "us.anthropic.claude-sonnet-4-5-20250929-v1:0"
 
 # Port defaults
 DEFAULT_FRONTEND_PORT = 6174

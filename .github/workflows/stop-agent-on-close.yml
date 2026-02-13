@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 env:
-  AWS_REGION: us-west-2
+  AWS_REGION: us-east-1
 
 jobs:
   stop-agent-sessions:
@@ -60,7 +60,7 @@ jobs:
           GITHUB_REPOSITORY = os.environ['GITHUB_REPOSITORY']
           GITHUB_RUN_ID = os.environ['GITHUB_RUN_ID']
           GITHUB_SERVER_URL = os.environ.get('GITHUB_SERVER_URL', 'https://github.com')
-          AGENT_ARN = "arn:aws:bedrock-agentcore:us-west-2:128673662201:runtime/antodo_agent-0UyfaL5NVq"
+          AGENT_ARN = f"arn:aws:bedrock-agentcore:us-east-1:669298908997:runtime/{os.environ.get('AGENTCORE_AGENT_ID', 'claude_code_reinvent-1eBYMO7kHw')}"
 
 
           def extract_session_ids(comments):
@@ -92,7 +92,7 @@ jobs:
               try:
                   print(f"Stopping session: {session_id}")
 
-                  client = boto3.client('bedrock-agentcore', region_name='us-west-2')
+                  client = boto3.client('bedrock-agentcore', region_name='us-east-1')
 
                   response = client.stop_runtime_session(
                       agentRuntimeArn=AGENT_ARN,

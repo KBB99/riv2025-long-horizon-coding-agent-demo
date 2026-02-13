@@ -90,7 +90,7 @@ def get_secret(secret_name: str) -> Optional[str]:
     Returns:
         Secret value or None if failed
     """
-    region = os.environ.get("AWS_REGION", "us-west-2")
+    region = os.environ.get("AWS_REGION", "us-east-1")
     client = boto3.client('secretsmanager', region_name=region)
 
     try:
@@ -862,7 +862,7 @@ def store_session_state_ssm(issue_number: int, session_id: Optional[str] = None)
         True if successful, False otherwise
     """
     try:
-        ssm = boto3.client('ssm', region_name=os.environ.get("AWS_REGION", "us-west-2"))
+        ssm = boto3.client('ssm', region_name=os.environ.get("AWS_REGION", "us-east-1"))
 
         # Store current issue
         ssm.put_parameter(
@@ -899,7 +899,7 @@ def clear_session_state_ssm() -> bool:
         True if successful, False otherwise
     """
     try:
-        ssm = boto3.client('ssm', region_name=os.environ.get("AWS_REGION", "us-west-2"))
+        ssm = boto3.client('ssm', region_name=os.environ.get("AWS_REGION", "us-east-1"))
 
         # Clear current issue
         try:
@@ -1495,7 +1495,7 @@ Commits will be pushed to branch `{branch or 'issue-' + str(issue_number)}`.
 
 If the GitHub Action fails to stop the session:
 ```bash
-AWS_PROFILE=<your-profile> AWS_REGION=us-west-2 agentcore stop-session --session-id "{session_id}"
+AWS_PROFILE=<your-profile> AWS_REGION=us-east-1 agentcore stop-session --session-id "{session_id}"
 ```
 
 </details>
@@ -1681,13 +1681,20 @@ def run_agent_background(
     """
     global agent_process, generation_dir
 
-    # Fetch API key from Secrets Manager
-    api_key = get_anthropic_api_key()
-    if not api_key:
-        print("❌ Cannot start agent without API key")
-        return
+    # Check if using Bedrock for model inference
+    use_bedrock = os.environ.get("CLAUDE_CODE_USE_BEDROCK", "0") == "1"
 
-    model = os.environ.get("DEFAULT_MODEL", "claude-opus-4-5-20251101")
+    if use_bedrock:
+        print("🔧 Using Amazon Bedrock for model inference")
+        api_key = None  # Not needed for Bedrock
+    else:
+        # Fetch API key from Secrets Manager
+        api_key = get_anthropic_api_key()
+        if not api_key:
+            print("❌ Cannot start agent without API key (set CLAUDE_CODE_USE_BEDROCK=1 to use Bedrock instead)")
+            return
+
+    model = os.environ.get("DEFAULT_MODEL", "us.anthropic.claude-sonnet-4-5-20250929-v1:0")
 
     # Determine working directory and command based on mode
     if build_dir is not None:
@@ -1737,9 +1744,13 @@ def run_agent_background(
     print(f"📝 Background command: {' '.join(cmd)}")
     print(f"📁 Working directory: {cwd}")
 
-    # Set up environment with API key
+    # Set up environment
     env = os.environ.copy()
-    env['ANTHROPIC_API_KEY'] = api_key
+    if use_bedrock:
+        env['CLAUDE_CODE_USE_BEDROCK'] = '1'
+        env['AWS_REGION'] = os.environ.get('AWS_REGION', 'us-east-1')
+    else:
+        env['ANTHROPIC_API_KEY'] = api_key
 
     # Start agent subprocess - don't capture output so it goes to CloudWatch
     agent_process = subprocess.Popen(
@@ -1964,7 +1975,7 @@ Commits should reference this issue: `Ref: #{issue_number}`
             # Post session info to GitHub issue for tracking
             agent_runtime_arn = os.environ.get(
                 "AGENT_RUNTIME_ARN",
-                "arn:aws:bedrock-agentcore:us-west-2:128673662201:runtime/antodo_agent-0UyfaL5NVq"
+                "arn:aws:bedrock-agentcore:us-east-1:669298908997:runtime/claude_code_reinvent-1eBYMO7kHw"
             )
 
             # If resuming, post a resume notification instead of new session info
@@ -2283,7 +2294,7 @@ Commits should reference this issue: `Ref: #{issue_number}`
                         # Post session info to the new issue
                         agent_runtime_arn = os.environ.get(
                             "AGENT_RUNTIME_ARN",
-                            "arn:aws:bedrock-agentcore:us-west-2:128673662201:runtime/antodo_agent-0UyfaL5NVq"
+                            "arn:aws:bedrock-agentcore:us-east-1:669298908997:runtime/claude_code_reinvent-1eBYMO7kHw"
                         )
                         post_session_info_to_issue(
                             github_repo=github_repo,
@@ -2499,7 +2510,7 @@ Commits should reference this issue: `Ref: #{issue_number}`
                         # Post session info to the new issue
                         agent_runtime_arn = os.environ.get(
                             "AGENT_RUNTIME_ARN",
-                            "arn:aws:bedrock-agentcore:us-west-2:128673662201:runtime/antodo_agent-0UyfaL5NVq"
+                            "arn:aws:bedrock-agentcore:us-east-1:669298908997:runtime/claude_code_reinvent-1eBYMO7kHw"
                         )
                         post_session_info_to_issue(
                             github_repo=github_repo,

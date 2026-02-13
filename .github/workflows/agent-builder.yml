@@ -43,8 +43,8 @@ permissions:
   actions: write
 
 env:
-  AWS_REGION: us-west-2  # AgentCore deployed in us-west-2
-  AGENTCORE_AGENT_ID: antodo_agent-0UyfaL5NVq
+  AWS_REGION: us-east-1
+  AGENTCORE_AGENT_ID: claude_code_reinvent-1eBYMO7kHw
 
 jobs:
   # Check if the issue is approved and ready to build
@@ -381,10 +381,10 @@ jobs:
           pip install --upgrade boto3 -q
 
           python3 .github/scripts/invoke_agent.py \
-            --agent-arn "arn:aws:bedrock-agentcore:us-west-2:128673662201:runtime/antodo_agent-0UyfaL5NVq" \
+            --agent-arn "arn:aws:bedrock-agentcore:us-east-1:669298908997:runtime/${AGENTCORE_AGENT_ID}" \
             --session-id "$SESSION_ID" \
             --payload "$PAYLOAD" \
-            --region us-west-2
+            --region us-east-1
 
           # Check exit code
           if [ $? -eq 0 ]; then
