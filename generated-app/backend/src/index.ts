@@ -58,18 +58,18 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
       if (method === 'POST') return await createIssue(params.id, event);
     }
 
+    // Bulk update — must come before /issues/:id to avoid 'bulk' being treated as an ID
+    params = matchRoute('/issues/bulk', path);
+    if (params) {
+      if (method === 'PUT') return await bulkUpdateIssues(event);
+    }
+
     // Issues direct
     params = matchRoute('/issues/:id', path);
     if (params) {
       if (method === 'GET') return await getIssue(params.id);
       if (method === 'PUT') return await updateIssue(params.id, event);
       if (method === 'DELETE') return await deleteIssue(params.id);
-    }
-
-    // Bulk update
-    params = matchRoute('/issues/bulk', path);
-    if (params) {
-      if (method === 'PUT') return await bulkUpdateIssues(event);
     }
 
     // Comments
