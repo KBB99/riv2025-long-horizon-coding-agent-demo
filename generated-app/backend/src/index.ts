@@ -4,6 +4,7 @@ import { listIssues, createIssue, getIssue, updateIssue, deleteIssue, bulkUpdate
 import { listSprints, createSprint, updateSprint } from './handlers/sprints';
 import { getBoard, updateBoard } from './handlers/boards';
 import { addComment, listComments } from './handlers/comments';
+import { uploadAttachment, listAttachments, getAttachment, deleteAttachment } from './handlers/attachments';
 import { search } from './handlers/search';
 import { success, error } from './lib/response';
 
@@ -70,6 +71,19 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
       if (method === 'GET') return await getIssue(params.id);
       if (method === 'PUT') return await updateIssue(params.id, event);
       if (method === 'DELETE') return await deleteIssue(params.id);
+    }
+
+    // Attachments (specific route must come before :attachmentId wildcard)
+    params = matchRoute('/issues/:id/attachments/:attachmentId', path);
+    if (params) {
+      if (method === 'GET') return await getAttachment(params.id, params.attachmentId);
+      if (method === 'DELETE') return await deleteAttachment(params.id, params.attachmentId);
+    }
+
+    params = matchRoute('/issues/:id/attachments', path);
+    if (params) {
+      if (method === 'GET') return await listAttachments(params.id);
+      if (method === 'POST') return await uploadAttachment(params.id, event);
     }
 
     // Comments

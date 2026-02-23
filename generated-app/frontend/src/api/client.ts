@@ -22,6 +22,8 @@ import type {
   CreateComment,
   SearchResult,
   SearchQuery,
+  Attachment,
+  AttachmentWithData,
 } from '@canopy/shared';
 
 // ---------------------------------------------------------------------------
@@ -451,6 +453,76 @@ export async function search(query: SearchQuery): Promise<SearchResult> {
     issues: matchedIssues.slice(0, limit),
     total: matchedProjects.length + matchedIssues.length,
   };
+}
+
+// ---- Attachments ----
+
+export async function uploadAttachment(
+  issueId: string,
+  data: { fileName: string; fileSize: number; mimeType: string; fileData: string },
+): Promise<Attachment> {
+  if (await shouldUseApi()) {
+    return http.post<Attachment>(`/issues/${issueId}/attachments`, {
+      ...data,
+      issueId,
+    });
+  }
+  // localStorage fallback
+  const attachment: Attachment = {
+    id: generateId(),
+    issueId,
+    fileName: data.fileName,
+    fileSize: data.fileSize,
+    mimeType: data.mimeType,
+    uploadedBy: 'local-user',
+    createdAt: now(),
+  };
+  // Store metadata in list
+  const items = lsRead<Attachment & { fileData?: string }>('attachments');
+  items.push({ ...attachment, fileData: data.fileData });
+  lsWrite('attachments', items);
+  return attachment;
+}
+
+export async function listAttachments(issueId: string): Promise<Attachment[]> {
+  if (await shouldUseApi()) {
+    return http.get<Attachment[]>(`/issues/${issueId}/attachments`);
+  }
+  return lsList<Attachment & { issueId: string }>('attachments').filter(
+    (a) => a.issueId === issueId,
+  );
+}
+
+export async function getAttachment(
+  issueId: string,
+  attachmentId: string,
+): Promise<AttachmentWithData> {
+  if (await shouldUseApi()) {
+    return http.get<AttachmentWithData>(
+      `/issues/${issueId}/attachments/${attachmentId}`,
+    );
+  }
+  const items = lsRead<AttachmentWithData & { issueId: string }>('attachments');
+  const item = items.find((a) => a.id === attachmentId && a.issueId === issueId);
+  if (!item) throw new ApiError(404, 'Attachment not found');
+  return item;
+}
+
+export async function deleteAttachment(
+  issueId: string,
+  attachmentId: string,
+): Promise<{ success: boolean }> {
+  if (await shouldUseApi()) {
+    return http.delete<{ success: boolean }>(
+      `/issues/${issueId}/attachments/${attachmentId}`,
+    );
+  }
+  const items = lsRead<Attachment & { issueId: string }>('attachments');
+  const filtered = items.filter(
+    (a) => !(a.id === attachmentId && a.issueId === issueId),
+  );
+  lsWrite('attachments', filtered);
+  return { success: filtered.length < items.length };
 }
 
 // ---------------------------------------------------------------------------

@@ -27,6 +27,9 @@ export type {
   Comment,
   SearchQuery,
   SearchResult,
+  CreateAttachment,
+  Attachment,
+  AttachmentWithData,
 } from './types';
 
 // Re-export endpoints

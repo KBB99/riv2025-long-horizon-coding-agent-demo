@@ -20,10 +20,18 @@ import {
   CircleDot,
   ChevronRight,
   Keyboard,
+  Paperclip,
+  Upload,
+  FileText,
+  Image as ImageIcon,
+  File,
+  Download,
+  Loader2,
 } from 'lucide-react';
-import type { Issue, UpdateIssue, Comment as IssueComment } from '@canopy/shared';
+import type { Issue, UpdateIssue, Comment as IssueComment, Attachment } from '@canopy/shared';
 
 import { useIssue, useUpdateIssue, useDeleteIssue } from '@/hooks/useIssues';
+import { useAttachments, useUploadAttachment, useDeleteAttachment, useDownloadAttachment } from '@/hooks/useAttachments';
 import { useSprints } from '@/hooks/useSprints';
 import { useProject } from '@/hooks/useProjects';
 import { useApp } from '@/context/AppContext';
@@ -37,7 +45,7 @@ import {
   getInitials,
   getAvatarColor,
 } from '@/lib/utils';
-import { addComment, listComments } from '@/api/client';
+import { addComment, listComments, getAttachment as getAttachmentApi } from '@/api/client';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -151,6 +159,12 @@ export default function IssueDetail() {
     },
   });
 
+  // Attachments
+  const { data: attachments = [], refetch: refetchAttachments } = useAttachments(issueId);
+  const uploadAttachmentMutation = useUploadAttachment();
+  const deleteAttachmentMutation = useDeleteAttachment();
+  const downloadAttachmentMutation = useDownloadAttachment();
+
   // Local editing state
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editTitle, setEditTitle] = useState('');
@@ -158,10 +172,12 @@ export default function IssueDetail() {
   const [editDescription, setEditDescription] = useState('');
   const [newComment, setNewComment] = useState('');
   const [editMode, setEditMode] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
   const commentRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Sync editing fields when issue loads
   useEffect(() => {
@@ -264,6 +280,124 @@ export default function IssueDetail() {
     if (!issueId || !newComment.trim()) return;
     addCommentMutation.mutate({ issueId, body: newComment.trim() });
   }, [issueId, newComment, addCommentMutation]);
+
+  // Attachment handlers
+  const handleFileUpload = useCallback(
+    (files: FileList | null) => {
+      if (!files || !issueId) return;
+      const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+      Array.from(files).forEach((file) => {
+        if (file.size > MAX_SIZE) {
+          toast.error(`File "${file.name}" is too large. Maximum size is 5MB.`);
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = (reader.result as string).split(',')[1]; // Remove data URL prefix
+          uploadAttachmentMutation.mutate(
+            {
+              issueId,
+              fileName: file.name,
+              fileSize: file.size,
+              mimeType: file.type || 'application/octet-stream',
+              fileData: base64,
+            },
+            {
+              onSuccess: () => {
+                toast.success(`"${file.name}" attached successfully`);
+                refetchAttachments();
+              },
+              onError: () => {
+                toast.error(`Failed to upload "${file.name}"`);
+              },
+            },
+          );
+        };
+        reader.onerror = () => {
+          toast.error(`Failed to read "${file.name}"`);
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    },
+    [issueId, uploadAttachmentMutation, refetchAttachments],
+  );
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setIsDragOver(false);
+      handleFileUpload(e.dataTransfer.files);
+    },
+    [handleFileUpload],
+  );
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  }, []);
+
+  const handleDownloadAttachment = useCallback(
+    (attachment: Attachment) => {
+      if (!issueId) return;
+      downloadAttachmentMutation.mutate(
+        { issueId, attachmentId: attachment.id },
+        {
+          onSuccess: (data) => {
+            // Create blob from base64 and trigger download
+            const byteCharacters = atob(data.fileData);
+            const byteNumbers = new Array(byteCharacters.length);
+            for (let i = 0; i < byteCharacters.length; i++) {
+              byteNumbers[i] = byteCharacters.charCodeAt(i);
+            }
+            const byteArray = new Uint8Array(byteNumbers);
+            const blob = new Blob([byteArray], { type: attachment.mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = attachment.fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+          },
+          onError: () => {
+            toast.error('Failed to download attachment');
+          },
+        },
+      );
+    },
+    [issueId, downloadAttachmentMutation],
+  );
+
+  const handleDeleteAttachment = useCallback(
+    (attachment: Attachment) => {
+      if (!issueId) return;
+      deleteAttachmentMutation.mutate(
+        { issueId, attachmentId: attachment.id },
+        {
+          onSuccess: () => {
+            toast.success(`"${attachment.fileName}" removed`);
+          },
+          onError: () => {
+            toast.error('Failed to delete attachment');
+          },
+        },
+      );
+    },
+    [issueId, deleteAttachmentMutation],
+  );
 
   // ---------------------------------------------------------------------------
   // Loading / Error states
@@ -634,6 +768,104 @@ export default function IssueDetail() {
                     Click to add a description...
                   </span>
                 )}
+              </div>
+            )}
+          </div>
+
+          <Separator />
+
+          {/* Attachments Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Paperclip className="w-4 h-4 text-muted-foreground" />
+                <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                  Attachments
+                </h3>
+                <span className="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">
+                  {attachments.length}
+                </span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-7 text-xs text-muted-foreground hover:text-foreground gap-1"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadAttachmentMutation.isPending}
+              >
+                {uploadAttachmentMutation.isPending ? (
+                  <Loader2 className="w-3 h-3 animate-spin" />
+                ) : (
+                  <Upload className="w-3 h-3" />
+                )}
+                Upload
+              </Button>
+            </div>
+
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              multiple
+              onChange={(e) => handleFileUpload(e.target.files)}
+              data-testid="attachment-file-input"
+            />
+
+            {/* Drop zone */}
+            <div
+              className={cn(
+                'relative border-2 border-dashed rounded-lg p-4 transition-all duration-200 cursor-pointer group',
+                isDragOver
+                  ? 'border-primary bg-primary/5 scale-[1.01]'
+                  : 'border-border/60 hover:border-border hover:bg-muted/30',
+              )}
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onClick={() => fileInputRef.current?.click()}
+              data-testid="attachment-dropzone"
+            >
+              <div className="flex flex-col items-center gap-1.5 py-2">
+                <div
+                  className={cn(
+                    'w-8 h-8 rounded-full flex items-center justify-center transition-colors',
+                    isDragOver
+                      ? 'bg-primary/15 text-primary'
+                      : 'bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary',
+                  )}
+                >
+                  <Upload className="w-4 h-4" />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {isDragOver ? (
+                    <span className="text-primary font-medium">Drop files here</span>
+                  ) : (
+                    <>
+                      Drag & drop files here or{' '}
+                      <span className="text-primary font-medium">browse</span>
+                    </>
+                  )}
+                </p>
+                <p className="text-[10px] text-muted-foreground/70">
+                  Max 5MB per file
+                </p>
+              </div>
+            </div>
+
+            {/* Attachment list */}
+            {attachments.length > 0 && (
+              <div className="space-y-1.5" data-testid="attachment-list">
+                {attachments.map((attachment) => (
+                  <AttachmentCard
+                    key={attachment.id}
+                    attachment={attachment}
+                    onDownload={() => handleDownloadAttachment(attachment)}
+                    onDelete={() => handleDeleteAttachment(attachment)}
+                    isDownloading={downloadAttachmentMutation.isPending}
+                    isDeleting={deleteAttachmentMutation.isPending}
+                  />
+                ))}
               </div>
             )}
           </div>
@@ -1196,6 +1428,136 @@ function SidebarField({
 
 function SidebarDivider() {
   return <div className="mx-4 h-px bg-border/50" />;
+}
+
+// ---------------------------------------------------------------------------
+// Attachment Card
+// ---------------------------------------------------------------------------
+
+function getFileIcon(mimeType: string) {
+  if (mimeType.startsWith('image/')) return <ImageIcon className="w-4 h-4" />;
+  if (mimeType === 'application/pdf') return <FileText className="w-4 h-4" />;
+  if (
+    mimeType.includes('word') ||
+    mimeType.includes('document') ||
+    mimeType === 'text/plain' ||
+    mimeType === 'text/markdown' ||
+    mimeType === 'text/csv'
+  )
+    return <FileText className="w-4 h-4" />;
+  return <File className="w-4 h-4" />;
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function getFileExtension(fileName: string): string {
+  const parts = fileName.split('.');
+  return parts.length > 1 ? parts[parts.length - 1].toUpperCase() : '';
+}
+
+function AttachmentCard({
+  attachment,
+  onDownload,
+  onDelete,
+  isDownloading,
+  isDeleting,
+}: {
+  attachment: Attachment;
+  onDownload: () => void;
+  onDelete: () => void;
+  isDownloading: boolean;
+  isDeleting: boolean;
+}) {
+  const ext = getFileExtension(attachment.fileName);
+  const isImage = attachment.mimeType.startsWith('image/');
+
+  return (
+    <div
+      className="group flex items-center gap-3 p-2.5 rounded-lg border border-border/50 bg-card hover:border-border hover:shadow-sm transition-all duration-150 animate-slide-up"
+      data-testid="attachment-item"
+    >
+      {/* File type icon */}
+      <div
+        className={cn(
+          'w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors',
+          isImage
+            ? 'bg-pink-500/10 text-pink-500'
+            : 'bg-primary/10 text-primary',
+        )}
+      >
+        {getFileIcon(attachment.mimeType)}
+      </div>
+
+      {/* File info */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm font-medium truncate" title={attachment.fileName}>
+            {attachment.fileName}
+          </span>
+          {ext && (
+            <span className="text-[9px] font-mono px-1 py-0.5 bg-muted rounded text-muted-foreground shrink-0">
+              {ext}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+          <span>{formatFileSize(attachment.fileSize)}</span>
+          <span>&middot;</span>
+          <span>{formatRelativeDate(attachment.createdAt)}</span>
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0 text-muted-foreground hover:text-primary"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDownload();
+              }}
+              disabled={isDownloading}
+            >
+              {isDownloading ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Download className="w-3.5 h-3.5" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Download</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0 text-muted-foreground hover:text-destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+              disabled={isDeleting}
+            >
+              {isDeleting ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <Trash2 className="w-3.5 h-3.5" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Delete</TooltipContent>
+        </Tooltip>
+      </div>
+    </div>
+  );
 }
 
 function CommentCard({

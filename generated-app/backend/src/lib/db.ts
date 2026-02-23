@@ -17,6 +17,7 @@ export const keys = {
   sprintInProject: (projectId: string, sprintId: string) => ({ PK: `PROJ#${projectId}`, SK: `SPRINT#${sprintId}` }),
   board: (projectId: string) => ({ PK: `PROJ#${projectId}`, SK: 'BOARD' }),
   comment: (issueId: string, commentId: string) => ({ PK: `ISSUE#${issueId}`, SK: `COMMENT#${commentId}` }),
+  attachment: (issueId: string, attachmentId: string) => ({ PK: `ISSUE#${issueId}`, SK: `ATTACHMENT#${attachmentId}` }),
   activity: (issueId: string, timestamp: string) => ({ PK: `ISSUE#${issueId}`, SK: `ACTIVITY#${timestamp}` }),
 };
 

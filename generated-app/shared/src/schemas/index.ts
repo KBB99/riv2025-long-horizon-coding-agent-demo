@@ -45,3 +45,11 @@ export {
   SearchQuerySchema,
   SearchResultSchema,
 } from './search';
+
+export {
+  CreateAttachmentSchema,
+  AttachmentSchema,
+  AttachmentWithDataSchema,
+  MAX_ATTACHMENT_SIZE,
+  ALLOWED_MIME_TYPES,
+} from './attachment';

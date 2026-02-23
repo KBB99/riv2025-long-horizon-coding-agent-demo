@@ -38,3 +38,8 @@ export type Comment = z.infer<typeof schemas.CommentSchema>;
 // Search
 export type SearchQuery = z.infer<typeof schemas.SearchQuerySchema>;
 export type SearchResult = z.infer<typeof schemas.SearchResultSchema>;
+
+// Attachment
+export type CreateAttachment = z.infer<typeof schemas.CreateAttachmentSchema>;
+export type Attachment = z.infer<typeof schemas.AttachmentSchema>;
+export type AttachmentWithData = z.infer<typeof schemas.AttachmentWithDataSchema>;

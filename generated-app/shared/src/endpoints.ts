@@ -7,6 +7,7 @@ import {
   CreateCommentSchema, CommentSchema,
   SearchQuerySchema, SearchResultSchema,
   PaginationSchema,
+  CreateAttachmentSchema, AttachmentSchema, AttachmentWithDataSchema,
 } from './schemas';
 
 export const endpoints = {
@@ -36,6 +37,12 @@ export const endpoints = {
   // Boards
   getBoard:       { method: 'GET',    path: '/projects/:id/board',    response: BoardSchema },
   updateBoard:    { method: 'PUT',    path: '/boards/:id',            body: UpdateBoardSchema,    response: BoardSchema },
+
+  // Attachments
+  uploadAttachment:  { method: 'POST',   path: '/issues/:id/attachments',              body: CreateAttachmentSchema,      response: AttachmentSchema },
+  listAttachments:   { method: 'GET',    path: '/issues/:id/attachments',              response: z.array(AttachmentSchema) },
+  getAttachment:     { method: 'GET',    path: '/issues/:id/attachments/:attachmentId', response: AttachmentWithDataSchema },
+  deleteAttachment:  { method: 'DELETE', path: '/issues/:id/attachments/:attachmentId', response: z.object({ success: z.boolean() }) },
 
   // Search
   search:         { method: 'GET',    path: '/search',                query: SearchQuerySchema,   response: SearchResultSchema },
