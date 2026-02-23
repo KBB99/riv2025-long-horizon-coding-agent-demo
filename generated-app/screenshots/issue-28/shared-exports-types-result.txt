@@ -1,0 +1,9 @@
+RESULT: PASS
+
+Command: cd shared && npm run build
+
+Output:
+
+> @canopy/shared@1.0.0 build
+> tsc
+

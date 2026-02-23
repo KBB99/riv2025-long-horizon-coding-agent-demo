@@ -1,0 +1,7 @@
+RESULT: PASS
+
+Command: node -e 'const f=require("fs");const e=f.readFileSync("frontend/.env","utf8");console.log(e);if(e.indexOf("VITE_API_URL")<0)process.exit(1)'
+
+Output:
+VITE_API_URL=https://wuoq75966e.execute-api.us-east-1.amazonaws.com
+

@@ -1,0 +1,472 @@
+Resources:
+  CanopyTable8B388EA1:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+        - AttributeName: GSI1PK
+          AttributeType: S
+        - AttributeName: GSI1SK
+          AttributeType: S
+        - AttributeName: GSI2PK
+          AttributeType: S
+        - AttributeName: GSI2SK
+          AttributeType: S
+        - AttributeName: GSI3PK
+          AttributeType: S
+        - AttributeName: GSI3SK
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
+      GlobalSecondaryIndexes:
+        - IndexName: GSI1
+          KeySchema:
+            - AttributeName: GSI1PK
+              KeyType: HASH
+            - AttributeName: GSI1SK
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: GSI2
+          KeySchema:
+            - AttributeName: GSI2PK
+              KeyType: HASH
+            - AttributeName: GSI2SK
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: GSI3
+          KeySchema:
+            - AttributeName: GSI3PK
+              KeyType: HASH
+            - AttributeName: GSI3SK
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      TableName: canopy-main-table
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyTable/Resource
+  CanopyApiHandlerServiceRole90B2CE2A:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+        Version: "2012-10-17"
+      ManagedPolicyArns:
+        - Fn::Join:
+            - ""
+            - - "arn:"
+              - Ref: AWS::Partition
+              - :iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyApiHandler/ServiceRole/Resource
+  CanopyApiHandlerServiceRoleDefaultPolicy95A21DE2:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - dynamodb:BatchGetItem
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:Scan
+              - dynamodb:ConditionCheckItem
+              - dynamodb:BatchWriteItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+              - dynamodb:DescribeTable
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - CanopyTable8B388EA1
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - CanopyTable8B388EA1
+                        - Arn
+                    - /index/*
+          - Action:
+              - dynamodb:GetRecords
+              - dynamodb:GetShardIterator
+            Effect: Allow
+            Resource:
+              - Fn::GetAtt:
+                  - CanopyTable8B388EA1
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - CanopyTable8B388EA1
+                        - Arn
+                    - /index/*
+        Version: "2012-10-17"
+      PolicyName: CanopyApiHandlerServiceRoleDefaultPolicy95A21DE2
+      Roles:
+        - Ref: CanopyApiHandlerServiceRole90B2CE2A
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyApiHandler/ServiceRole/DefaultPolicy/Resource
+  CanopyApiHandler732CFD88:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: cdk-hnb659fds-assets-669298908997-us-east-1
+        S3Key: dcbca2b1139f3a3308098e717d8b37c0f9e88719d9faff988ae28f0c6e9d51d3.zip
+      Environment:
+        Variables:
+          TABLE_NAME:
+            Ref: CanopyTable8B388EA1
+          NODE_OPTIONS: --enable-source-maps
+      FunctionName: canopy-api-handler
+      Handler: index.handler
+      MemorySize: 512
+      Role:
+        Fn::GetAtt:
+          - CanopyApiHandlerServiceRole90B2CE2A
+          - Arn
+      Runtime: nodejs20.x
+      Timeout: 30
+    DependsOn:
+      - CanopyApiHandlerServiceRoleDefaultPolicy95A21DE2
+      - CanopyApiHandlerServiceRole90B2CE2A
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyApiHandler/Resource
+      aws:asset:path: asset.dcbca2b1139f3a3308098e717d8b37c0f9e88719d9faff988ae28f0c6e9d51d3
+      aws:asset:is-bundled: true
+      aws:asset:property: Code
+  CanopyHttpApiF2651D74:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      CorsConfiguration:
+        AllowHeaders:
+          - Content-Type
+          - Authorization
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        AllowOrigins:
+          - "*"
+        MaxAge: 3600
+      Name: canopy-api
+      ProtocolType: HTTP
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyHttpApi/Resource
+  CanopyHttpApiDefaultStageD1965B38:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId:
+        Ref: CanopyHttpApiF2651D74
+      AutoDeploy: true
+      StageName: $default
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyHttpApi/DefaultStage/Resource
+  CanopyHttpApiANYproxyCanopyLambdaIntegration030ADB3F:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId:
+        Ref: CanopyHttpApiF2651D74
+      IntegrationType: AWS_PROXY
+      IntegrationUri:
+        Fn::GetAtt:
+          - CanopyApiHandler732CFD88
+          - Arn
+      PayloadFormatVersion: "2.0"
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyHttpApi/ANY--{proxy+}/CanopyLambdaIntegration/Resource
+  CanopyHttpApiANYproxyCanopyLambdaIntegrationPermissionD1DD6D80:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - CanopyApiHandler732CFD88
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:us-east-1:669298908997:"
+            - Ref: CanopyHttpApiF2651D74
+            - /*/*/{proxy+}
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyHttpApi/ANY--{proxy+}/CanopyLambdaIntegration-Permission
+  CanopyHttpApiANYproxy8A6BD95E:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: CanopyHttpApiF2651D74
+      AuthorizationType: NONE
+      RouteKey: ANY /{proxy+}
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: CanopyHttpApiANYproxyCanopyLambdaIntegration030ADB3F
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyHttpApi/ANY--{proxy+}/Resource
+  CanopyHttpApiGETCanopyLambdaIntegrationPermission76608473:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+          - CanopyApiHandler732CFD88
+          - Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn:
+        Fn::Join:
+          - ""
+          - - "arn:"
+            - Ref: AWS::Partition
+            - ":execute-api:us-east-1:669298908997:"
+            - Ref: CanopyHttpApiF2651D74
+            - /*/*/
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyHttpApi/GET--/CanopyLambdaIntegration-Permission
+  CanopyHttpApiGETD8B79968:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId:
+        Ref: CanopyHttpApiF2651D74
+      AuthorizationType: NONE
+      RouteKey: GET /
+      Target:
+        Fn::Join:
+          - ""
+          - - integrations/
+            - Ref: CanopyHttpApiANYproxyCanopyLambdaIntegration030ADB3F
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyHttpApi/GET--/Resource
+  CanopyFrontendBucket7E29486D:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: canopy-frontend-669298908997-us-east-1
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      Tags:
+        - Key: aws-cdk:auto-delete-objects
+          Value: "true"
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyFrontendBucket/Resource
+  CanopyFrontendBucketPolicy68ACF7AE:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: CanopyFrontendBucket7E29486D
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:PutBucketPolicy
+              - s3:GetBucket*
+              - s3:List*
+              - s3:DeleteObject*
+            Effect: Allow
+            Principal:
+              AWS:
+                Fn::GetAtt:
+                  - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+                  - Arn
+            Resource:
+              - Fn::GetAtt:
+                  - CanopyFrontendBucket7E29486D
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - CanopyFrontendBucket7E29486D
+                        - Arn
+                    - /*
+          - Action:
+              - s3:GetObject*
+              - s3:GetBucket*
+              - s3:List*
+            Effect: Allow
+            Principal:
+              CanonicalUser:
+                Fn::GetAtt:
+                  - CanopyOAICD34141D
+                  - S3CanonicalUserId
+            Resource:
+              - Fn::GetAtt:
+                  - CanopyFrontendBucket7E29486D
+                  - Arn
+              - Fn::Join:
+                  - ""
+                  - - Fn::GetAtt:
+                        - CanopyFrontendBucket7E29486D
+                        - Arn
+                    - /*
+          - Action: s3:GetObject
+            Effect: Allow
+            Principal:
+              CanonicalUser:
+                Fn::GetAtt:
+                  - CanopyOAICD34141D
+                  - S3CanonicalUserId
+            Resource:
+              Fn::Join:
+                - ""
+                - - Fn::GetAtt:
+                      - CanopyFrontendBucket7E29486D
+                      - Arn
+                  - /*
+        Version: "2012-10-17"
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyFrontendBucket/Policy/Resource
+  CanopyFrontendBucketAutoDeleteObjectsCustomResource3BD3831B:
+    Type: Custom::S3AutoDeleteObjects
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F
+          - Arn
+      BucketName:
+        Ref: CanopyFrontendBucket7E29486D
+    DependsOn:
+      - CanopyFrontendBucketPolicy68ACF7AE
+    UpdateReplacePolicy: Delete
+    DeletionPolicy: Delete
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyFrontendBucket/AutoDeleteObjectsCustomResource/Default
+  CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+      ManagedPolicyArns:
+        - Fn::Sub: arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    Metadata:
+      aws:cdk:path: canopy-app-stack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Role
+  CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: cdk-hnb659fds-assets-669298908997-us-east-1
+        S3Key: faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6.zip
+      Timeout: 900
+      MemorySize: 128
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+          - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+          - Arn
+      Runtime: nodejs22.x
+      Description:
+        Fn::Join:
+          - ""
+          - - "Lambda function for auto-deleting objects in "
+            - Ref: CanopyFrontendBucket7E29486D
+            - " S3 bucket."
+    DependsOn:
+      - CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092
+    Metadata:
+      aws:cdk:path: canopy-app-stack/Custom::S3AutoDeleteObjectsCustomResourceProvider/Handler
+      aws:asset:path: asset.faa95a81ae7d7373f3e1f242268f904eb748d8d0fdd306e8a6fe515a1905a7d6
+      aws:asset:property: Code
+  CanopyOAICD34141D:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: Allows CloudFront to reach the bucket
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyOAI/Resource
+  CanopyDistributionC5D57BD9:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        CustomErrorResponses:
+          - ErrorCachingMinTTL: 300
+            ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+          - ErrorCachingMinTTL: 300
+            ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+        DefaultCacheBehavior:
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          Compress: true
+          TargetOriginId: canopyappstackCanopyDistributionOrigin194899FFB
+          ViewerProtocolPolicy: redirect-to-https
+        DefaultRootObject: index.html
+        Enabled: true
+        HttpVersion: http2
+        IPV6Enabled: true
+        Origins:
+          - DomainName:
+              Fn::GetAtt:
+                - CanopyFrontendBucket7E29486D
+                - RegionalDomainName
+            Id: canopyappstackCanopyDistributionOrigin194899FFB
+            S3OriginConfig:
+              OriginAccessIdentity:
+                Fn::Join:
+                  - ""
+                  - - origin-access-identity/cloudfront/
+                    - Ref: CanopyOAICD34141D
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CanopyDistribution/Resource
+  CDKMetadata:
+    Type: AWS::CDK::Metadata
+    Properties:
+      Analytics: v2:deflate64:H4sIAAAAAAAA/21Ry27CMBD8lt6NS8OJI1Chciko7R05tokWEjvyrkHIyr/Xj0Jp1dPM7I7X43XFq9mcT5/EBSdSnSYdNDx8kJAnFkv7oK5G9FbF4qdoOs1WB5PJyDrRN0rsjVX6iPw9w9obSWANA9HzUNtyIOPOdiCvSRY2MpztBaIm5IsEUfOw9PKkaSlQs0LTgW9W4GfOo77F4SE27inSZdr1gBjVyMQArSB9EddzxcMb0bAYIJkSJBnf3ebEhaRSbT0VtjGkWydug//I7BuZ7KxXB2cN8bB10IJZSKkRN0obAsq5V8mzTp5/Ha+A5KDxt8mPehxZrdF6JzXLS0tBwbRs5ZFsf++lQHf+q7Vz9gxKu7ziaNt6GjyNLH0jP+LzuZrylzmvno4IMHE+Zuo1rwt+AU/NTuItAgAA
+    Metadata:
+      aws:cdk:path: canopy-app-stack/CDKMetadata/Default
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value:
+      Fn::GetAtt:
+        - CanopyHttpApiF2651D74
+        - ApiEndpoint
+  FrontendBucketName:
+    Description: S3 bucket for frontend assets
+    Value:
+      Ref: CanopyFrontendBucket7E29486D
+  DistributionId:
+    Description: CloudFront distribution ID
+    Value:
+      Ref: CanopyDistributionC5D57BD9
+  DistributionDomain:
+    Description: CloudFront domain name
+    Value:
+      Fn::GetAtt:
+        - CanopyDistributionC5D57BD9
+        - DomainName
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+

@@ -1,0 +1,48 @@
+RESULT: PASS
+
+Command: cd infrastructure && npm test
+
+Output:
+
+> @canopy/infrastructure@1.0.0 test
+> jest
+
+  console.warn
+    [WARNING] aws-cdk-lib.aws_cloudfront_origins.S3Origin is deprecated.
+      Use `S3BucketOrigin` or `S3StaticWebsiteOrigin` instead.
+      This API will be removed in the next major release.
+
+      124 |     const distribution = new cloudfront.Distribution(this, 'CanopyDistribution', {
+      125 |       defaultBehavior: {
+    > 126 |         origin: new cloudfrontOrigins.S3Origin(frontendBucket, {
+          |                 ^
+      127 |           originAccessIdentity,
+      128 |         }),
+      129 |         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+
+      at Object.print (../node_modules/aws-cdk-lib/.warnings.jsii.js:11:146)
+      at new S3Origin (../node_modules/aws-cdk-lib/aws-cloudfront-origins/lib/s3-origin.js:1:848)
+      at new CanopyStack (lib/canopy-stack.ts:126:17)
+      at Object.<anonymous> (test/canopy-stack.test.ts:10:19)
+
+  console.warn
+    [WARNING] aws-cdk-lib.aws_cloudfront_origins.S3Origin#bind is deprecated.
+      Use `S3BucketOrigin` or `S3StaticWebsiteOrigin` instead.
+      This API will be removed in the next major release.
+
+      122 |     frontendBucket.grantRead(originAccessIdentity);
+      123 |
+    > 124 |     const distribution = new cloudfront.Distribution(this, 'CanopyDistribution', {
+          |                          ^
+      125 |       defaultBehavior: {
+      126 |         origin: new cloudfrontOrigins.S3Origin(frontendBucket, {
+      127 |           originAccessIdentity,
+
+      at Object.print (../node_modules/aws-cdk-lib/.warnings.jsii.js:11:146)
+      at S3Origin.bind (../node_modules/aws-cdk-lib/aws-cloudfront-origins/lib/s3-origin.js:1:1477)
+      at WrappedClass.addOrigin (../node_modules/aws-cdk-lib/aws-cloudfront/lib/distribution.js:1:23287)
+      at new Distribution2 (../node_modules/aws-cdk-lib/aws-cloudfront/lib/distribution.js:1:13084)
+      at new Distribution2 (../node_modules/aws-cdk-lib/core/lib/prop-injectable.js:1:783)
+      at new CanopyStack (lib/canopy-stack.ts:124:26)
+      at Object.<anonymous> (test/canopy-stack.test.ts:10:19)
+

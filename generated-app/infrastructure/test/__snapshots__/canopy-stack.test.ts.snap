@@ -50,7 +50,7 @@ exports[`CanopyStack matches snapshot 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "bb261c5103c3710efcbf910bc9f44c86c8e82342179517d53a429cf60d7bbd11.zip",
+          "S3Key": "c0cd80b595666de3e6746d807ba5476ed86a2aec7851d536235de579bd149efb.zip",
         },
         "Environment": {
           "Variables": {

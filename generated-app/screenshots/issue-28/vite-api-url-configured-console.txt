@@ -1,0 +1,2 @@
+VITE_API_URL=https://wuoq75966e.execute-api.us-east-1.amazonaws.com
+
