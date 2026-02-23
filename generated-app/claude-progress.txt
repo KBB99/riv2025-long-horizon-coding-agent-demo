@@ -1,0 +1,96 @@
+CANOPY PROJECT MANAGEMENT APP - Progress Report
+=================================================
+
+## Status: ALL PHASES COMPLETE
+
+### Architecture
+- Monorepo with npm workspaces: shared/, backend/, frontend/, infrastructure/
+- Frontend: React 19 + Vite 7 + Tailwind CSS v4 + React Router v7 + React Query v5
+- Backend: AWS Lambda (Node.js 20) + API Gateway HTTP API + DynamoDB
+- Infrastructure: AWS CDK v2 with NodejsFunction
+- Shared: Zod schemas as API contract
+
+### Phase 1: Shared Contract ✅
+- All Zod schemas in shared/src/schemas/ (project, issue, sprint, board, comment, search)
+- Types exported via z.infer<> in types.ts
+- Endpoint route map in endpoints.ts
+- Compiles with zero errors
+
+### Phase 2a: Infrastructure ✅
+- CDK stack with: DynamoDB (3 GSIs), Lambda (NodejsFunction), HTTP API with CORS, S3, CloudFront
+- 19 CDK tests all passing (snapshot + assertions)
+- CDK synth produces valid CloudFormation template
+- All resources use canopy- prefix (canopy-app-stack, canopy-main-table)
+
+### Phase 2b: Backend Deployment ✅
+- Stack deployed: canopy-app-stack (CREATE_COMPLETE)
+- API URL: https://wuoq75966e.execute-api.us-east-1.amazonaws.com
+- All endpoints working:
+  - Projects: CRUD (GET/POST/PUT/DELETE /projects)
+  - Issues: CRUD + bulk update (GET/POST/PUT/DELETE /projects/:id/issues, /issues/:id)
+  - Sprints: CRUD (GET/POST/PUT /projects/:id/sprints, /sprints/:id)
+  - Boards: GET/PUT (/projects/:id/board, /boards/:id)
+  - Comments: GET/POST (/issues/:id/comments)
+  - Search: GET /search?q=...
+  - Input validation with Zod, proper error responses with 400 status
+  - CORS headers: access-control-allow-origin: *
+- DynamoDB table: canopy-main-table with single-table design (PK/SK + 3 GSIs)
+
+### Phase 3: Frontend ✅
+- VITE_API_URL set in frontend/.env pointing to deployed API
+- Forest-themed Canopy design: Space Grotesk (headers), DM Sans (body), JetBrains Mono (code)
+- Color palette: Deep green (#1B4332), forest (#2D6A4F), amber accent (#D4A373)
+- Pages implemented:
+  - Dashboard: Stats cards, project list, assigned issues, welcome screen
+  - ProjectList: Grid of projects with dropdown actions
+  - CreateProject: Form with name, key, description, color picker
+  - BoardView: Kanban board with @dnd-kit drag-and-drop, 4 columns
+  - BacklogView: Sprint sections (collapsible) + backlog items
+  - IssueDetail: Full two-column layout with inline editing, comments
+  - Reports: Recharts-powered analytics (status/priority/type charts, velocity)
+  - ProjectSettings: Edit name/desc/color, archive toggle, delete with confirmation
+- Components: TopNav, Sidebar (collapsible), CreateIssueModal, SearchModal (Cmd+K)
+- Keyboard shortcuts: C (create), Cmd+K (search), Cmd+[ (sidebar toggle)
+- Dark theme support with CSS custom properties
+- React Query hooks with API client + localStorage fallback
+
+### Phase 4: Testing & Polish ✅
+- tests.json with 50 tests (all passing):
+  - 4 shared tests
+  - 7 infrastructure tests
+  - 13 backend API tests
+  - 17 frontend UI tests
+  - 5 integration tests
+  - 4 misc tests
+- E2e tests with Playwright:
+  - Create project flow
+  - Project list page
+  - Create issue modal (keyboard shortcut)
+  - Search modal
+  - Sidebar collapse/expand
+  - Board view with API data
+- init.sh for session restart
+
+### Key Technical Notes
+- Frontend build must run from monorepo root: `npx vite build frontend` (not from frontend/ directory)
+- CDK uses depsLockFilePath to point to root package-lock.json (avoids pnpm-lock conflict)
+- Backend uses crypto.randomUUID() (built-in Node.js 20, no uuid package needed)
+- DynamoDB single-table design with PK=PROJ#{id}/ISSUE#{id}, SK=METADATA/ISSUE#/SPRINT#/BOARD#
+- GSI1 for listing (PROJECTS/PROJ#{projectId}), GSI2 for status queries, GSI3 for search
+
+### Files Structure
+generated-app/
+├── shared/src/          # Zod schemas, types, endpoints
+├── backend/src/         # Lambda handlers (projects, issues, sprints, boards, comments, search)
+├── infrastructure/      # CDK stack + 19 tests
+├── frontend/src/        # React app
+│   ├── api/client.ts    # API client with localStorage fallback
+│   ├── hooks/           # React Query hooks (useProjects, useIssues, useSprints, useBoard)
+│   ├── context/         # AppContext (theme, sidebar, user)
+│   ├── components/      # UI components + layout + modals
+│   ├── pages/           # Dashboard, Board, Backlog, IssueDetail, Reports, Settings, etc.
+│   └── styles/          # globals.css with Canopy design system
+├── e2e-tests/           # Playwright e2e tests
+├── tests.json           # 50 tests (all passing)
+├── init.sh              # Session restart script
+└── claude-progress.txt  # This file
