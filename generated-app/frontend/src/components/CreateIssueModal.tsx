@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useProjects } from '@/hooks/useProjects';
 import { useCreateIssue } from '@/hooks/useIssues';
@@ -36,6 +36,13 @@ export function CreateIssueModal() {
   const [selectedProjectId, setSelectedProjectId] = useState(projectId);
   const [createAnother, setCreateAnother] = useState(false);
 
+  // Sync selectedProjectId when the current project changes (e.g. after navigation)
+  useEffect(() => {
+    if (projectId && selectedProjectId !== projectId) {
+      setSelectedProjectId(projectId);
+    }
+  }, [projectId]);
+
   const resetForm = () => {
     setSummary('');
     setDescription('');
@@ -53,8 +60,14 @@ export function CreateIssueModal() {
       return;
     }
 
+    const effectiveProjectId = selectedProjectId || projectId;
+    if (!effectiveProjectId) {
+      toast.error('Please select a project');
+      return;
+    }
+
     const data: CreateIssue = {
-      projectId: selectedProjectId,
+      projectId: effectiveProjectId,
       type: type as any,
       summary: summary.trim(),
       description: description.trim() || undefined,

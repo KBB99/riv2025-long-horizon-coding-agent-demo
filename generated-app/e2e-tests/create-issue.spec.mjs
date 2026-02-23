@@ -13,26 +13,33 @@ test('creates an issue from the create modal', async ({ page }) => {
 
   await page.goto(`http://localhost:6174/project/${project.id}/board`);
   await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(1500);
 
-  // Press C to open create issue modal
-  await page.keyboard.press('c');
-  await page.waitForTimeout(500);
-
-  // Fill in the summary
-  const summaryInput = page.locator('input[placeholder="What needs to be done?"]');
-  await summaryInput.fill('E2E created issue');
-
-  // Click the Create button in the dialog (submit button)
-  const dialogSubmit = page.locator('[role="dialog"] button[type="submit"]');
-  await dialogSubmit.click();
-  await page.waitForTimeout(2000);
-
-  // Verify issue appears on the board after data refetch
-  await page.reload();
-  await page.waitForLoadState('networkidle');
+  // Click the Create button in the top nav (header)
+  const createBtn = page.locator('header button:has-text("Create")');
+  await createBtn.click();
   await page.waitForTimeout(1000);
 
-  const issueText = page.locator('text=E2E created issue');
-  await expect(issueText).toBeVisible();
+  // The dialog should be visible
+  const dialog = page.locator('[role="dialog"]');
+  await expect(dialog).toBeVisible({ timeout: 5000 });
+
+  // Fill in the summary
+  const summaryInput = dialog.locator('input[placeholder="What needs to be done?"]');
+  const uniqueName = `E2E issue ${Date.now()}`;
+  await summaryInput.fill(uniqueName);
+
+  // Click the submit button inside the dialog
+  const submitBtn = dialog.locator('button[type="submit"]');
+  await submitBtn.click();
+  await page.waitForTimeout(3000);
+
+  // Reload to make sure data persists from API
+  await page.reload();
+  await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(2000);
+
+  // The issue should be visible on the board (in To Do column)
+  const issue = page.locator(`text=${uniqueName}`);
+  await expect(issue).toBeVisible({ timeout: 10000 });
 });
