@@ -4,6 +4,7 @@ import { AppProvider, useApp } from '@/context/AppContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { CreateIssueModal } from '@/components/CreateIssueModal';
 import { SearchModal } from '@/components/SearchModal';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Suspense, lazy, useEffect } from 'react';
 
 // Lazy load pages

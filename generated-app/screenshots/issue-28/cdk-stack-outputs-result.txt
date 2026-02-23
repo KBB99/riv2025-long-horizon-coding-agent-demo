@@ -1,11 +1,11 @@
 RESULT: PASS
 
-Command: cd infrastructure && npm test -- --testNamePattern='outputs'
+Command: cd infrastructure && npm test -- --testNamePattern='Stack Outputs'
 
 Output:
 
 > @canopy/infrastructure@1.0.0 test
-> jest --testNamePattern=outputs
+> jest --testNamePattern=Stack Outputs
 
   console.warn
     [WARNING] aws-cdk-lib.aws_cloudfront_origins.S3Origin is deprecated.

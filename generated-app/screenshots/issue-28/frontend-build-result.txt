@@ -5,22 +5,22 @@ Command: npx vite build frontend
 Output:
 vite v7.3.1 building client environment for production...
 transforming...
-✓ 1227 modules transformed.
+✓ 1228 modules transformed.
 rendering chunks...
 computing gzip size...
 dist/index.html                              0.71 kB │ gzip:   0.44 kB
-dist/assets/index-CQvnzpAD.css             124.00 kB │ gzip:  19.45 kB
-dist/assets/card-D8nGb9Ki.js                 0.89 kB │ gzip:   0.38 kB
-dist/assets/badge-DyZdBHxA.js                1.16 kB │ gzip:   0.56 kB
-dist/assets/separator-LT7IE-F9.js            1.42 kB │ gzip:   0.76 kB
-dist/assets/CreateProject-BNxA6kqx.js        2.98 kB │ gzip:   1.38 kB
-dist/assets/avatar-B6CdCvmT.js               4.29 kB │ gzip:   1.90 kB
-dist/assets/ProjectList-ChZY3L7y.js          4.78 kB │ gzip:   1.72 kB
-dist/assets/Dashboard-CBWtSAiV.js            9.46 kB │ gzip:   2.93 kB
-dist/assets/BacklogView-ChEOcd6p.js         11.41 kB │ gzip:   4.00 kB
-dist/assets/ProjectSettings-pYkdfASH.js     11.57 kB │ gzip:   4.05 kB
-dist/assets/IssueDetail-Yk5emkAA.js         40.45 kB │ gzip:  11.24 kB
-dist/assets/BoardView-CYM0R0z_.js           64.35 kB │ gzip:  21.90 kB
-dist/assets/Reports-CbXECNK9.js            775.05 kB │ gzip: 213.85 kB
-dist/assets/index-CswTbG95.js            1,153.79 kB │ gzip: 326.17 kB
-✓ built in 10.09s
+dist/assets/index-ByAGu-3F.css             124.36 kB │ gzip:  19.54 kB
+dist/assets/card-CgyhW3_S.js                 0.89 kB │ gzip:   0.38 kB
+dist/assets/badge-nz6JhINp.js                1.16 kB │ gzip:   0.56 kB
+dist/assets/separator-BpuRjUi5.js            1.42 kB │ gzip:   0.75 kB
+dist/assets/CreateProject-Di5M2eaz.js        2.98 kB │ gzip:   1.38 kB
+dist/assets/avatar-BIwPLuty.js               4.29 kB │ gzip:   1.89 kB
+dist/assets/ProjectList-CIc8XYMq.js          4.78 kB │ gzip:   1.72 kB
+dist/assets/Dashboard-BBtLjZPz.js            9.46 kB │ gzip:   2.93 kB
+dist/assets/BacklogView-Bo2MsMZn.js         11.41 kB │ gzip:   4.00 kB
+dist/assets/ProjectSettings-CIMC3huw.js     11.57 kB │ gzip:   4.05 kB
+dist/assets/IssueDetail-p5ykSq85.js         40.45 kB │ gzip:  11.24 kB
+dist/assets/BoardView-BDrepYrF.js           64.35 kB │ gzip:  21.90 kB
+dist/assets/Reports-ALb06CvZ.js            775.05 kB │ gzip: 213.85 kB
+dist/assets/index-qexi2dwf.js            1,155.20 kB │ gzip: 326.59 kB
+✓ built in 10.21s

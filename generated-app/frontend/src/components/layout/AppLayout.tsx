@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import { TopNav } from './TopNav';
 import { Sidebar } from './Sidebar';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Toaster } from 'sonner';
 
 export function AppLayout() {
@@ -11,7 +12,9 @@ export function AppLayout() {
         <Sidebar />
         <main className="flex-1 overflow-y-auto bg-background">
           <div className="max-w-[1400px] mx-auto p-6">
-            <Outlet />
+            <ErrorBoundary>
+              <Outlet />
+            </ErrorBoundary>
           </div>
         </main>
       </div>
