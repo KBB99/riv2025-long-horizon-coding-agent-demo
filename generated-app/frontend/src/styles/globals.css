@@ -1,0 +1,178 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Canopy Forest Design — Space Grotesk + DM Sans + JetBrains Mono */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --font-size: 14px;
+  --background: #FAF9F6;
+  --foreground: #2D3748;
+  --card: #FFFFFF;
+  --card-foreground: #2D3748;
+  --popover: #FFFFFF;
+  --popover-foreground: #2D3748;
+  --primary: #1B4332;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5F3EF;
+  --secondary-foreground: #2D3748;
+  --muted: #F0EDE8;
+  --muted-foreground: #5A6578;
+  --accent: #D4A373;
+  --accent-foreground: #FFFFFF;
+  --destructive: #BC6C25;
+  --destructive-foreground: #FFFFFF;
+  --border: #E5E1DB;
+  --input: #E5E1DB;
+  --input-background: #FFFFFF;
+  --switch-background: #cbced4;
+  --ring: #D4A373;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: #40916C;
+  --chart-2: #D4A373;
+  --chart-3: #2196F3;
+  --chart-4: #9B59B6;
+  --chart-5: #BC6C25;
+  --radius: 0.5rem;
+  --sidebar: #F5F3EF;
+  --sidebar-foreground: #2D3748;
+  --sidebar-primary: #1B4332;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: rgba(212, 163, 115, 0.15);
+  --sidebar-accent-foreground: #2D3748;
+  --sidebar-border: #E5E1DB;
+  --sidebar-ring: #D4A373;
+}
+
+.dark {
+  --background: #1A1F2E;
+  --foreground: #E8ECF4;
+  --card: #242B3D;
+  --card-foreground: #E8ECF4;
+  --popover: #242B3D;
+  --popover-foreground: #E8ECF4;
+  --primary: #40916C;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1E2435;
+  --secondary-foreground: #E8ECF4;
+  --muted: #2A3144;
+  --muted-foreground: #9BA4B5;
+  --accent: #D4A373;
+  --accent-foreground: #1A1F2E;
+  --destructive: #E07A5F;
+  --destructive-foreground: #FFFFFF;
+  --border: #3D4556;
+  --input: #3D4556;
+  --ring: #D4A373;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: #40916C;
+  --chart-2: #D4A373;
+  --chart-3: #2196F3;
+  --chart-4: #9B59B6;
+  --chart-5: #E07A5F;
+  --sidebar: #151922;
+  --sidebar-foreground: #E8ECF4;
+  --sidebar-primary: #40916C;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: rgba(212, 163, 115, 0.12);
+  --sidebar-accent-foreground: #E8ECF4;
+  --sidebar-border: #3D4556;
+  --sidebar-ring: #D4A373;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --font-sans: 'DM Sans', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+  }
+
+  code, pre, kbd {
+    font-family: 'JetBrains Mono', 'SF Mono', monospace;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideInRight { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+.animate-fade-in { animation: fadeIn 300ms ease-out both; }
+.animate-slide-up { animation: slideUp 400ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-slide-in-right { animation: slideInRight 300ms ease-out both; }
+.animate-slide-down { animation: slideDown 200ms ease-out both; }
+.animate-scale-in { animation: scaleIn 200ms ease-out both; }
+
+.stagger-1 { animation-delay: 50ms; }
+.stagger-2 { animation-delay: 100ms; }
+.stagger-3 { animation-delay: 150ms; }
+.stagger-4 { animation-delay: 200ms; }
+.stagger-5 { animation-delay: 250ms; }
+.stagger-6 { animation-delay: 300ms; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
+
+html {
+  font-size: var(--font-size);
+}

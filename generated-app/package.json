@@ -13,5 +13,8 @@
     "dev:frontend": "cd frontend && npm run dev",
     "test:infra": "cd infrastructure && npm test",
     "synth": "cd infrastructure && npx cdk synth"
+  },
+  "devDependencies": {
+    "playwright": "^1.58.2"
   }
 }
