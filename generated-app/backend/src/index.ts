@@ -26,8 +26,8 @@ function matchRoute(pattern: string, path: string): Record<string, string> | nul
 }
 
 export async function handler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> {
-  const method = event.requestContext?.http?.method || event.httpMethod || 'GET';
-  const path = event.requestContext?.http?.path || event.path || '/';
+  const method = event.requestContext?.http?.method || (event as any).httpMethod || 'GET';
+  const path = event.requestContext?.http?.path || (event as any).path || '/';
 
   console.log(`${method} ${path}`);
 
