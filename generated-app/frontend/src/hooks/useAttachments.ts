@@ -28,8 +28,16 @@ export const attachmentKeys = {
 export function useAttachments(issueId: string | undefined) {
   return useQuery<Attachment[]>({
     queryKey: attachmentKeys.list(issueId!),
-    queryFn: () => listAttachments(issueId!),
+    queryFn: async () => {
+      try {
+        return await listAttachments(issueId!);
+      } catch {
+        // Gracefully return empty array if endpoint not yet deployed
+        return [];
+      }
+    },
     enabled: !!issueId,
+    retry: 1,
   });
 }
 
