@@ -44,20 +44,22 @@ export function useIssue(id: string | undefined) {
   });
 }
 
-/** Fetch issues from all projects. Uses localStorage fallback when no API. */
+/** Fetch issues from all projects by aggregating per-project issue lists. */
 export function useAllIssues() {
   return useQuery<Issue[]>({
     queryKey: [...issueKeys.all, 'all-issues'],
     queryFn: async () => {
-      // Read all issues from localStorage fallback
-      try {
-        const raw = localStorage.getItem('canopy_issues');
-        return raw ? JSON.parse(raw) : [];
-      } catch {
-        return [];
-      }
+      // Fetch all projects first, then get issues for each
+      const { listProjects } = await import('@/api/client');
+      const projects = await listProjects();
+      if (projects.length === 0) return [];
+
+      const allIssues = await Promise.all(
+        projects.map(p => listIssues(p.id).catch(() => [] as Issue[]))
+      );
+      return allIssues.flat();
     },
-    staleTime: 5000,
+    staleTime: 15000,
   });
 }
 
@@ -78,6 +80,8 @@ export function useCreateIssue() {
         (old = []) => [...old, newIssue],
       );
       queryClient.invalidateQueries({ queryKey: issueKeys.list(newIssue.projectId) });
+      // Invalidate all-issues aggregation (Dashboard stats)
+      queryClient.invalidateQueries({ queryKey: [...issueKeys.all, 'all-issues'] });
       // The project's issueCounter may have changed
       queryClient.invalidateQueries({ queryKey: projectKeys.detail(newIssue.projectId) });
     },
@@ -96,6 +100,8 @@ export function useUpdateIssue() {
         issueKeys.list(updated.projectId),
         (old = []) => old.map((i) => (i.id === updated.id ? updated : i)),
       );
+      // Invalidate all-issues aggregation (Dashboard stats)
+      queryClient.invalidateQueries({ queryKey: [...issueKeys.all, 'all-issues'] });
     },
   });
 }
@@ -116,6 +122,8 @@ export function useDeleteIssue() {
         (old = []) => old.filter((i) => i.id !== id),
       );
       queryClient.removeQueries({ queryKey: issueKeys.detail(id) });
+      // Invalidate all-issues aggregation (Dashboard stats)
+      queryClient.invalidateQueries({ queryKey: [...issueKeys.all, 'all-issues'] });
     },
   });
 }

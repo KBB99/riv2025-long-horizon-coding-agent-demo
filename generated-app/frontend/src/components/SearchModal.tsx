@@ -42,9 +42,14 @@ export function SearchModal() {
 
   const close = () => dispatch({ type: 'SET_SEARCH_OPEN', open: false });
 
-  const handleSelectIssue = (id: string) => {
+  const handleSelectIssue = (issue: any) => {
     close();
-    navigate(`/issue/${id}`);
+    if (issue.projectId) {
+      dispatch({ type: 'SET_CURRENT_PROJECT', projectId: issue.projectId });
+      navigate(`/project/${issue.projectId}/issues/${issue.id}`);
+    } else {
+      navigate(`/issues/${issue.id}`);
+    }
   };
 
   const handleSelectProject = (id: string) => {
@@ -65,7 +70,7 @@ export function SearchModal() {
         {results.issues.length > 0 && (
           <CommandGroup heading="Issues">
             {results.issues.map((issue: any) => (
-              <CommandItem key={issue.id} onSelect={() => handleSelectIssue(issue.id)}>
+              <CommandItem key={issue.id} onSelect={() => handleSelectIssue(issue)}>
                 <div className="w-2 h-2 rounded-full mr-2" style={{ backgroundColor: issueTypeColors[issue.type] || '#8896A6' }} />
                 <span className="text-xs font-mono text-muted-foreground mr-2">{issue.key}</span>
                 <span className="truncate">{issue.summary}</span>
