@@ -1,4 +1,2 @@
-HTTP/2 204 
-date: Mon, 23 Feb 2026 19:03:32 GMT
-apigw-requestid: ZP6kziRFIAMEanA=
-
+HTTP/2 200 
+access-control-allow-origin: *

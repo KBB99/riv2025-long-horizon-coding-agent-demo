@@ -14,10 +14,10 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import type { CreateIssue } from '@canopy/shared';
+import type { CreateIssue, IssueTypeValue, PriorityValue } from '@canopy/shared';
 
-const ISSUE_TYPES = ['Story', 'Bug', 'Task', 'Epic', 'Sub-task'] as const;
-const PRIORITIES = ['Highest', 'High', 'Medium', 'Low', 'Lowest'] as const;
+const ISSUE_TYPES: IssueTypeValue[] = ['Story', 'Bug', 'Task', 'Epic', 'Sub-task'];
+const PRIORITIES: PriorityValue[] = ['Highest', 'High', 'Medium', 'Low', 'Lowest'];
 
 export function CreateIssueModal() {
   const { state, closeCreateIssue } = useApp();
@@ -28,8 +28,8 @@ export function CreateIssueModal() {
 
   const [summary, setSummary] = useState('');
   const [description, setDescription] = useState('');
-  const [type, setType] = useState<string>('Task');
-  const [priority, setPriority] = useState<string>('Medium');
+  const [type, setType] = useState<IssueTypeValue>('Task');
+  const [priority, setPriority] = useState<PriorityValue>('Medium');
   const [assigneeId, setAssigneeId] = useState<string>('');
   const [sprintId, setSprintId] = useState<string>('');
   const [storyPoints, setStoryPoints] = useState<string>('');
@@ -68,10 +68,10 @@ export function CreateIssueModal() {
 
     const data: CreateIssue = {
       projectId: effectiveProjectId,
-      type: type as any,
+      type,
       summary: summary.trim(),
       description: description.trim() || undefined,
-      priority: priority as any,
+      priority,
       assigneeId: (assigneeId && assigneeId !== 'none') ? assigneeId : undefined,
       sprintId: (sprintId && sprintId !== 'none') ? sprintId : undefined,
       storyPoints: storyPoints ? parseFloat(storyPoints) : undefined,
@@ -124,7 +124,7 @@ export function CreateIssueModal() {
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-xs">Type</Label>
-              <Select value={type} onValueChange={setType}>
+              <Select value={type} onValueChange={(v) => setType(v as IssueTypeValue)}>
                 <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {ISSUE_TYPES.map(t => (
@@ -135,7 +135,7 @@ export function CreateIssueModal() {
             </div>
             <div className="space-y-1.5">
               <Label className="text-xs">Priority</Label>
-              <Select value={priority} onValueChange={setPriority}>
+              <Select value={priority} onValueChange={(v) => setPriority(v as PriorityValue)}>
                 <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {PRIORITIES.map(p => (

@@ -5,17 +5,17 @@ rendering chunks...
 computing gzip size...
 dist/index.html                              0.71 kB │ gzip:   0.44 kB
 dist/assets/index-CQvnzpAD.css             124.00 kB │ gzip:  19.45 kB
-dist/assets/card-BK6BuAW8.js                 0.89 kB │ gzip:   0.38 kB
-dist/assets/badge-DBE0eWaE.js                1.16 kB │ gzip:   0.56 kB
-dist/assets/separator-BXld1Atq.js            1.42 kB │ gzip:   0.75 kB
-dist/assets/CreateProject-DDS-BBzH.js        2.98 kB │ gzip:   1.38 kB
-dist/assets/avatar-DyP15LbM.js               4.29 kB │ gzip:   1.89 kB
-dist/assets/ProjectList-hUKoss2S.js          4.78 kB │ gzip:   1.72 kB
-dist/assets/Dashboard-BqcCY33i.js            9.46 kB │ gzip:   2.93 kB
-dist/assets/BacklogView-eMJecnRj.js         11.41 kB │ gzip:   4.00 kB
-dist/assets/ProjectSettings-D2CUsvKz.js     11.57 kB │ gzip:   4.05 kB
-dist/assets/IssueDetail-Z7t05mM_.js         40.45 kB │ gzip:  11.24 kB
-dist/assets/BoardView-B6-1jlVV.js           64.35 kB │ gzip:  21.90 kB
-dist/assets/Reports-BvvWLt6w.js            775.05 kB │ gzip: 213.85 kB
-dist/assets/index-BozLBnae.js            1,153.72 kB │ gzip: 326.15 kB
-✓ built in 10.39s
+dist/assets/card-D8nGb9Ki.js                 0.89 kB │ gzip:   0.38 kB
+dist/assets/badge-DyZdBHxA.js                1.16 kB │ gzip:   0.56 kB
+dist/assets/separator-LT7IE-F9.js            1.42 kB │ gzip:   0.76 kB
+dist/assets/CreateProject-BNxA6kqx.js        2.98 kB │ gzip:   1.38 kB
+dist/assets/avatar-B6CdCvmT.js               4.29 kB │ gzip:   1.90 kB
+dist/assets/ProjectList-ChZY3L7y.js          4.78 kB │ gzip:   1.72 kB
+dist/assets/Dashboard-CBWtSAiV.js            9.46 kB │ gzip:   2.93 kB
+dist/assets/BacklogView-ChEOcd6p.js         11.41 kB │ gzip:   4.00 kB
+dist/assets/ProjectSettings-pYkdfASH.js     11.57 kB │ gzip:   4.05 kB
+dist/assets/IssueDetail-Yk5emkAA.js         40.45 kB │ gzip:  11.24 kB
+dist/assets/BoardView-CYM0R0z_.js           64.35 kB │ gzip:  21.90 kB
+dist/assets/Reports-CbXECNK9.js            775.05 kB │ gzip: 213.85 kB
+dist/assets/index-CswTbG95.js            1,153.79 kB │ gzip: 326.17 kB
+✓ built in 10.09s

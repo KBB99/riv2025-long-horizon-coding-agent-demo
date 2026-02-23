@@ -79,7 +79,13 @@ export function TopNav() {
               {state.theme === 'dark' ? <Sun className="w-4 h-4 mr-2" /> : <Moon className="w-4 h-4 mr-2" />}
               {state.theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => navigate('/settings')}>
+            <DropdownMenuItem onClick={() => {
+              if (state.currentProjectId) {
+                navigate(`/project/${state.currentProjectId}/settings`);
+              } else {
+                navigate('/projects');
+              }
+            }}>
               <Settings className="w-4 h-4 mr-2" />
               Settings
             </DropdownMenuItem>

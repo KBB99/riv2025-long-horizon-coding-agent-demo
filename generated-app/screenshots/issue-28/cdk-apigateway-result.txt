@@ -1,11 +1,11 @@
 RESULT: PASS
 
-Command: cd infrastructure && npm test
+Command: cd infrastructure && npm test -- --testNamePattern='API'
 
 Output:
 
 > @canopy/infrastructure@1.0.0 test
-> jest
+> jest --testNamePattern=API
 
   console.warn
     [WARNING] aws-cdk-lib.aws_cloudfront_origins.S3Origin is deprecated.

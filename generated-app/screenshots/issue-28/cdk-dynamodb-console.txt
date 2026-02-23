@@ -1,6 +1,6 @@
 
 > @canopy/infrastructure@1.0.0 test
-> jest
+> jest --testNamePattern=DynamoDB
 
   console.warn
     [WARNING] aws-cdk-lib.aws_cloudfront_origins.S3Origin is deprecated.

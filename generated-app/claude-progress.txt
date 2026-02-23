@@ -73,8 +73,8 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - All screenshots captured and verified in screenshots/issue-28/
 - playwright-test.cjs and backend-verify.cjs helper scripts created
 
-### Issue #28 Enhancement Changes (Latest Session)
-Previous changes (session 1):
+### Issue #28 Enhancement Changes (All Sessions)
+Session 1 changes:
 1. Fixed page title from "Vite + React + TS" to "Canopy" with 🌿 favicon
 2. Enhanced Dashboard with gradient hero banner, animated stat cards, project progress bars
 3. Improved ProjectList with issue stats per project, top accent borders, shimmer loading
@@ -86,16 +86,10 @@ Previous changes (session 1):
 9. Updated CDK snapshot after asset hash change
 10. All 50 tests verified passing with screenshots
 
-New changes (session 2 - current):
+Session 2 changes:
 11. CRITICAL FIX: useAllIssues hook now fetches from real API instead of localStorage
-    - Dashboard stats were always showing 0 because it read from empty localStorage
-    - Now aggregates issues from all projects via API calls
-    - Dashboard correctly shows "6 total issues", "6 open issues"
-    - Project cards show correct issue counts (1 open, 5 open)
 12. CRITICAL FIX: SearchModal navigation route corrected from /issue/ to /issues/
-    - Also improved to navigate with project context when available
 13. CRITICAL FIX: Backend route ordering - /issues/bulk moved before /issues/:id
-    - "bulk" was being treated as an issue ID, causing 404 errors for bulk updates
 14. Added cache invalidation for all-issues query on create/update/delete mutations
 15. Updated CDK snapshot to reflect backend changes
 16. All 50 tests re-verified with fresh screenshots and no console errors
@@ -113,12 +107,20 @@ New changes (session 2 - current):
 7. All 50 tests.json tests verified with screenshots (no console errors)
 8. API accessible at: https://wuoq75966e.execute-api.us-east-1.amazonaws.com
 
+Session 3 changes (current):
+17. FIX: TopNav Settings route - was navigating to non-existent /settings, now navigates to project settings when project selected
+18. FIX: CreateIssueModal type safety - replaced `as any` casts with proper IssueTypeValue/PriorityValue types from shared package
+19. FIX: API client reachability timeout increased from 2s to 5s for slow networks
+20. FIX: frontend-build test automatedTest command corrected (removed incorrect cd ..)
+21. All 50 tests re-verified with fresh screenshots and no console errors
+
 ### Key Technical Notes
 - Frontend build must run from monorepo root: `npx vite build frontend` (not from frontend/ directory)
 - CDK uses depsLockFilePath to point to root package-lock.json (avoids pnpm-lock conflict)
 - Backend uses crypto.randomUUID() (built-in Node.js 20, no uuid package needed)
 - DynamoDB single-table design with PK=PROJ#{id}/ISSUE#{id}, SK=METADATA/ISSUE#/SPRINT#/BOARD#
 - GSI1 for listing (PROJECTS/PROJ#{projectId}), GSI2 for status queries, GSI3 for search
+- Shared package exports types with renamed aliases (IssueTypeValue, PriorityValue) to avoid name conflicts with Zod schema exports
 
 ### Files Structure
 generated-app/

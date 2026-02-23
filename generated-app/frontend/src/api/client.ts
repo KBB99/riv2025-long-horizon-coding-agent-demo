@@ -43,7 +43,7 @@ async function checkApiReachable(): Promise<boolean> {
   try {
     const res = await fetch(`${API_BASE_URL}/projects`, {
       method: 'GET',
-      signal: AbortSignal.timeout(2000),
+      signal: AbortSignal.timeout(5000),
     });
     apiReachable = res.ok || res.status === 404;
   } catch {

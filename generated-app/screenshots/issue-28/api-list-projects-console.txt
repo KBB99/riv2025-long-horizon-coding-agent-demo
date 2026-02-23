@@ -1,1 +1,1 @@
-[{"id":"25b21c19-9f70-47d5-a386-8dbdababe77c","name":"E2E Test Project","key":"EETES","color":"#1B4332","issueCounter":1,"isArchived":false,"settings":{},"createdAt":"2026-02-23T18:02:15.355Z","updatedAt":"2026-02-23T18:02:15.355Z"},{"id":"c73dbae5-0111-46b6-99fa-5ba3ad60fbe2","name":"Canopy Demo","key":"CAN","description":"Demo project for testing","issueCounter":5,"isArchived":false,"settings":{},"createdAt":"2026-02-23T17:59:38.698Z","updatedAt":"2026-02-23T17:59:38.698Z"}]
+4

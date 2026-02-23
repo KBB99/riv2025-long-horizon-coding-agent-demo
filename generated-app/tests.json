@@ -166,7 +166,7 @@
       "category": "frontend",
       "name": "Frontend builds without errors",
       "status": "pass",
-      "automatedTest": "cd .. && npx vite build frontend"
+      "automatedTest": "npx vite build frontend"
     },
     {
       "id": "homepage-loads",
