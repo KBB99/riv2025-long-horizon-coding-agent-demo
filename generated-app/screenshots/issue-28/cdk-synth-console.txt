@@ -127,7 +127,7 @@ Resources:
     Properties:
       Code:
         S3Bucket: cdk-hnb659fds-assets-669298908997-us-east-1
-        S3Key: dcbca2b1139f3a3308098e717d8b37c0f9e88719d9faff988ae28f0c6e9d51d3.zip
+        S3Key: 1f7b974fe397397c52caf38a44f7186189fb01110524b26ad1d1307c84494fec.zip
       Environment:
         Variables:
           TABLE_NAME:
@@ -147,7 +147,7 @@ Resources:
       - CanopyApiHandlerServiceRole90B2CE2A
     Metadata:
       aws:cdk:path: canopy-app-stack/CanopyApiHandler/Resource
-      aws:asset:path: asset.dcbca2b1139f3a3308098e717d8b37c0f9e88719d9faff988ae28f0c6e9d51d3
+      aws:asset:path: asset.1f7b974fe397397c52caf38a44f7186189fb01110524b26ad1d1307c84494fec
       aws:asset:is-bundled: true
       aws:asset:property: Code
   CanopyHttpApiF2651D74:

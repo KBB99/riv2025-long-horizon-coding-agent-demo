@@ -19,7 +19,7 @@ test('creates a project from UI and it persists to API', async ({ page }) => {
 
   // Verify project was created by checking API
   const response = await page.evaluate(async () => {
-    const res = await fetch(import.meta.env?.VITE_API_URL || 'https://wuoq75966e.execute-api.us-east-1.amazonaws.com' + '/projects');
+    const res = await fetch('https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects');
     return res.json();
   });
 

@@ -649,3 +649,20 @@ Let me now check the projects page and also clean up duplicate data via the API:
 [Tool Call] Bash [issue:28]
 [2026-02-23 18:34:23]   Input: {'command': 'git add -A && git rebase --continue 2>&1'}
 [2026-02-23 18:34:23] ✅ Allowed: git
+[2026-02-23 18:34:26] Agent: Good, the rebase completed. Now let me pop the stash to get back any stashed changes:
+[2026-02-23 18:34:27] 
+[Tool Call] Bash [issue:28]
+[2026-02-23 18:34:27]   Input: {'command': 'git stash pop 2>&1'}
+[2026-02-23 18:34:27] ✅ Allowed: git
+[2026-02-23 18:34:29] 
+[Tool Call] Bash [issue:28]
+[2026-02-23 18:34:29]   Input: {'command': 'git push origin agent-runtime 2>&1'}
+[2026-02-23 18:34:29] ✅ Allowed: git
+[2026-02-23 18:34:32] 
+[Tool Call] Bash [issue:28]
+[2026-02-23 18:34:32]   Input: {'command': 'git pull --rebase origin agent-runtime 2>&1'}
+[2026-02-23 18:34:32] ✅ Allowed: git
+[2026-02-23 18:34:35] 
+[Tool Call] Bash [issue:28]
+[2026-02-23 18:34:35]   Input: {'command': 'git stash && git pull --rebase origin agent-runtime 2>&1 && git stash pop 2>&1'}
+[2026-02-23 18:34:35] ✅ Allowed: git
