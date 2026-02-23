@@ -15,16 +15,11 @@ interface NavItem {
 }
 
 const projectNavItems: NavItem[] = [
-  { label: 'Roadmap', icon: Map, path: '/roadmap', section: 'Planning' },
   { label: 'Backlog', icon: List, path: '/backlog', section: 'Planning' },
   { label: 'Active Sprints', icon: Play, path: '/sprints', section: 'Planning' },
   { label: 'Board', icon: Columns3, path: '/board', section: 'Board' },
-  { label: 'Burndown', icon: BarChart3, path: '/reports/burndown', section: 'Reports' },
-  { label: 'Velocity', icon: TrendingUp, path: '/reports/velocity', section: 'Reports' },
-  { label: 'Sprint Report', icon: FileText, path: '/reports/sprint', section: 'Reports' },
+  { label: 'Reports', icon: BarChart3, path: '/reports', section: 'Reports' },
   { label: 'Settings', icon: Settings, path: '/settings', section: 'Project' },
-  { label: 'Labels', icon: Tags, path: '/settings/labels', section: 'Project' },
-  { label: 'Components', icon: Boxes, path: '/settings/components', section: 'Project' },
 ];
 
 export function Sidebar() {

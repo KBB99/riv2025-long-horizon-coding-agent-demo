@@ -9,8 +9,9 @@
   ],
   "scripts": {
     "build:shared": "cd shared && npm run build",
-    "build:frontend": "cd frontend && npm run build",
-    "dev:frontend": "cd frontend && npm run dev",
+    "build:frontend": "npx vite build frontend",
+    "dev:frontend": "npx vite dev frontend",
+    "build": "npm run build:shared && npx vite build frontend",
     "test:infra": "cd infrastructure && npm test",
     "synth": "cd infrastructure && npx cdk synth"
   },

@@ -12,6 +12,9 @@ const ProjectList = lazy(() => import('@/pages/ProjectList'));
 const CreateProject = lazy(() => import('@/pages/CreateProject'));
 const BoardView = lazy(() => import('@/pages/BoardView'));
 const BacklogView = lazy(() => import('@/pages/BacklogView'));
+const IssueDetail = lazy(() => import('@/pages/IssueDetail'));
+const ProjectSettings = lazy(() => import('@/pages/ProjectSettings'));
+const Reports = lazy(() => import('@/pages/Reports'));
 
 // Simple loading spinner
 function PageLoader() {
@@ -104,6 +107,24 @@ function App() {
                 <Suspense fallback={<PageLoader />}>
                   <ProjectRouteWrapper><BacklogView /></ProjectRouteWrapper>
                 </Suspense>
+              } />
+              <Route path="/project/:projectId/reports" element={
+                <Suspense fallback={<PageLoader />}>
+                  <ProjectRouteWrapper><Reports /></ProjectRouteWrapper>
+                </Suspense>
+              } />
+              <Route path="/project/:projectId/settings" element={
+                <Suspense fallback={<PageLoader />}>
+                  <ProjectRouteWrapper><ProjectSettings /></ProjectRouteWrapper>
+                </Suspense>
+              } />
+              <Route path="/project/:projectId/issues/:issueId" element={
+                <Suspense fallback={<PageLoader />}>
+                  <ProjectRouteWrapper><IssueDetail /></ProjectRouteWrapper>
+                </Suspense>
+              } />
+              <Route path="/issues/:issueId" element={
+                <Suspense fallback={<PageLoader />}><IssueDetail /></Suspense>
               } />
               <Route path="/project/:projectId/*" element={
                 <Suspense fallback={<PageLoader />}>
