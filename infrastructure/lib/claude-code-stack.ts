@@ -485,6 +485,15 @@ function handler(event) {
       ],
     }));
 
+    // CloudFormation read permission so deploy-preview can resolve the API URL
+    // The agent-generated stack name (e.g. canopy-app-stack) isn't known at harness
+    // deploy time, so we allow DescribeStacks on all stacks in this account/region.
+    githubPreviewDeployRole.addToPolicy(new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['cloudformation:DescribeStacks'],
+      resources: ['*'],
+    }));
+
     // Create IAM user for GitHub Actions (or use existing user via context)
     const existingGithubActionsUserName = this.node.tryGetContext('githubActionsUserName') || '';
     const githubActionsUser = existingGithubActionsUserName
