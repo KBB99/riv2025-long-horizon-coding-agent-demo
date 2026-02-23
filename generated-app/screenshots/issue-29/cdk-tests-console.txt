@@ -1,0 +1,15 @@
+      ✓ creates an S3 bucket for frontend (1 ms)
+      ✓ S3 bucket blocks public access
+      ✓ creates a CloudFront distribution
+      ✓ CloudFront has SPA error handling (1 ms)
+    Stack Outputs
+      ✓ outputs API URL (1 ms)
+      ✓ outputs Frontend Bucket Name (1 ms)
+      ✓ outputs Distribution ID
+      ✓ outputs Distribution Domain
+
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   1 passed, 1 total
+Time:        9.094 s
+Ran all test suites.

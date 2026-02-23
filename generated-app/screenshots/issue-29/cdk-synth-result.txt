@@ -1,0 +1,6 @@
+RESULT: PASS
+
+Command: cd infrastructure && npx cdk synth > /dev/null 2>&1 && echo 'CDK synth successful'
+
+Output:
+CDK synth successful
