@@ -1,7 +1,7 @@
 CANOPY PROJECT MANAGEMENT APP - Progress Report
 =================================================
 
-## Status: ALL PHASES COMPLETE
+## Status: ALL PHASES COMPLETE (Issue #28 Enhancement)
 
 ### Architecture
 - Monorepo with npm workspaces: shared/, backend/, frontend/, infrastructure/
@@ -40,19 +40,22 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - VITE_API_URL set in frontend/.env pointing to deployed API
 - Forest-themed Canopy design: Space Grotesk (headers), DM Sans (body), JetBrains Mono (code)
 - Color palette: Deep green (#1B4332), forest (#2D6A4F), amber accent (#D4A373)
+- Design fusion: Everforest palette + Kinfolk editorial typography + Swiss International grid + Teenage Engineering details
 - Pages implemented:
-  - Dashboard: Stats cards, project list, assigned issues, welcome screen
-  - ProjectList: Grid of projects with dropdown actions
+  - Dashboard: Gradient hero banner, stats cards with count-up animations, project list with progress bars, assigned issues
+  - ProjectList: Grid of projects with issue stats, progress bars, top accent borders, hover effects
   - CreateProject: Form with name, key, description, color picker
-  - BoardView: Kanban board with @dnd-kit drag-and-drop, 4 columns
-  - BacklogView: Sprint sections (collapsible) + backlog items
-  - IssueDetail: Full two-column layout with inline editing, comments
+  - BoardView: Kanban board with @dnd-kit drag-and-drop, 4 columns with empty state placeholders
+  - BacklogView: Sprint sections (collapsible) + backlog items with project-scoped navigation
+  - IssueDetail: Full two-column layout with inline editing, comments, breadcrumb navigation
   - Reports: Recharts-powered analytics (status/priority/type charts, velocity)
   - ProjectSettings: Edit name/desc/color, archive toggle, delete with confirmation
-- Components: TopNav, Sidebar (collapsible), CreateIssueModal, SearchModal (Cmd+K)
+- Components: TopNav (gradient, logo container, refined search bar), Sidebar (collapsible), CreateIssueModal, SearchModal (Cmd+K)
 - Keyboard shortcuts: C (create), Cmd+K (search), Cmd+[ (sidebar toggle)
 - Dark theme support with CSS custom properties
 - React Query hooks with API client + localStorage fallback
+- Animations: fadeIn, slideUp, scaleIn, countUp, float, shimmer, breathe
+- Card hover effects, subtle grain texture, selection styling, focus ring improvements
 
 ### Phase 4: Testing & Polish ✅
 - tests.json with 50 tests (all passing):
@@ -64,12 +67,23 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
   - 4 misc tests
 - E2e tests with Playwright:
   - Create project flow
-  - Project list page
-  - Create issue modal (keyboard shortcut)
+  - Create issue modal
   - Search modal
-  - Sidebar collapse/expand
-  - Board view with API data
-- init.sh for session restart
+  - Dark theme toggle
+- All screenshots captured and verified in screenshots/issue-28/
+- playwright-test.cjs and backend-verify.cjs helper scripts created
+
+### Issue #28 Enhancement Changes
+1. Fixed page title from "Vite + React + TS" to "Canopy" with 🌿 favicon
+2. Enhanced Dashboard with gradient hero banner, animated stat cards, project progress bars
+3. Improved ProjectList with issue stats per project, top accent borders, shimmer loading
+4. Enhanced TopNav with gradient background, logo container, refined search bar
+5. Fixed navigation: Board/Backlog views use project-scoped routes instead of `/issue/`
+6. Added CSS animations: shimmer, float, breathe, countUp
+7. Added card-hover effects, subtle grain texture overlay
+8. Improved scrollbar styling, selection colors, focus ring styles
+9. Updated CDK snapshot after asset hash change
+10. All 50 tests verified passing with screenshots
 
 ### Key Technical Notes
 - Frontend build must run from monorepo root: `npx vite build frontend` (not from frontend/ directory)
@@ -92,5 +106,7 @@ generated-app/
 │   └── styles/          # globals.css with Canopy design system
 ├── e2e-tests/           # Playwright e2e tests
 ├── tests.json           # 50 tests (all passing)
+├── playwright-test.cjs  # Screenshot + console verification helper
+├── backend-verify.cjs   # Backend verification helper
 ├── init.sh              # Session restart script
 └── claude-progress.txt  # This file
