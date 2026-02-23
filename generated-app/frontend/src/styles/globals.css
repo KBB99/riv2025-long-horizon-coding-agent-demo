@@ -3,7 +3,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Canopy Forest Design — Space Grotesk + DM Sans + JetBrains Mono */
+/* Canopy Forest Design — Combining Everforest palette with Kinfolk editorial typography,
+   Swiss International grid principles, and Teenage Engineering detail treatments */
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
@@ -136,482 +137,202 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'DM Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Space Grotesk', system-ui, sans-serif;
+    letter-spacing: -0.01em;
   }
 
   code, pre, kbd {
     font-family: 'JetBrains Mono', 'SF Mono', monospace;
   }
+
+  /* Better focus rings */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
 }
 
-/* Animations — using smooth cubic-bezier curves */
+/* ─── Animations ─── */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 @keyframes slideInRight {
   from { opacity: 0; transform: translateX(24px); }
   to { opacity: 1; transform: translateX(0); }
 }
+
 @keyframes slideDown {
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
 
-.animate-fade-in { animation: fadeIn 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in { animation: fadeIn 350ms ease-out both; }
 .animate-slide-up { animation: slideUp 450ms cubic-bezier(0.16, 1, 0.3, 1) both; }
-.animate-slide-in-right { animation: slideInRight 350ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-.animate-slide-down { animation: slideDown 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both; }
-.animate-scale-in { animation: scaleIn 250ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.animate-slide-in-right { animation: slideInRight 350ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-slide-down { animation: slideDown 250ms ease-out both; }
+.animate-scale-in { animation: scaleIn 300ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-count-up { animation: countUp 500ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-float { animation: float 3s ease-in-out infinite; }
 
-.stagger-1 { animation-delay: 50ms; }
-.stagger-2 { animation-delay: 100ms; }
-.stagger-3 { animation-delay: 150ms; }
-.stagger-4 { animation-delay: 200ms; }
-.stagger-5 { animation-delay: 250ms; }
-.stagger-6 { animation-delay: 300ms; }
+.stagger-1 { animation-delay: 60ms; }
+.stagger-2 { animation-delay: 120ms; }
+.stagger-3 { animation-delay: 180ms; }
+.stagger-4 { animation-delay: 240ms; }
+.stagger-5 { animation-delay: 300ms; }
+.stagger-6 { animation-delay: 360ms; }
+.stagger-7 { animation-delay: 420ms; }
+.stagger-8 { animation-delay: 480ms; }
 
-/* Scrollbar */
+/* ─── Card Hover Effects ─── */
+.card-hover {
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.dark .card-hover:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ─── Shimmer Loading ─── */
+.shimmer {
+  background: linear-gradient(90deg,
+    var(--muted) 25%,
+    var(--secondary) 37%,
+    var(--muted) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ─── Subtle grain texture on background ─── */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.015;
+  pointer-events: none;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+.dark body::before {
+  opacity: 0.03;
+}
+
+/* ─── Scrollbar ─── */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
 
-html {
-  font-size: var(--font-size);
+/* ─── Selection ─── */
+::selection {
+  background: rgba(212, 163, 115, 0.25);
+  color: inherit;
 }
 
-/* ============================================================
-   Enhanced Animations & Micro-Interactions
-   Canopy Forest palette: #1B4332, #2D6A4F, #D4A373, #FAF9F6
-   ============================================================ */
-
-/* --- 1. Shimmer loading animation for skeleton states --- */
-@keyframes shimmer {
-  0% {
-    background-position: -400px 0;
-  }
-  100% {
-    background-position: 400px 0;
-  }
-}
-
-.animate-shimmer {
-  background: linear-gradient(
-    90deg,
-    var(--muted) 0%,
-    var(--secondary) 40%,
-    var(--muted) 80%
-  );
-  background-size: 800px 100%;
-  animation: shimmer 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  border-radius: var(--radius);
-}
-
-/* --- 2. Subtle pulse-glow for accent color --- */
-@keyframes pulseGlow {
-  0%, 100% {
-    box-shadow: 0 0 4px rgba(212, 163, 115, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 16px rgba(212, 163, 115, 0.45), 0 0 32px rgba(212, 163, 115, 0.15);
-  }
-}
-
-.animate-pulse-glow {
-  animation: pulseGlow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* --- 3. Card-hover transform effect --- */
-.card-hover {
-  transition:
-    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, box-shadow;
-}
-
-.card-hover:hover {
-  transform: translateY(-2px) scale(1.005);
-  box-shadow:
-    0 8px 24px rgba(27, 67, 50, 0.08),
-    0 2px 8px rgba(27, 67, 50, 0.04);
-}
-
-.card-hover:active {
-  transform: translateY(0) scale(0.998);
-  transition-duration: 100ms;
-}
-
-/* --- 4. Gradient-border effect for featured/active cards --- */
-@keyframes gradientRotate {
-  0% {
-    --gradient-angle: 0deg;
-  }
-  100% {
-    --gradient-angle: 360deg;
-  }
-}
-
-@property --gradient-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-.gradient-border {
+/* ─── Status indicators ─── */
+.status-dot {
   position: relative;
-  border-radius: var(--radius);
-  isolation: isolate;
 }
-
-.gradient-border::before {
-  content: "";
+.status-dot::after {
+  content: '';
   position: absolute;
-  inset: -1.5px;
-  border-radius: calc(var(--radius) + 1.5px);
-  background: conic-gradient(
-    from var(--gradient-angle, 0deg),
-    #1B4332,
-    #2D6A4F,
-    #D4A373,
-    #40916C,
-    #1B4332
-  );
-  z-index: -1;
-  animation: gradientRotate 4s linear infinite;
+  inset: -2px;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.3;
+  animation: breathe 2s ease-in-out infinite;
 }
 
-.gradient-border::after {
-  content: "";
+/* ─── Kanban column transitions ─── */
+.kanban-card-enter {
+  animation: scaleIn 200ms ease-out;
+}
+
+/* ─── Button press effect ─── */
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* ─── Link underline animation ─── */
+.link-animate {
+  position: relative;
+}
+.link-animate::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: currentColor;
+  transition: width 200ms ease;
+}
+.link-animate:hover::after {
+  width: 100%;
+}
+
+/* ─── Badge pulse for active states ─── */
+.badge-active {
+  position: relative;
+}
+.badge-active::before {
+  content: '';
   position: absolute;
   inset: 0;
-  border-radius: var(--radius);
-  background: var(--card);
+  border-radius: inherit;
+  background: inherit;
+  animation: breathe 2s ease-in-out infinite;
   z-index: -1;
 }
 
-/* --- 5. (Cubic-bezier updates applied to existing animations above) --- */
-
-/* --- 6. Count-up keyframes for number counter effects --- */
-@keyframes countUp {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-    filter: blur(2px);
-  }
-  60% {
-    opacity: 1;
-    filter: blur(0);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-.animate-count-up {
-  animation: countUp 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  font-variant-numeric: tabular-nums;
-}
-
-/* --- 7. Column drop zone highlight animation for the board --- */
-@keyframes dropZonePulse {
-  0%, 100% {
-    border-color: rgba(45, 106, 79, 0.3);
-    background-color: rgba(45, 106, 79, 0.04);
-  }
-  50% {
-    border-color: rgba(45, 106, 79, 0.6);
-    background-color: rgba(45, 106, 79, 0.1);
-  }
-}
-
-.drop-zone-active {
-  border: 2px dashed rgba(45, 106, 79, 0.4);
-  border-radius: var(--radius);
-  animation: dropZonePulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  transition: border-color 200ms ease, background-color 200ms ease;
-}
-
-.dark .drop-zone-active {
-  border-color: rgba(64, 145, 108, 0.4);
-}
-
-@keyframes dropZoneEnter {
-  from {
-    border-color: rgba(45, 106, 79, 0.1);
-    background-color: transparent;
-  }
-  to {
-    border-color: rgba(45, 106, 79, 0.5);
-    background-color: rgba(45, 106, 79, 0.08);
-  }
-}
-
-.drop-zone-active.drag-over {
-  animation: dropZoneEnter 200ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  box-shadow: inset 0 0 20px rgba(45, 106, 79, 0.06);
-}
-
-/* --- 8. Subtle background grid pattern --- */
-.bg-grid-pattern {
-  background-image:
-    linear-gradient(rgba(27, 67, 50, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(27, 67, 50, 0.03) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-.dark .bg-grid-pattern {
-  background-image:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-.bg-dot-pattern {
-  background-image: radial-gradient(
-    circle,
-    rgba(27, 67, 50, 0.06) 1px,
-    transparent 1px
-  );
-  background-size: 20px 20px;
-}
-
-.dark .bg-dot-pattern {
-  background-image: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.035) 1px,
-    transparent 1px
-  );
-  background-size: 20px 20px;
-}
-
-/* --- 9. Better focus ring styles for accessibility --- */
-*:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-  border-radius: calc(var(--radius) - 2px);
-  transition: outline-offset 150ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-button:focus-visible,
-a:focus-visible,
-[role="button"]:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 4px rgba(212, 163, 115, 0.15);
-  transition:
-    outline-offset 150ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 150ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.dark button:focus-visible,
-.dark a:focus-visible,
-.dark [role="button"]:focus-visible,
-.dark input:focus-visible,
-.dark select:focus-visible,
-.dark textarea:focus-visible {
-  box-shadow: 0 0 0 4px rgba(212, 163, 115, 0.2);
-}
-
-/* --- 10. Card lift animation on hover (translateY + shadow) --- */
-@keyframes cardLift {
-  from {
-    transform: translateY(0);
-    box-shadow: 0 1px 3px rgba(27, 67, 50, 0.06);
-  }
-  to {
-    transform: translateY(-4px);
-    box-shadow:
-      0 12px 28px rgba(27, 67, 50, 0.1),
-      0 4px 10px rgba(27, 67, 50, 0.05);
-  }
-}
-
-/* ============================================================
-   Utility Classes
-   ============================================================ */
-
-/* --- .glass — glassmorphism effect for modals/overlays --- */
-.glass {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(16px) saturate(1.6);
-  -webkit-backdrop-filter: blur(16px) saturate(1.6);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow:
-    0 4px 24px rgba(27, 67, 50, 0.06),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-
-.dark .glass {
-  background: rgba(36, 43, 61, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-}
-
-/* --- .gradient-text — gradient text for headings --- */
-.gradient-text {
-  background: linear-gradient(
-    135deg,
-    #1B4332 0%,
-    #2D6A4F 45%,
-    #D4A373 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.dark .gradient-text {
-  background: linear-gradient(
-    135deg,
-    #40916C 0%,
-    #52B788 45%,
-    #D4A373 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* --- .hover-lift — lift on hover with shadow --- */
-.hover-lift {
-  transition:
-    transform 280ms cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 280ms cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform, box-shadow;
-}
-
-.hover-lift:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 12px 28px rgba(27, 67, 50, 0.1),
-    0 4px 10px rgba(27, 67, 50, 0.05);
-}
-
-.dark .hover-lift:hover {
-  box-shadow:
-    0 12px 28px rgba(0, 0, 0, 0.25),
-    0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.hover-lift:active {
-  transform: translateY(-1px);
-  box-shadow:
-    0 4px 12px rgba(27, 67, 50, 0.06),
-    0 2px 4px rgba(27, 67, 50, 0.04);
-  transition-duration: 100ms;
-}
-
-/* --- .card-glow — subtle glow effect on focus/active --- */
-.card-glow {
-  transition: box-shadow 300ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.card-glow:focus,
-.card-glow:focus-within,
-.card-glow.active {
-  box-shadow:
-    0 0 0 1px rgba(212, 163, 115, 0.3),
-    0 0 20px rgba(212, 163, 115, 0.12),
-    0 4px 12px rgba(27, 67, 50, 0.06);
-}
-
-.dark .card-glow:focus,
-.dark .card-glow:focus-within,
-.dark .card-glow.active {
-  box-shadow:
-    0 0 0 1px rgba(212, 163, 115, 0.25),
-    0 0 24px rgba(212, 163, 115, 0.1),
-    0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* ============================================================
-   Additional Animation Enhancements
-   ============================================================ */
-
-/* Smooth page transition wrapper */
-@keyframes pageEnter {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-    filter: blur(1px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-.animate-page-enter {
-  animation: pageEnter 400ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* Subtle float animation for decorative elements */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
-}
-
-.animate-float {
-  animation: float 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Spin animation with smooth easing for loaders */
-@keyframes smoothSpin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.animate-smooth-spin {
-  animation: smoothSpin 800ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
-}
-
-/* Reduced motion — respect user preferences */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-
-  .animate-shimmer,
-  .animate-pulse-glow,
-  .animate-float,
-  .animate-smooth-spin {
-    animation: none;
-  }
-
-  .hover-lift:hover,
-  .card-hover:hover {
-    transform: none;
-  }
+html {
+  font-size: var(--font-size);
+  scroll-behavior: smooth;
 }

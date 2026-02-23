@@ -145,7 +145,7 @@ export default function BacklogView() {
           onToggle={() => toggleSprint(sprint.id)}
           onStart={() => handleStartSprint(sprint)}
           onComplete={() => handleCompleteSprint(sprint)}
-          onIssueClick={(id) => navigate(`/issue/${id}`)}
+          onIssueClick={(id) => navigate(`/project/${projectId}/issues/${id}`)}
           onRemoveFromSprint={(issueId) => handleMoveToSprint(issueId, null)}
           users={state.users}
         />
@@ -167,7 +167,7 @@ export default function BacklogView() {
             <IssueRow
               key={issue.id}
               issue={issue}
-              onClick={() => navigate(`/issue/${issue.id}`)}
+              onClick={() => navigate(`/project/${projectId}/issues/${issue.id}`)}
               users={state.users}
               sprints={sprints.filter(s => s.status !== 'completed')}
               onMoveToSprint={(sprintId) => handleMoveToSprint(issue.id, sprintId)}

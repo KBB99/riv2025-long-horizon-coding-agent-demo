@@ -17,13 +17,15 @@ export function TopNav() {
   const user = state.currentUser;
 
   return (
-    <header className="h-14 bg-[#1B4332] text-white flex items-center px-4 gap-3 shrink-0 z-50 sticky top-0">
+    <header className="h-14 bg-gradient-to-r from-[#1B4332] via-[#1B4332] to-[#234E3E] text-white flex items-center px-4 gap-3 shrink-0 z-50 sticky top-0 shadow-md">
       {/* Logo */}
       <button
         onClick={() => navigate('/')}
-        className="flex items-center gap-2 hover:opacity-80 transition-opacity mr-2"
+        className="flex items-center gap-2.5 hover:opacity-90 transition-all duration-200 mr-2 group"
       >
-        <TreePine className="w-6 h-6 text-[#D4A373]" />
+        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center group-hover:bg-white/15 transition-colors">
+          <TreePine className="w-5 h-5 text-[#D4A373]" />
+        </div>
         <span className="font-display font-semibold text-lg tracking-tight hidden sm:block"
           style={{ fontFamily: "'Space Grotesk', system-ui, sans-serif" }}>
           Canopy
@@ -33,11 +35,11 @@ export function TopNav() {
       {/* Search */}
       <button
         onClick={toggleSearch}
-        className="flex items-center gap-2 bg-white/10 hover:bg-white/15 rounded-md px-3 py-1.5 text-sm text-white/70 transition-colors flex-1 max-w-md"
+        className="flex items-center gap-2 bg-white/8 hover:bg-white/12 border border-white/10 rounded-lg px-3.5 py-2 text-sm text-white/60 transition-all duration-200 flex-1 max-w-md group"
       >
-        <Search className="w-4 h-4" />
-        <span className="hidden sm:inline">Search issues, projects...</span>
-        <kbd className="ml-auto text-xs bg-white/10 px-1.5 py-0.5 rounded hidden sm:inline">⌘K</kbd>
+        <Search className="w-4 h-4 group-hover:text-white/80 transition-colors" />
+        <span className="hidden sm:inline group-hover:text-white/80 transition-colors">Search issues, projects...</span>
+        <kbd className="ml-auto text-[10px] bg-white/8 border border-white/10 px-1.5 py-0.5 rounded hidden sm:inline font-mono">⌘K</kbd>
       </button>
 
       {/* Actions */}

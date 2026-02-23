@@ -229,7 +229,7 @@ export default function BoardView() {
               key={column.id}
               column={column}
               issues={issuesByColumn[column.id] || []}
-              onIssueClick={(id) => navigate(`/issue/${id}`)}
+              onIssueClick={(id) => navigate(`/project/${projectId}/issues/${id}`)}
               users={state.users}
             />
           ))}
