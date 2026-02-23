@@ -32,3 +32,8 @@ export function notFound(message = 'Resource not found'): APIGatewayProxyResultV
 export function serverError(message = 'Internal server error'): APIGatewayProxyResultV2 {
   return error(message, 500, 'INTERNAL_ERROR');
 }
+
+/** Created response for successful resource creation (201) */
+export function created(body: unknown): APIGatewayProxyResultV2 {
+  return success(body, 201);
+}
