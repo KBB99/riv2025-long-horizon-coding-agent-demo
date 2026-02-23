@@ -99,6 +99,19 @@ New changes (session 2 - current):
 14. Added cache invalidation for all-issues query on create/update/delete mutations
 15. Updated CDK snapshot to reflect backend changes
 16. All 50 tests re-verified with fresh screenshots and no console errors
+17. All 15 Playwright E2E tests pass (create project, create issue, dark theme, keyboard shortcuts, etc.)
+18. Fixed import.meta.env reference in E2E test (not available outside Vite context)
+19. Deployment in progress for backend route fix (CI/CD triggered by commit)
+
+### Phase Gates (all verified this session)
+1. shared/ compiles: `cd shared && npx tsc --noEmit` -> OK
+2. infrastructure/ synths: `cd infrastructure && npx cdk synth` -> OK
+3. infrastructure/ tests: `cd infrastructure && npm test` -> 19/19 pass
+4. backend/ builds: `cd backend && npx tsc --noEmit` -> OK
+5. frontend/ builds: `npx vite build frontend` -> OK
+6. All 15 Playwright E2E tests pass
+7. All 50 tests.json tests verified with screenshots (no console errors)
+8. API accessible at: https://wuoq75966e.execute-api.us-east-1.amazonaws.com
 
 ### Key Technical Notes
 - Frontend build must run from monorepo root: `npx vite build frontend` (not from frontend/ directory)
