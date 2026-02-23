@@ -73,7 +73,8 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - All screenshots captured and verified in screenshots/issue-28/
 - playwright-test.cjs and backend-verify.cjs helper scripts created
 
-### Issue #28 Enhancement Changes
+### Issue #28 Enhancement Changes (Latest Session)
+Previous changes (session 1):
 1. Fixed page title from "Vite + React + TS" to "Canopy" with 🌿 favicon
 2. Enhanced Dashboard with gradient hero banner, animated stat cards, project progress bars
 3. Improved ProjectList with issue stats per project, top accent borders, shimmer loading
@@ -84,6 +85,20 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 8. Improved scrollbar styling, selection colors, focus ring styles
 9. Updated CDK snapshot after asset hash change
 10. All 50 tests verified passing with screenshots
+
+New changes (session 2 - current):
+11. CRITICAL FIX: useAllIssues hook now fetches from real API instead of localStorage
+    - Dashboard stats were always showing 0 because it read from empty localStorage
+    - Now aggregates issues from all projects via API calls
+    - Dashboard correctly shows "6 total issues", "6 open issues"
+    - Project cards show correct issue counts (1 open, 5 open)
+12. CRITICAL FIX: SearchModal navigation route corrected from /issue/ to /issues/
+    - Also improved to navigate with project context when available
+13. CRITICAL FIX: Backend route ordering - /issues/bulk moved before /issues/:id
+    - "bulk" was being treated as an issue ID, causing 404 errors for bulk updates
+14. Added cache invalidation for all-issues query on create/update/delete mutations
+15. Updated CDK snapshot to reflect backend changes
+16. All 50 tests re-verified with fresh screenshots and no console errors
 
 ### Key Technical Notes
 - Frontend build must run from monorepo root: `npx vite build frontend` (not from frontend/ directory)
