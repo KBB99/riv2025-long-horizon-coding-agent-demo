@@ -1,0 +1,16 @@
+VERIFIED_BY: backend-verify.cjs
+TIMESTAMP: 2026-02-23T17:57:59.781Z
+COMMAND: aws cloudformation describe-stacks --stack-name canopy-app-stack --region us-east-1 --query 'Stacks[0].Outputs[*].OutputValue' --output json
+EXIT_CODE: 0
+RESULT: PASS
+
+--- STDOUT ---
+[
+    "dy4x19mdzh07m.cloudfront.net",
+    "canopy-main-table",
+    "https://wuoq75966e.execute-api.us-east-1.amazonaws.com",
+    "canopy-frontend-669298908997-us-east-1",
+    "E372INHCNL75O1"
+]
+
+--- STDERR ---

@@ -1,0 +1,2 @@
+ERRORS:
+The requested module '/@fs/app/workspace/agent-runtime/generated-app/node_modules/react/index.js' does not provide an export named 'default'

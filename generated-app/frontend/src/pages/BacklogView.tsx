@@ -4,7 +4,7 @@ import { useApp } from '@/context/AppContext';
 import { useIssues, useUpdateIssue, useCreateIssue } from '@/hooks/useIssues';
 import { useSprints, useCreateSprint, useUpdateSprint } from '@/hooks/useSprints';
 import { useProject } from '@/hooks/useProjects';
-import { Plus, GripVertical, ChevronDown, ChevronRight, Play, CheckCircle, Filter } from 'lucide-react';
+import { Plus, GripVertical, ChevronDown, ChevronRight, Play, CheckCircle, Filter, Bug, Bookmark, Zap, CircleDot, Layers, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -211,22 +211,44 @@ function SprintSection({
 }) {
   const totalPoints = issues.reduce((sum, i) => sum + (i.storyPoints || 0), 0);
   const donePoints = issues.filter(i => i.status === 'done').reduce((sum, i) => sum + (i.storyPoints || 0), 0);
+  const doneCount = issues.filter(i => i.status === 'done').length;
+  const progressPercent = issues.length > 0 ? Math.round((doneCount / issues.length) * 100) : 0;
 
   return (
     <Collapsible open={isOpen} onOpenChange={onToggle}>
-      <div className="border border-border/50 rounded-lg">
+      <div className="border border-border/50 rounded-xl overflow-hidden">
         <CollapsibleTrigger asChild>
-          <div className="p-3 flex items-center justify-between bg-muted/30 rounded-t-lg cursor-pointer hover:bg-muted/50 transition-colors">
-            <div className="flex items-center gap-2">
-              {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          <div className="p-3 flex items-center justify-between bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors">
+            <div className="flex items-center gap-2.5">
+              {isOpen ? <ChevronDown className="w-4 h-4 text-muted-foreground" /> : <ChevronRight className="w-4 h-4 text-muted-foreground" />}
               <span className="font-medium text-sm">{sprint.name}</span>
-              <Badge variant={sprint.status === 'active' ? 'default' : 'secondary'} className="text-[10px] h-5">
+              <Badge
+                variant={sprint.status === 'active' ? 'default' : 'secondary'}
+                className={cn(
+                  "text-[10px] h-5",
+                  sprint.status === 'active' && "bg-[#40916C] text-white"
+                )}
+              >
                 {sprint.status}
               </Badge>
-              <Badge variant="secondary" className="text-xs">{issues.length}</Badge>
+              <span className="text-xs text-muted-foreground font-mono">{issues.length}</span>
               <span className="text-xs text-muted-foreground">
                 {donePoints}/{totalPoints} pts
               </span>
+              {issues.length > 0 && (
+                <div className="flex items-center gap-1.5 ml-2">
+                  <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{
+                        width: `${progressPercent}%`,
+                        backgroundColor: progressPercent === 100 ? '#40916C' : '#D4A373',
+                      }}
+                    />
+                  </div>
+                  <span className="text-[10px] text-muted-foreground font-mono">{progressPercent}%</span>
+                </div>
+              )}
             </div>
             <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
               {sprint.status === 'future' && issues.length > 0 && (
@@ -266,6 +288,22 @@ function SprintSection({
   );
 }
 
+const issueTypeIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+  'Bug': Bug,
+  'Story': Bookmark,
+  'Epic': Zap,
+  'Task': CircleDot,
+  'Sub-task': Layers,
+};
+
+const priorityLabels: Record<string, string> = {
+  'Highest': 'P0',
+  'High': 'P1',
+  'Medium': 'P2',
+  'Low': 'P3',
+  'Lowest': 'P4',
+};
+
 function IssueRow({
   issue,
   onClick,
@@ -282,27 +320,40 @@ function IssueRow({
   const assignee = users.find(u => u.id === issue.assigneeId);
   const typeColor = issueTypeColors[issue.type] || '#8896A6';
   const prioColor = priorityColors[issue.priority] || '#8896A6';
+  const TypeIcon = issueTypeIcons[issue.type] || CircleDot;
+  const prioLabel = priorityLabels[issue.priority] || 'P2';
 
   return (
     <div
       onClick={onClick}
-      className="flex items-center gap-3 px-3 py-2 hover:bg-muted/30 cursor-pointer transition-colors group"
+      className="flex items-center gap-3 px-3 py-2.5 hover:bg-muted/30 cursor-pointer transition-all duration-150 group"
     >
-      <div className="w-4 h-4 rounded flex items-center justify-center" style={{ backgroundColor: `${typeColor}15` }}>
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: typeColor }} />
+      <div
+        className="w-5 h-5 rounded flex items-center justify-center shrink-0"
+        style={{ backgroundColor: `${typeColor}15` }}
+      >
+        <TypeIcon className="w-3 h-3" style={{ color: typeColor }} />
       </div>
       <span className="text-xs text-muted-foreground font-mono w-16 shrink-0">{issue.key}</span>
       <span className="text-sm flex-1 truncate">{issue.summary}</span>
-      {issue.storyPoints && (
-        <span className="text-[10px] px-1.5 py-0.5 bg-muted rounded-full font-mono">{issue.storyPoints}</span>
+      {issue.storyPoints != null && issue.storyPoints > 0 && (
+        <span className="text-[10px] w-5 h-5 flex items-center justify-center bg-muted rounded-full font-mono font-medium shrink-0">
+          {issue.storyPoints}
+        </span>
       )}
-      <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: prioColor }} title={issue.priority} />
+      <span
+        className="text-[10px] font-mono font-semibold px-1.5 py-0.5 rounded flex items-center gap-1 shrink-0"
+        style={{ color: prioColor }}
+      >
+        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: prioColor }} />
+        {prioLabel}
+      </span>
       {issue.labels.slice(0, 2).map(label => (
         <Badge key={label} variant="secondary" className="text-[10px] h-5">{label}</Badge>
       ))}
       {assignee && (
         <div
-          className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0"
+          className="w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold text-white shrink-0 ring-2 ring-background"
           style={{ backgroundColor: assignee.color }}
           title={assignee.name}
         >
@@ -313,7 +364,7 @@ function IssueRow({
         <select
           onClick={e => e.stopPropagation()}
           onChange={e => e.target.value && onMoveToSprint(e.target.value)}
-          className="text-xs bg-transparent border border-border/50 rounded px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="text-xs bg-transparent border border-border/50 rounded px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
           defaultValue=""
         >
           <option value="" disabled>Move to...</option>

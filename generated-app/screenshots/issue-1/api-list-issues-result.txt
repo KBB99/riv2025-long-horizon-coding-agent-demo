@@ -1,0 +1,9 @@
+VERIFIED_BY: backend-verify.cjs
+TIMESTAMP: 2026-02-23T17:56:41.228Z
+COMMAND: curl -s https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects/aa1dfc9f-4ee5-41e8-bb1b-f92036d210b6/issues
+EXIT_CODE: 0
+RESULT: PASS
+
+--- STDOUT ---
+[{"id":"03b2a2b1-6d73-47f1-b913-b6c991a772ad","projectId":"aa1dfc9f-4ee5-41e8-bb1b-f92036d210b6","key":"VP-1","type":"Task","summary":"Test issue","status":"todo","priority":"Medium","reporterId":"315471ad-9a62-4dd3-8def-4709e38a153a","labels":[],"components":[],"sortOrder":1771869376831,"timeSpent":0,"createdAt":"2026-02-23T17:56:16.821Z","updatedAt":"2026-02-23T17:56:16.821Z"}]
+--- STDERR ---

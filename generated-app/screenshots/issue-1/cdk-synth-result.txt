@@ -1,0 +1,29 @@
+VERIFIED_BY: backend-verify.cjs
+TIMESTAMP: 2026-02-23T17:53:12.921Z
+COMMAND: cd /app/workspace/agent-runtime/generated-app/infrastructure && npx cdk synth 2>&1 | tail -20
+EXIT_CODE: 0
+RESULT: PASS
+
+--- STDOUT ---
+    Description: S3 bucket for frontend assets
+    Value:
+      Ref: CanopyFrontendBucket7E29486D
+  DistributionId:
+    Description: CloudFront distribution ID
+    Value:
+      Ref: CanopyDistributionC5D57BD9
+  DistributionDomain:
+    Description: CloudFront domain name
+    Value:
+      Fn::GetAtt:
+        - CanopyDistributionC5D57BD9
+        - DomainName
+Parameters:
+  BootstrapVersion:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
+    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
+
+72 feature flags are not configured. Run 'cdk flags --unstable=flags' to learn more.
+
+--- STDERR ---

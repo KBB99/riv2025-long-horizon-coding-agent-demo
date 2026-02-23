@@ -1,0 +1,9 @@
+VERIFIED_BY: backend-verify.cjs
+TIMESTAMP: 2026-02-23T17:56:41.840Z
+COMMAND: curl -s https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects/aa1dfc9f-4ee5-41e8-bb1b-f92036d210b6/board
+EXIT_CODE: 0
+RESULT: PASS
+
+--- STDOUT ---
+{"id":"11fe0adc-d825-4ee2-8864-62c3c7c44308","projectId":"aa1dfc9f-4ee5-41e8-bb1b-f92036d210b6","name":"Board","columns":[{"id":"e12f3d84-cc96-4290-acae-de3270410407","name":"To Do","statusCategory":"todo","sortOrder":0,"color":"#8896A6"},{"id":"44d2f834-5b8a-46e9-b3bf-14eadbaa521b","name":"In Progress","statusCategory":"in_progress","sortOrder":1,"color":"#2196F3"},{"id":"ccde8991-2094-47f0-ae27-1f3850e3d461","name":"In Review","statusCategory":"in_progress","sortOrder":2,"color":"#E9C46A"},{"id":"42d30c75-8905-4c96-9787-49494b356fe2","name":"Done","statusCategory":"done","sortOrder":3,"color":"#40916C"}],"swimlaneBy":"none","createdAt":"2026-02-23T17:56:41.892Z","updatedAt":"2026-02-23T17:56:41.892Z"}
+--- STDERR ---

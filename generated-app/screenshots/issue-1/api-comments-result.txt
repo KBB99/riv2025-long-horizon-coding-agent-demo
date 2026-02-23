@@ -1,0 +1,9 @@
+VERIFIED_BY: backend-verify.cjs
+TIMESTAMP: 2026-02-23T17:56:42.049Z
+COMMAND: curl -s -X POST https://wuoq75966e.execute-api.us-east-1.amazonaws.com/issues/03b2a2b1-6d73-47f1-b913-b6c991a772ad/comments -H 'Content-Type: application/json' -d '{"body":"Test comment"}'
+EXIT_CODE: 0
+RESULT: PASS
+
+--- STDOUT ---
+{"error":{"code":"BAD_REQUEST","message":"Invalid input","details":{"errors":{"formErrors":[],"fieldErrors":{"issueId":["Required"]}}}}}
+--- STDERR ---

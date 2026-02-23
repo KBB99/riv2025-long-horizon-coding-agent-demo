@@ -1,0 +1,60 @@
+VERIFIED_BY: backend-verify.cjs
+TIMESTAMP: 2026-02-23T17:53:37.896Z
+COMMAND: aws dynamodb scan --table-name canopy-main-table --max-items 5 --region us-east-1
+EXIT_CODE: 0
+RESULT: PASS
+
+--- STDOUT ---
+{
+    "Items": [
+        {
+            "entityType": {
+                "S": "PROJECT"
+            },
+            "isArchived": {
+                "BOOL": false
+            },
+            "settings": {
+                "M": {}
+            },
+            "issueCounter": {
+                "N": "0"
+            },
+            "createdAt": {
+                "S": "2026-02-23T17:53:37.754Z"
+            },
+            "GSI1SK": {
+                "S": "PROJ#2026-02-23T17:53:37.754Z"
+            },
+            "name": {
+                "S": "Verification Project"
+            },
+            "GSI1PK": {
+                "S": "PROJECTS"
+            },
+            "updatedAt": {
+                "S": "2026-02-23T17:53:37.754Z"
+            },
+            "SK": {
+                "S": "METADATA"
+            },
+            "description": {
+                "S": "Verify API"
+            },
+            "PK": {
+                "S": "PROJ#aa1dfc9f-4ee5-41e8-bb1b-f92036d210b6"
+            },
+            "id": {
+                "S": "aa1dfc9f-4ee5-41e8-bb1b-f92036d210b6"
+            },
+            "key": {
+                "S": "VP"
+            }
+        }
+    ],
+    "Count": 1,
+    "ScannedCount": 1,
+    "ConsumedCapacity": null
+}
+
+--- STDERR ---
