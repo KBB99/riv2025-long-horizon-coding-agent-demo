@@ -226,13 +226,13 @@
       "id": "create-issue-modal",
       "category": "frontend",
       "name": "Create issue modal with all fields",
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "search-modal",
       "category": "frontend",
       "name": "Search modal (Cmd+K) searches issues and projects",
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "sidebar-navigation",
@@ -256,37 +256,37 @@
       "id": "create-project-e2e",
       "category": "integration",
       "name": "Creating a project from UI persists to API",
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "create-issue-e2e",
       "category": "integration",
       "name": "Creating an issue from UI persists to API",
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "board-dnd",
       "category": "integration",
       "name": "Board view supports drag and drop",
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "dark-theme",
       "category": "frontend",
       "name": "Dark theme toggle works",
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "keyboard-shortcuts",
       "category": "frontend",
       "name": "Keyboard shortcuts work (C for create, Cmd+K for search)",
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "responsive-layout",
       "category": "frontend",
       "name": "Layout is responsive and sidebar collapses",
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "forest-theme",

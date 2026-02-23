@@ -16,6 +16,7 @@
     "synth": "cd infrastructure && npx cdk synth"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "playwright": "^1.58.2"
   }
 }
