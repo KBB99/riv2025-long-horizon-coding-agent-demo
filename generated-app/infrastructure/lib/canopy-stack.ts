@@ -56,13 +56,13 @@ export class CanopyStack extends cdk.Stack {
       handler: 'handler',
       entry: path.join(__dirname, '../../backend/src/index.ts'),
       depsLockFilePath: path.join(__dirname, '../../package-lock.json'),
-      description: 'Canopy API handler with attachment routes v12',
+      description: 'Canopy API handler with attachment routes v13',
       memorySize: 1024,
       timeout: cdk.Duration.seconds(30),
       environment: {
         TABLE_NAME: table.tableName,
         NODE_OPTIONS: '--enable-source-maps',
-        DEPLOY_VERSION: '12',
+        DEPLOY_VERSION: '13',
       },
       bundling: {
         externalModules: ['@aws-sdk/*'],
