@@ -335,7 +335,7 @@
       "id": "attachment-ui-section",
       "category": "frontend",
       "name": "Issue detail page shows attachments section with upload dropzone",
-      "status": "pending"
+      "status": "pass"
     },
     {
       "id": "attachment-upload-api",

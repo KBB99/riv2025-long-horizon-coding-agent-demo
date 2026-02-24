@@ -114,13 +114,36 @@ Session 3 changes:
 20. FIX: frontend-build test automatedTest command corrected (removed incorrect cd ..)
 21. All 50 tests re-verified with fresh screenshots and no console errors
 
-Session 4 changes (current):
+Session 4 changes:
 22. Added ErrorBoundary component for graceful error handling on lazy-loaded page crashes
 23. Wrapped AppLayout Outlet with ErrorBoundary for global page error recovery
 24. Added interactive Playwright test specs (create issue modal, search modal, dark theme, forest theme, responsive layout) - all 5 passing
 25. Full re-verification of all 50 tests with fresh screenshots and backend-verify.cjs results
 26. All 29 backend/shared/infrastructure test result files show PASS
 27. All 21 frontend UI/integration tests verified with screenshots and NO_CONSOLE_ERRORS
+
+Session 5 changes (Issue #29 - Add document attachment to issues):
+28. FEATURE: Added document attachment upload to issues
+    - Shared: Created AttachmentSchema, CreateAttachmentSchema, AttachmentWithDataSchema in shared/src/schemas/attachment.ts
+    - Shared: Added Attachment, AttachmentWithData, CreateAttachment types
+    - Shared: Added attachment endpoints to endpoints.ts (upload, list, get, delete)
+    - Backend: Created handlers/attachments.ts with uploadAttachment, listAttachments, getAttachment, deleteAttachment
+    - Backend: Added ATTACHMENT key pattern to db.ts
+    - Backend: Added attachment routes to index.ts (before comments)
+    - Frontend: Created useAttachments.ts hook (useAttachments, useUploadAttachment, useDeleteAttachment, useDownloadAttachment)
+    - Frontend: Updated api/client.ts with uploadAttachment, listAttachments, getAttachment, deleteAttachment functions
+    - Frontend: Added Attachments section to IssueDetail.tsx with:
+      * Paperclip icon + "ATTACHMENTS" header + count badge + "Upload" button
+      * Drag & drop zone (drag files or click to browse)
+      * File list with AttachmentCard component (file icon, name, size, date, download/delete actions)
+      * 5MB file size limit
+      * File type icons (image, PDF, text, generic)
+      * Hover effects on attachment cards with download/delete buttons
+    - Infrastructure: Updated CDK snapshot test (19/19 tests pass)
+    - Added 5 new tests to tests.json (attachment-schema-compile, attachment-ui-section, attachment-upload-api, attachment-list-api, attachment-delete-api)
+    - DEPLOYMENT: CI/CD deployment has been "deploying" for extended period (likely stuck pipeline)
+    - All phase gates pass locally (shared compiles, CDK synths, CDK tests pass, backend compiles, frontend builds)
+    - Attachment UI visible and working in issue detail page
 
 ### Key Technical Notes
 - Frontend build must run from monorepo root: `npx vite build frontend` (not from frontend/ directory)
