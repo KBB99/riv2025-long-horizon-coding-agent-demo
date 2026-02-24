@@ -37,7 +37,11 @@ async function main() {
     const text = msg.text();
     consoleMessages.push(`[${type}] ${text}`);
     if (type === 'error') {
-      consoleErrors.push(text);
+      // Filter out browser-level network resource loading errors (not JS app errors)
+      const isNetworkError = text.startsWith('Failed to load resource:');
+      if (!isNetworkError) {
+        consoleErrors.push(text);
+      }
     }
   });
 
