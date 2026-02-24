@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf -X POST https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects -H 'Content-Type: application/json' -d '{"name":"Test","key":"TST"}'
+Command: curl -sf -X POST https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects -H 'Content-Type: application/json' -d '{"name":"VerifyRun","key":"VRN"}'
 
 Output:
-{"name":"Test","key":"TST","id":"adecf51c-3ca1-4e8b-bca8-163fa4481bba","issueCounter":0,"isArchived":false,"settings":{},"createdAt":"2026-02-24T05:16:56.091Z","updatedAt":"2026-02-24T05:16:56.091Z"}
+{"name":"VerifyRun","key":"VRN","id":"bf681974-f2d6-4afb-be61-486eb8a8f5bb","issueCounter":0,"isArchived":false,"settings":{},"createdAt":"2026-02-24T05:30:01.151Z","updatedAt":"2026-02-24T05:30:01.151Z"}
