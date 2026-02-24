@@ -1,5 +1,6 @@
 RESULT: PASS
 
-Command: cd shared && npx tsc --noEmit
+Command: cd shared && npx tsc --noEmit && grep 'export const endpoints' src/endpoints.ts
 
 Output:
+export const endpoints = {

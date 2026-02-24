@@ -1,5 +1,6 @@
 RESULT: PASS
 
-Command: cd shared && npx tsc --noEmit
+Command: cd shared && npx tsc --noEmit && echo 'Attachment schema compiles OK'
 
 Output:
+Attachment schema compiles OK

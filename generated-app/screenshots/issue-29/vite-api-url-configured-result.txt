@@ -1,6 +1,8 @@
 RESULT: PASS
 
-Command: cat frontend/.env
+Command: cat frontend/.env && echo '' && echo 'VITE_API_URL is configured'
 
 Output:
 VITE_API_URL=https://wuoq75966e.execute-api.us-east-1.amazonaws.com
+
+VITE_API_URL is configured
