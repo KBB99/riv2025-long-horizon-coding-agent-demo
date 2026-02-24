@@ -1,13 +1,27 @@
 RESULT: PASS
 
-Command: cd infrastructure && npm test -- --testNamePattern='CORS' 2>&1 | tail -8
+Command: cd infrastructure && npm test 2>&1 | grep -E 'API|CORS|✓'
 
 Output:
-      ○ skipped outputs Distribution ID
-      ○ skipped outputs Distribution Domain
-
-Test Suites: 1 passed, 1 total
-Tests:       18 skipped, 1 passed, 19 total
-Snapshots:   0 total
-Time:        9.287 s, estimated 10 s
-Ran all test suites with tests matching "CORS".
+      This API will be removed in the next major release.
+      This API will be removed in the next major release.
+    ✓ matches snapshot (5 ms)
+      ✓ creates a DynamoDB table with correct key schema (6 ms)
+      ✓ DynamoDB table has GSI1 (1 ms)
+      ✓ DynamoDB table has GSI2 (1 ms)
+      ✓ DynamoDB table has GSI3 (1 ms)
+      ✓ DynamoDB table has point-in-time recovery (1 ms)
+      ✓ creates a Lambda function with Node.js 20 runtime
+      ✓ Lambda has correct environment variables (1 ms)
+      ✓ Lambda has DynamoDB read/write permissions (1 ms)
+    API Gateway
+      ✓ creates an HTTP API (1 ms)
+      ✓ API Gateway has CORS configured (1 ms)
+      ✓ creates an S3 bucket for frontend
+      ✓ S3 bucket blocks public access (1 ms)
+      ✓ creates a CloudFront distribution
+      ✓ CloudFront has SPA error handling
+      ✓ outputs API URL (1 ms)
+      ✓ outputs Frontend Bucket Name (1 ms)
+      ✓ outputs Distribution ID
+      ✓ outputs Distribution Domain (1 ms)

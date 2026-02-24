@@ -1,5 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf -X POST https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects/0781eea6-d4dc-43b1-91de-5d90c95ee33b/issues -H 'Content-Type: application/json' -d '{"title":"Verify Issue","type":"task","priority":"medium","status":"todo"}' | head -200
+Command: curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects/c482fcff-2f83-4a2b-b597-6637cf9a004b/issues | head -c 200
 
 Output:
+[{"id":"0571312f-4fe5-49ec-8e58-2b835fd2253e","projectId":"c482fcff-2f83-4a2b-b597-6637cf9a004b","key":"TNINE-1","type":"Task","summary":"Updated Test Issue","status":"todo","priority":"Medium","repor

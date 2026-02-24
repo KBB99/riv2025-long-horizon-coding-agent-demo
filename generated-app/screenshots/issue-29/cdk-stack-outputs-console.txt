@@ -1,8 +1,20 @@
+    ✓ matches snapshot (9 ms)
+      ✓ creates a DynamoDB table with correct key schema (6 ms)
+      ✓ DynamoDB table has GSI1 (1 ms)
+      ✓ DynamoDB table has GSI2 (1 ms)
+      ✓ DynamoDB table has GSI3 (1 ms)
+      ✓ DynamoDB table has point-in-time recovery (3 ms)
+      ✓ creates a Lambda function with Node.js 20 runtime (1 ms)
+      ✓ Lambda has correct environment variables (2 ms)
+      ✓ Lambda has DynamoDB read/write permissions
+      ✓ creates an HTTP API
+      ✓ API Gateway has CORS configured (2 ms)
+      ✓ creates an S3 bucket for frontend
+      ✓ S3 bucket blocks public access
+      ✓ creates a CloudFront distribution
+      ✓ CloudFront has SPA error handling
+    Stack Outputs
+      ✓ outputs API URL (1 ms)
+      ✓ outputs Frontend Bucket Name
       ✓ outputs Distribution ID
-      ✓ outputs Distribution Domain (1 ms)
-
-Test Suites: 1 passed, 1 total
-Tests:       15 skipped, 4 passed, 19 total
-Snapshots:   0 total
-Time:        9.115 s
-Ran all test suites with tests matching "Stack Outputs".
+      ✓ outputs Distribution Domain

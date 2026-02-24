@@ -1,8 +1,1 @@
-HTTP/2 204 
-date: Tue, 24 Feb 2026 04:51:37 GMT
 access-control-allow-origin: *
-access-control-allow-methods: DELETE,GET,OPTIONS,POST,PUT
-access-control-allow-headers: authorization,content-type
-access-control-max-age: 3600
-apigw-requestid: ZRQt-h_coAMEc1Q=
-

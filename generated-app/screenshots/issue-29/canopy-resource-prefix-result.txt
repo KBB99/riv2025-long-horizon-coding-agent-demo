@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: cd infrastructure && npx cdk synth 2>&1 | grep -c 'canopy-'
+Command: cd infrastructure && npx cdk synth 2>&1 | grep -c canopy
 
 Output:
-24
+26

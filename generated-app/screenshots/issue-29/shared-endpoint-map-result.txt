@@ -1,6 +1,9 @@
 RESULT: PASS
 
-Command: cd shared && npx tsc --noEmit && grep 'export const endpoints' src/endpoints.ts
+Command: cd shared && npm run build
 
 Output:
-export const endpoints = {
+
+> @canopy/shared@1.0.0 build
+> tsc
+

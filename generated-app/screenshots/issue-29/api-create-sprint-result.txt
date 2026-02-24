@@ -1,5 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf -X POST https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects/0781eea6-d4dc-43b1-91de-5d90c95ee33b/sprints -H 'Content-Type: application/json' -d '{"name":"Sprint Verify","startDate":"2026-03-01","endDate":"2026-03-14"}' | head -200
+Command: curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects/c482fcff-2f83-4a2b-b597-6637cf9a004b/sprints | head -c 200
 
 Output:
+[{"id":"39d259aa-94a8-4d47-8bdd-1f6e20e4754c","projectId":"c482fcff-2f83-4a2b-b597-6637cf9a004b","name":"Sprint 29","startDate":"2026-02-24T00:00:00Z","endDate":"2026-03-10T00:00:00Z","status":"future

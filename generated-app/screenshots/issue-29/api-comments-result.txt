@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects | python3 -c "import sys,json; d=json.load(sys.stdin); print('API working, projects:', len(d))"
+Command: curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/issues/0571312f-4fe5-49ec-8e58-2b835fd2253e/comments | head -c 200
 
 Output:
-API working, projects: 11
+[]
