@@ -1,20 +1,7 @@
 vite v7.3.1 building client environment for production...
 transforming...
-Found 1 warning while optimizing generated CSS:
-
-[2m│   initial-value: 0;[22m
-[2m│ }[22m
-[2m│[22m @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600&display=swap');
-[2m┆[22m        [33m[2m^--[22m @import rules must precede all rules aside from @charset and @layer statements[39m
-[2m┆[22m
-[2m│ :root {[22m
-[2m│   --font-size: 14px;[22m
-
 ✓ 1229 modules transformed.
 rendering chunks...
-[plugin vite:reporter] 
-(!) /app/workspace/agent-runtime/generated-app/frontend/src/api/client.ts is dynamically imported by /app/workspace/agent-runtime/generated-app/frontend/src/hooks/useIssues.ts but also statically imported by /app/workspace/agent-runtime/generated-app/frontend/src/components/SearchModal.tsx, /app/workspace/agent-runtime/generated-app/frontend/src/hooks/useAttachments.ts, /app/workspace/agent-runtime/generated-app/frontend/src/hooks/useBoard.ts, /app/workspace/agent-runtime/generated-app/frontend/src/hooks/useIssues.ts, /app/workspace/agent-runtime/generated-app/frontend/src/hooks/useProjects.ts, /app/workspace/agent-runtime/generated-app/frontend/src/hooks/useSprints.ts, /app/workspace/agent-runtime/generated-app/frontend/src/pages/IssueDetail.tsx, dynamic import will not move module into another chunk.
-
 computing gzip size...
 dist/index.html                              0.71 kB │ gzip:   0.44 kB
 dist/assets/index-D4Oaf8uq.css             125.76 kB │ gzip:  19.67 kB
@@ -31,9 +18,4 @@ dist/assets/IssueDetail-BgNz_JYG.js         47.54 kB │ gzip:  13.04 kB
 dist/assets/BoardView-USeB3HMW.js           64.35 kB │ gzip:  21.90 kB
 dist/assets/Reports-Dr3J4a8E.js            775.05 kB │ gzip: 213.85 kB
 dist/assets/index-xrwjRzDt.js            1,156.15 kB │ gzip: 326.87 kB
-
-(!) Some chunks are larger than 500 kB after minification. Consider:
-- Using dynamic import() to code-split the application
-- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
-- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
-✓ built in 9.72s
+✓ built in 12.61s
