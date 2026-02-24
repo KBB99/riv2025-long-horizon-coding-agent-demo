@@ -52,9 +52,10 @@ exports[`CanopyStack matches snapshot 1`] = `
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
           "S3Key": "ff3c450e569ea6896201fe9598d7a2aeedfe7b15ce3905aaf832ce57a2ea171a.zip",
         },
+        "Description": "Canopy API handler with attachment routes v11",
         "Environment": {
           "Variables": {
-            "DEPLOY_VERSION": "10",
+            "DEPLOY_VERSION": "11",
             "NODE_OPTIONS": "--enable-source-maps",
             "TABLE_NAME": {
               "Ref": "CanopyTable8B388EA1",
