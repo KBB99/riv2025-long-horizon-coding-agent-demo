@@ -61,7 +61,7 @@ export class CanopyStack extends cdk.Stack {
       environment: {
         TABLE_NAME: table.tableName,
         NODE_OPTIONS: '--enable-source-maps',
-        DEPLOY_VERSION: '9',
+        DEPLOY_VERSION: '10',
       },
       bundling: {
         externalModules: ['@aws-sdk/*'],
