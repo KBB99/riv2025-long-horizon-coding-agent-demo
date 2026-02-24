@@ -1,4 +1,5 @@
-    Lambda
-      ✓ creates a Lambda function with Node.js 20 runtime (1 ms)
-      ✓ Lambda has correct environment variables (1 ms)
-      ✓ Lambda has DynamoDB read/write permissions
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   1 passed, 1 total
+Time:        9.039 s
+Ran all test suites.

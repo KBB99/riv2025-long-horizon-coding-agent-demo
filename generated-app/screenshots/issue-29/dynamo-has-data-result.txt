@@ -115,8 +115,8 @@ Output:
             }
         }
     ],
-    "Count": 37,
-    "ScannedCount": 37,
+    "Count": 39,
+    "ScannedCount": 39,
     "ConsumedCapacity": null,
     "NextToken": "eyJFeGNsdXNpdmVTdGFydEtleSI6IG51bGwsICJib3RvX3RydW5jYXRlX2Ftb3VudCI6IDF9"
 }

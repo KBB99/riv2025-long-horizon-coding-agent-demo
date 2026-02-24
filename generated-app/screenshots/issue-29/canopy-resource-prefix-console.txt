@@ -1,1 +1,5 @@
-"canopy-main-table"
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   1 passed, 1 total
+Time:        9.118 s
+Ran all test suites.

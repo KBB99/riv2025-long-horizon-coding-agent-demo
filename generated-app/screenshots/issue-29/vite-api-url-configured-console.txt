@@ -1,6 +1,1 @@
-NO_CONSOLE_ERRORS
-
-All Messages:
-[debug] [vite] connecting...
-[debug] [vite] connected.
-[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+VITE_API_URL=https://wuoq75966e.execute-api.us-east-1.amazonaws.com

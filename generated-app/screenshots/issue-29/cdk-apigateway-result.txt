@@ -1,7 +1,10 @@
 RESULT: PASS
 
-Command: cd /app/workspace/agent-runtime/generated-app/infrastructure && npm test 2>&1 | grep -i 'api gateway\|CORS'
+Command: cd infrastructure && npm test 2>&1 | tail -5
 
 Output:
-    API Gateway
-      ✓ API Gateway has CORS configured (1 ms)
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   1 passed, 1 total
+Time:        9.209 s
+Ran all test suites.

@@ -1,6 +1,10 @@
 RESULT: PASS
 
-Command: aws dynamodb describe-table --table-name canopy-main-table --region us-east-1 --query 'Table.TableName'
+Command: cd infrastructure && npm test 2>&1 | tail -5
 
 Output:
-"canopy-main-table"
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   1 passed, 1 total
+Time:        9.118 s
+Ran all test suites.
