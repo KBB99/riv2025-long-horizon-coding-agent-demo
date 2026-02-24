@@ -1,5 +1,21 @@
-(!) Some chunks are larger than 500 kB after minification. Consider:
-- Using dynamic import() to code-split the application
-- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
-- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
-✓ built in 10.12s
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 1229 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                              0.71 kB │ gzip:   0.44 kB
+dist/assets/index-D4Oaf8uq.css             125.76 kB │ gzip:  19.67 kB
+dist/assets/card-DrOZzvX7.js                 0.89 kB │ gzip:   0.39 kB
+dist/assets/badge-BPdlm64d.js                1.16 kB │ gzip:   0.56 kB
+dist/assets/separator-BW7klE0u.js            1.42 kB │ gzip:   0.76 kB
+dist/assets/CreateProject-DRjlAoSn.js        2.98 kB │ gzip:   1.38 kB
+dist/assets/avatar-CyTWJGiG.js               4.29 kB │ gzip:   1.89 kB
+dist/assets/ProjectList-D2EQ2EC2.js          4.78 kB │ gzip:   1.72 kB
+dist/assets/Dashboard-DB8zqF4y.js            9.46 kB │ gzip:   2.93 kB
+dist/assets/BacklogView-7zdFpdjk.js         11.41 kB │ gzip:   4.00 kB
+dist/assets/ProjectSettings-Cs6Ahp_Q.js     11.57 kB │ gzip:   4.05 kB
+dist/assets/IssueDetail-hniYYcAQ.js         47.54 kB │ gzip:  13.04 kB
+dist/assets/BoardView-wDad-e3t.js           64.35 kB │ gzip:  21.90 kB
+dist/assets/Reports-CNy6YUrh.js            775.05 kB │ gzip: 213.85 kB
+dist/assets/index-BBW3QjTy.js            1,156.81 kB │ gzip: 326.97 kB
+✓ built in 9.72s
