@@ -50,11 +50,11 @@ exports[`CanopyStack matches snapshot 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "605907a433ebcb830c21f0f2b4b73a65512936ce8dee8fca93fd224758127bee.zip",
+          "S3Key": "ff3c450e569ea6896201fe9598d7a2aeedfe7b15ce3905aaf832ce57a2ea171a.zip",
         },
         "Environment": {
           "Variables": {
-            "DEPLOY_VERSION": "6",
+            "DEPLOY_VERSION": "7",
             "NODE_OPTIONS": "--enable-source-maps",
             "TABLE_NAME": {
               "Ref": "CanopyTable8B388EA1",
@@ -63,7 +63,7 @@ exports[`CanopyStack matches snapshot 1`] = `
         },
         "FunctionName": "canopy-api-handler",
         "Handler": "index.handler",
-        "MemorySize": 512,
+        "MemorySize": 1024,
         "Role": {
           "Fn::GetAtt": [
             "CanopyApiHandlerServiceRole90B2CE2A",

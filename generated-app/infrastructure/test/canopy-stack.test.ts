@@ -82,7 +82,7 @@ describe('CanopyStack', () => {
     test('creates a Lambda function with Node.js 20 runtime', () => {
       template.hasResourceProperties('AWS::Lambda::Function', {
         Runtime: 'nodejs20.x',
-        MemorySize: 512,
+        MemorySize: 1024,
         Timeout: 30,
       });
     });

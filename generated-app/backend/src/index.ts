@@ -1,3 +1,4 @@
+// Canopy API Lambda Handler v6 - with attachment routes
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { listProjects, createProject, getProject, updateProject, deleteProject } from './handlers/projects';
 import { listIssues, createIssue, getIssue, updateIssue, deleteIssue, bulkUpdateIssues } from './handlers/issues';
