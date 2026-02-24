@@ -1,18 +1,13 @@
-RESULT: PASS
-
-Command: cd infrastructure && npm test 2>&1
-
-Output:
 
 > @canopy/infrastructure@1.0.0 test
 > jest
 
 Bundling asset TestStack/CanopyApiHandler/Code/Stage...
 
-  ...71adba5e13f40f7ab611a1e37693da5d46d547f11e2ac8-building/index.js   78.3kb
-  ...ba5e13f40f7ab611a1e37693da5d46d547f11e2ac8-building/index.js.map  301.4kb
+  ...11cb0404ecceb8da4e6b0c2463bfa063fb6e93c561970c-building/index.js   78.3kb
+  ...0404ecceb8da4e6b0c2463bfa063fb6e93c561970c-building/index.js.map  301.4kb
 
-⚡ Done in 18ms
+⚡ Done in 17ms
   console.warn
     [WARNING] aws-cdk-lib.aws_cloudfront_origins.S3Origin is deprecated.
       Use `S3BucketOrigin` or `S3StaticWebsiteOrigin` instead.
@@ -52,35 +47,35 @@ Bundling asset TestStack/CanopyApiHandler/Code/Stage...
       at new CanopyStack (lib/canopy-stack.ts:125:26)
       at Object.<anonymous> (test/canopy-stack.test.ts:10:19)
 
-PASS test/canopy-stack.test.ts (11.919 s)
+PASS test/canopy-stack.test.ts (8.826 s)
   CanopyStack
     ✓ matches snapshot (6 ms)
     DynamoDB
       ✓ creates a DynamoDB table with correct key schema (6 ms)
-      ✓ DynamoDB table has GSI1 (2 ms)
+      ✓ DynamoDB table has GSI1 (1 ms)
       ✓ DynamoDB table has GSI2 (1 ms)
       ✓ DynamoDB table has GSI3 (1 ms)
       ✓ DynamoDB table has point-in-time recovery (1 ms)
     Lambda
-      ✓ creates a Lambda function with Node.js 20 runtime
-      ✓ Lambda has correct environment variables (5 ms)
+      ✓ creates a Lambda function with Node.js 20 runtime (1 ms)
+      ✓ Lambda has correct environment variables (1 ms)
       ✓ Lambda has DynamoDB read/write permissions (1 ms)
     API Gateway
       ✓ creates an HTTP API (1 ms)
       ✓ API Gateway has CORS configured (1 ms)
     Frontend Hosting
       ✓ creates an S3 bucket for frontend
-      ✓ S3 bucket blocks public access
+      ✓ S3 bucket blocks public access (1 ms)
       ✓ creates a CloudFront distribution
       ✓ CloudFront has SPA error handling
     Stack Outputs
-      ✓ outputs API URL (2 ms)
-      ✓ outputs Frontend Bucket Name
-      ✓ outputs Distribution ID (1 ms)
+      ✓ outputs API URL (1 ms)
+      ✓ outputs Frontend Bucket Name (1 ms)
+      ✓ outputs Distribution ID
       ✓ outputs Distribution Domain
 
 Test Suites: 1 passed, 1 total
 Tests:       19 passed, 19 total
 Snapshots:   1 passed, 1 total
-Time:        12.158 s, estimated 13 s
+Time:        9.068 s
 Ran all test suites.

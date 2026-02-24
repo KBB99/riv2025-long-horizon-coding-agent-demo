@@ -1,0 +1,6 @@
+RESULT: PASS
+
+Command: curl -sf -X POST https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects -H 'Content-Type: application/json' -d '{"name":"AttachTest","key":"ATT"}'
+
+Output:
+{"name":"AttachTest","key":"ATT","id":"267b920a-18a1-41c3-97f2-d98c47604e82","issueCounter":0,"isArchived":false,"settings":{},"createdAt":"2026-02-24T00:06:30.465Z","updatedAt":"2026-02-24T00:06:30.465Z"}
