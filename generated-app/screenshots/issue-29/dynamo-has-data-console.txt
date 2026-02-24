@@ -18,3 +18,100 @@
                                 "S": "#8896A6"
                             },
                             "sortOrder": {
+                                "N": "0"
+                            }
+                        }
+                    },
+                    {
+                        "M": {
+                            "name": {
+                                "S": "In Progress"
+                            },
+                            "id": {
+                                "S": "8f84ccca-1b41-4a33-836d-92ee83bf3b4b"
+                            },
+                            "statusCategory": {
+                                "S": "in_progress"
+                            },
+                            "color": {
+                                "S": "#2196F3"
+                            },
+                            "sortOrder": {
+                                "N": "1"
+                            }
+                        }
+                    },
+                    {
+                        "M": {
+                            "name": {
+                                "S": "In Review"
+                            },
+                            "id": {
+                                "S": "44f2e796-3707-4583-840e-028d5f62822f"
+                            },
+                            "statusCategory": {
+                                "S": "in_progress"
+                            },
+                            "color": {
+                                "S": "#E9C46A"
+                            },
+                            "sortOrder": {
+                                "N": "2"
+                            }
+                        }
+                    },
+                    {
+                        "M": {
+                            "name": {
+                                "S": "Done"
+                            },
+                            "id": {
+                                "S": "aa1c9da0-0cd0-47ca-9356-e772b68397b7"
+                            },
+                            "statusCategory": {
+                                "S": "done"
+                            },
+                            "color": {
+                                "S": "#40916C"
+                            },
+                            "sortOrder": {
+                                "N": "3"
+                            }
+                        }
+                    }
+                ]
+            },
+            "projectId": {
+                "S": "722c1920-9eeb-4858-abfc-20625ff195b3"
+            },
+            "entityType": {
+                "S": "BOARD"
+            },
+            "swimlaneBy": {
+                "S": "none"
+            },
+            "updatedAt": {
+                "S": "2026-02-23T18:26:36.546Z"
+            },
+            "createdAt": {
+                "S": "2026-02-23T18:26:36.546Z"
+            },
+            "SK": {
+                "S": "BOARD"
+            },
+            "PK": {
+                "S": "PROJ#722c1920-9eeb-4858-abfc-20625ff195b3"
+            },
+            "id": {
+                "S": "a874d870-2d96-4d48-af4d-7488dd98c0a6"
+            },
+            "name": {
+                "S": "Board"
+            }
+        }
+    ],
+    "Count": 33,
+    "ScannedCount": 33,
+    "ConsumedCapacity": null,
+    "NextToken": "eyJFeGNsdXNpdmVTdGFydEtleSI6IG51bGwsICJib3RvX3RydW5jYXRlX2Ftb3VudCI6IDF9"
+}
