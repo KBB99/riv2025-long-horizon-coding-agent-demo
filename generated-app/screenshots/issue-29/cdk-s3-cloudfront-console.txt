@@ -1,7 +1,9 @@
+Bundling asset TestStack/CanopyApiHandler/Code/Stage...
 
-> @canopy/infrastructure@1.0.0 test
-> jest
+  ...18ee52e5c0d619a7ad95ac9e2e9014d342be7049fb788f-building/index.js   78.3kb
+  ...52e5c0d619a7ad95ac9e2e9014d342be7049fb788f-building/index.js.map  301.4kb
 
+⚡ Done in 16ms
   console.warn
     [WARNING] aws-cdk-lib.aws_cloudfront_origins.S3Origin is deprecated.
       Use `S3BucketOrigin` or `S3StaticWebsiteOrigin` instead.
@@ -41,3 +43,35 @@
       at new CanopyStack (lib/canopy-stack.ts:125:26)
       at Object.<anonymous> (test/canopy-stack.test.ts:10:19)
 
+PASS infrastructure/test/canopy-stack.test.ts (8.797 s)
+  CanopyStack
+    ✓ matches snapshot (6 ms)
+    DynamoDB
+      ✓ creates a DynamoDB table with correct key schema (5 ms)
+      ✓ DynamoDB table has GSI1 (2 ms)
+      ✓ DynamoDB table has GSI2 (1 ms)
+      ✓ DynamoDB table has GSI3
+      ✓ DynamoDB table has point-in-time recovery
+    Lambda
+      ✓ creates a Lambda function with Node.js 20 runtime
+      ✓ Lambda has correct environment variables (2 ms)
+      ✓ Lambda has DynamoDB read/write permissions
+    API Gateway
+      ✓ creates an HTTP API
+      ✓ API Gateway has CORS configured (1 ms)
+    Frontend Hosting
+      ✓ creates an S3 bucket for frontend (1 ms)
+      ✓ S3 bucket blocks public access
+      ✓ creates a CloudFront distribution
+      ✓ CloudFront has SPA error handling
+    Stack Outputs
+      ✓ outputs API URL (1 ms)
+      ✓ outputs Frontend Bucket Name
+      ✓ outputs Distribution ID (1 ms)
+      ✓ outputs Distribution Domain
+
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   1 passed, 1 total
+Time:        9.033 s
+Ran all test suites.
