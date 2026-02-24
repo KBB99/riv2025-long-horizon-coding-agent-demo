@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/search?q=test
+Command: curl -sf 'https://wuoq75966e.execute-api.us-east-1.amazonaws.com/search?q=test'
 
 Output:
 {"issues":[{"id":"82875acd-d3c8-4001-a103-050f4f27d510","projectId":"c73dbae5-0111-46b6-99fa-5ba3ad60fbe2","key":"CAN-4","type":"Task","summary":"E2E board issue test","status":"todo","priority":"Medium","reporterId":"1e42aaea-0561-490c-af04-92d728946625","labels":[],"components":[],"sortOrder":1771871579330,"timeSpent":0,"createdAt":"2026-02-23T18:32:59.290Z","updatedAt":"2026-02-23T18:32:59.290Z"}],"projects":[],"total":1}

@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: cd /app/workspace/agent-runtime/generated-app/infrastructure && npx cdk synth 2>&1 | tail -5
+Command: cd infrastructure && npx cdk synth 2>&1 | tail -5
 
 Output:
     Type: AWS::SSM::Parameter::Value<String>
