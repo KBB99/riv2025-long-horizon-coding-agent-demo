@@ -1,12 +1,16 @@
 RESULT: PASS
 
-Command: npx jest --config infrastructure/jest.config.js 2>&1
+Command: cd /app/workspace/agent-runtime/generated-app/infrastructure && npm test 2>&1
 
 Output:
+
+> @canopy/infrastructure@1.0.0 test
+> jest
+
 Bundling asset TestStack/CanopyApiHandler/Code/Stage...
 
-  ...b767409a51144f172273fce46162c44cd28ad839944d91-building/index.js   78.3kb
-  ...409a51144f172273fce46162c44cd28ad839944d91-building/index.js.map  301.4kb
+  ...4b5e6afcc9425a972f5c53b4aeb27d75e8fb506ddac57a-building/index.js   78.3kb
+  ...6afcc9425a972f5c53b4aeb27d75e8fb506ddac57a-building/index.js.map  301.4kb
 
 ⚡ Done in 17ms
   console.warn
@@ -48,35 +52,35 @@ Bundling asset TestStack/CanopyApiHandler/Code/Stage...
       at new CanopyStack (lib/canopy-stack.ts:125:26)
       at Object.<anonymous> (test/canopy-stack.test.ts:10:19)
 
-PASS infrastructure/test/canopy-stack.test.ts (8.981 s)
+PASS test/canopy-stack.test.ts (8.958 s)
   CanopyStack
-    ✓ matches snapshot (6 ms)
+    ✓ matches snapshot (5 ms)
     DynamoDB
-      ✓ creates a DynamoDB table with correct key schema (6 ms)
+      ✓ creates a DynamoDB table with correct key schema (5 ms)
       ✓ DynamoDB table has GSI1 (1 ms)
       ✓ DynamoDB table has GSI2 (1 ms)
       ✓ DynamoDB table has GSI3 (1 ms)
       ✓ DynamoDB table has point-in-time recovery (1 ms)
     Lambda
       ✓ creates a Lambda function with Node.js 20 runtime (1 ms)
-      ✓ Lambda has correct environment variables (2 ms)
+      ✓ Lambda has correct environment variables (1 ms)
       ✓ Lambda has DynamoDB read/write permissions
     API Gateway
       ✓ creates an HTTP API
       ✓ API Gateway has CORS configured (1 ms)
     Frontend Hosting
-      ✓ creates an S3 bucket for frontend (1 ms)
-      ✓ S3 bucket blocks public access
-      ✓ creates a CloudFront distribution (1 ms)
+      ✓ creates an S3 bucket for frontend
+      ✓ S3 bucket blocks public access (1 ms)
+      ✓ creates a CloudFront distribution
       ✓ CloudFront has SPA error handling (1 ms)
     Stack Outputs
       ✓ outputs API URL (1 ms)
-      ✓ outputs Frontend Bucket Name
-      ✓ outputs Distribution ID (1 ms)
-      ✓ outputs Distribution Domain
+      ✓ outputs Frontend Bucket Name (1 ms)
+      ✓ outputs Distribution ID
+      ✓ outputs Distribution Domain (1 ms)
 
 Test Suites: 1 passed, 1 total
 Tests:       19 passed, 19 total
 Snapshots:   1 passed, 1 total
-Time:        9.222 s, estimated 12 s
+Time:        9.195 s, estimated 12 s
 Ran all test suites.

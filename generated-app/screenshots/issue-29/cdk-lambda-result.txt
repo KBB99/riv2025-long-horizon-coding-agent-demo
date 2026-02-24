@@ -1,14 +1,18 @@
 RESULT: PASS
 
-Command: npx jest --config infrastructure/jest.config.js 2>&1
+Command: cd /app/workspace/agent-runtime/generated-app/infrastructure && npm test 2>&1
 
 Output:
+
+> @canopy/infrastructure@1.0.0 test
+> jest
+
 Bundling asset TestStack/CanopyApiHandler/Code/Stage...
 
-  ...80800dd8e55e1eb6726c38d544ea5370dbe49a3577b588-building/index.js   78.3kb
-  ...0dd8e55e1eb6726c38d544ea5370dbe49a3577b588-building/index.js.map  301.4kb
+  ...32d26ceafe40bddc462ccf082a74f0fd9ca07ca3b76c42-building/index.js   78.3kb
+  ...6ceafe40bddc462ccf082a74f0fd9ca07ca3b76c42-building/index.js.map  301.4kb
 
-⚡ Done in 17ms
+⚡ Done in 16ms
   console.warn
     [WARNING] aws-cdk-lib.aws_cloudfront_origins.S3Origin is deprecated.
       Use `S3BucketOrigin` or `S3StaticWebsiteOrigin` instead.
@@ -48,12 +52,12 @@ Bundling asset TestStack/CanopyApiHandler/Code/Stage...
       at new CanopyStack (lib/canopy-stack.ts:125:26)
       at Object.<anonymous> (test/canopy-stack.test.ts:10:19)
 
-PASS infrastructure/test/canopy-stack.test.ts (8.876 s)
+PASS test/canopy-stack.test.ts (8.817 s)
   CanopyStack
-    ✓ matches snapshot (5 ms)
+    ✓ matches snapshot (6 ms)
     DynamoDB
       ✓ creates a DynamoDB table with correct key schema (6 ms)
-      ✓ DynamoDB table has GSI1 (2 ms)
+      ✓ DynamoDB table has GSI1 (1 ms)
       ✓ DynamoDB table has GSI2 (1 ms)
       ✓ DynamoDB table has GSI3 (1 ms)
       ✓ DynamoDB table has point-in-time recovery (1 ms)
@@ -65,18 +69,18 @@ PASS infrastructure/test/canopy-stack.test.ts (8.876 s)
       ✓ creates an HTTP API (1 ms)
       ✓ API Gateway has CORS configured (1 ms)
     Frontend Hosting
-      ✓ creates an S3 bucket for frontend
-      ✓ S3 bucket blocks public access (1 ms)
+      ✓ creates an S3 bucket for frontend (1 ms)
+      ✓ S3 bucket blocks public access
       ✓ creates a CloudFront distribution
       ✓ CloudFront has SPA error handling (1 ms)
     Stack Outputs
       ✓ outputs API URL (1 ms)
-      ✓ outputs Frontend Bucket Name (1 ms)
-      ✓ outputs Distribution ID
+      ✓ outputs Frontend Bucket Name
+      ✓ outputs Distribution ID (1 ms)
       ✓ outputs Distribution Domain
 
 Test Suites: 1 passed, 1 total
 Tests:       19 passed, 19 total
 Snapshots:   1 passed, 1 total
-Time:        9.119 s
+Time:        9.054 s
 Ran all test suites.

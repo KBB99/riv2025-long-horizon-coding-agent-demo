@@ -1,9 +1,13 @@
+
+> @canopy/infrastructure@1.0.0 test
+> jest
+
 Bundling asset TestStack/CanopyApiHandler/Code/Stage...
 
-  ...12c2b97ba6941bc65c937d7cd33633056fb8a7ea7c7b15-building/index.js   78.3kb
-  ...b97ba6941bc65c937d7cd33633056fb8a7ea7c7b15-building/index.js.map  301.4kb
+  ...33a63ba35db9671f653eb8fca33bc5b730dd114b52c794-building/index.js   78.3kb
+  ...3ba35db9671f653eb8fca33bc5b730dd114b52c794-building/index.js.map  301.4kb
 
-⚡ Done in 17ms
+⚡ Done in 16ms
   console.warn
     [WARNING] aws-cdk-lib.aws_cloudfront_origins.S3Origin is deprecated.
       Use `S3BucketOrigin` or `S3StaticWebsiteOrigin` instead.
@@ -43,35 +47,35 @@ Bundling asset TestStack/CanopyApiHandler/Code/Stage...
       at new CanopyStack (lib/canopy-stack.ts:125:26)
       at Object.<anonymous> (test/canopy-stack.test.ts:10:19)
 
-PASS infrastructure/test/canopy-stack.test.ts (8.792 s)
+PASS test/canopy-stack.test.ts (8.887 s)
   CanopyStack
     ✓ matches snapshot (6 ms)
     DynamoDB
-      ✓ creates a DynamoDB table with correct key schema (5 ms)
+      ✓ creates a DynamoDB table with correct key schema (6 ms)
       ✓ DynamoDB table has GSI1 (2 ms)
       ✓ DynamoDB table has GSI2 (1 ms)
-      ✓ DynamoDB table has GSI3 (1 ms)
-      ✓ DynamoDB table has point-in-time recovery (1 ms)
+      ✓ DynamoDB table has GSI3
+      ✓ DynamoDB table has point-in-time recovery
     Lambda
       ✓ creates a Lambda function with Node.js 20 runtime
-      ✓ Lambda has correct environment variables (1 ms)
-      ✓ Lambda has DynamoDB read/write permissions (1 ms)
+      ✓ Lambda has correct environment variables (2 ms)
+      ✓ Lambda has DynamoDB read/write permissions
     API Gateway
       ✓ creates an HTTP API (1 ms)
       ✓ API Gateway has CORS configured (1 ms)
     Frontend Hosting
-      ✓ creates an S3 bucket for frontend
-      ✓ S3 bucket blocks public access (1 ms)
+      ✓ creates an S3 bucket for frontend (1 ms)
+      ✓ S3 bucket blocks public access
       ✓ creates a CloudFront distribution
-      ✓ CloudFront has SPA error handling
+      ✓ CloudFront has SPA error handling (1 ms)
     Stack Outputs
       ✓ outputs API URL (1 ms)
-      ✓ outputs Frontend Bucket Name (1 ms)
+      ✓ outputs Frontend Bucket Name
       ✓ outputs Distribution ID
-      ✓ outputs Distribution Domain (1 ms)
+      ✓ outputs Distribution Domain
 
 Test Suites: 1 passed, 1 total
 Tests:       19 passed, 19 total
 Snapshots:   1 passed, 1 total
-Time:        9.028 s
+Time:        9.125 s
 Ran all test suites.

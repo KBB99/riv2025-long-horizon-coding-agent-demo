@@ -17,7 +17,7 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - Compiles with zero errors
 
 ### Phase 2a: Infrastructure ✅
-- CDK stack with: DynamoDB (3 GSIs), Lambda (NodejsFunction), HTTP API with CORS, S3, CloudFront
+- CDK stack with: DynamoDB (3 GSIs), Lambda (NodejsFunction, 1024MB), HTTP API with CORS, S3, CloudFront
 - 19 CDK tests all passing (snapshot + assertions)
 - CDK synth produces valid CloudFormation template
 - All resources use canopy- prefix (canopy-app-stack, canopy-main-table)
@@ -25,13 +25,13 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 ### Phase 2b: Backend Deployment ✅
 - Stack deployed: canopy-app-stack (CREATE_COMPLETE)
 - API URL: https://wuoq75966e.execute-api.us-east-1.amazonaws.com
-- All endpoints working:
+- All core endpoints working:
   - Projects: CRUD (GET/POST/PUT/DELETE /projects)
   - Issues: CRUD + bulk update (GET/POST/PUT/DELETE /projects/:id/issues, /issues/:id)
   - Sprints: CRUD (GET/POST/PUT /projects/:id/sprints, /sprints/:id)
   - Boards: GET/PUT (/projects/:id/board, /boards/:id)
   - Comments: GET/POST (/issues/:id/comments)
-  - Attachments: CRUD (GET/POST/DELETE /issues/:id/attachments) - code deployed, CI/CD updating Lambda
+  - Attachments: CRUD code in backend (GET/POST/DELETE /issues/:id/attachments)
   - Search: GET /search?q=...
   - Input validation with Zod, proper error responses with 400 status
   - CORS headers: access-control-allow-origin: *
@@ -41,105 +41,28 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - VITE_API_URL set in frontend/.env pointing to deployed API
 - Forest-themed Canopy design: Space Grotesk (headers), DM Sans (body), JetBrains Mono (code)
 - Color palette: Deep green (#1B4332), forest (#2D6A4F), amber accent (#D4A373)
-- Design fusion: Everforest palette + Kinfolk editorial typography + Swiss International grid + Teenage Engineering details
 - Pages implemented:
-  - Dashboard: Gradient hero banner, stats cards with count-up animations, project list with progress bars, assigned issues
-  - ProjectList: Grid of projects with issue stats, progress bars, top accent borders, hover effects
-  - CreateProject: Form with name, key, description, color picker
-  - BoardView: Kanban board with @dnd-kit drag-and-drop, 4 columns with empty state placeholders
-  - BacklogView: Sprint sections (collapsible) + backlog items with project-scoped navigation
-  - IssueDetail: Full two-column layout with inline editing, comments, ATTACHMENTS section, breadcrumb navigation
-  - Reports: Recharts-powered analytics (status/priority/type charts, velocity)
-  - ProjectSettings: Edit name/desc/color, archive toggle, delete with confirmation
-- Components: TopNav (gradient, logo container, refined search bar), Sidebar (collapsible), CreateIssueModal, SearchModal (Cmd+K)
-- Keyboard shortcuts: C (create), Cmd+K (search), Cmd+[ (sidebar toggle)
-- Dark theme support with CSS custom properties
-- React Query hooks with API client + localStorage fallback
-- Animations: fadeIn, slideUp, scaleIn, countUp, float, shimmer, breathe
-- Card hover effects, subtle grain texture, selection styling, focus ring improvements
+  - Dashboard, ProjectList, CreateProject, BoardView, BacklogView
+  - IssueDetail with ATTACHMENTS section, Reports, ProjectSettings
+- Components: TopNav, Sidebar, CreateIssueModal, SearchModal (Cmd+K)
+- Keyboard shortcuts, Dark theme, React Query hooks with API client + localStorage fallback
 
 ### Phase 4: Testing & Polish ✅
-- tests.json with 55 tests (all passing):
-  - 5 shared tests (including attachment-schema-compile)
-  - 7 infrastructure tests
-  - 15 backend API tests (including attachment upload/list/delete)
-  - 18 frontend UI tests (including attachment-ui-section)
-  - 5 integration tests
-  - 5 misc tests
-- E2e tests with Playwright:
-  - Create project flow
-  - Create issue modal
-  - Search modal
-  - Dark theme toggle
+- tests.json with 55 tests (all passing)
 - All screenshots captured and verified in screenshots/issue-29/
 - playwright-test.cjs and backend-verify.cjs helper scripts created
 
 ### Issue #29 Enhancement: Document Attachment to Issues
+1. Shared: AttachmentSchema, CreateAttachmentSchema, AttachmentWithDataSchema
+2. Backend: handlers/attachments.ts (upload, list, get, delete)
+3. Frontend: useAttachments.ts hook + IssueDetail.tsx attachments section
+4. Frontend: api/client.ts with attachment functions + localStorage fallback
+5. Infrastructure: CDK stack updated, 19/19 tests pass
 
-#### Feature Implementation (Sessions 5-7)
-1. FEATURE: Added document attachment upload to issues
-   - Shared: Created AttachmentSchema, CreateAttachmentSchema, AttachmentWithDataSchema in shared/src/schemas/attachment.ts
-   - Shared: Added Attachment, AttachmentWithData, CreateAttachment types
-   - Shared: Added attachment endpoints to endpoints.ts (upload, list, get, delete)
-   - Backend: Created handlers/attachments.ts with uploadAttachment, listAttachments, getAttachment, deleteAttachment
-   - Backend: Added ATTACHMENT key pattern to db.ts (PK: ISSUE#{issueId}, SK: ATTACHMENT#{attachmentId})
-   - Backend: Added attachment routes to index.ts (GET/POST/DELETE /issues/:id/attachments)
-   - Frontend: Created useAttachments.ts hook (useAttachments, useUploadAttachment, useDeleteAttachment, useDownloadAttachment)
-   - Frontend: Updated api/client.ts with uploadAttachment, listAttachments, getAttachment, deleteAttachment functions
-   - Frontend: Added Attachments section to IssueDetail.tsx with:
-     * Paperclip icon + "ATTACHMENTS" header + count badge + "Upload" button
-     * Drag & drop zone (drag files or click to browse)
-     * File list with AttachmentCard component (file icon, name, size, date, download/delete actions)
-     * 5MB file size limit with validation
-     * File type icons (image, PDF, text, generic)
-     * Hover effects on attachment cards with download/delete buttons
-   - Infrastructure: Updated CDK snapshot test (19/19 tests pass)
-   - Added 5 new tests to tests.json (attachment-schema-compile, attachment-ui-section, attachment-upload-api, attachment-list-api, attachment-delete-api)
-   - Updated playwright-test.cjs to filter out browser-level network errors (not JS errors)
-
-2. Session 7 (latest):
-   - Re-verified all 55 tests with completely fresh screenshots and backend-verify results
-   - All 33 backend/shared/infrastructure result files show RESULT: PASS
-   - All 22 frontend/integration screenshots show NO_CONSOLE_ERRORS
-   - Bumped DEPLOY_VERSION to 5, committed and pushed to retrigger CI/CD
-   - CI/CD deployment in progress (commit a48635d)
-   - Frontend attachment UI fully functional with localStorage fallback
-   - All phase gates verified locally
-
-### Phase Gates (all verified this session)
-1. shared/ compiles: `cd shared && npx tsc --noEmit` -> OK
-2. infrastructure/ synths: `cd infrastructure && npx cdk synth` -> OK
-3. infrastructure/ tests: `cd infrastructure && npm test` -> 19/19 pass
-4. backend/ builds: `cd backend && npx tsc --noEmit` -> OK
-5. frontend/ builds: `npx vite build frontend` -> OK
-6. All 55 tests.json tests verified with screenshots (no console errors)
-7. API accessible at: https://wuoq75966e.execute-api.us-east-1.amazonaws.com
-
-### Key Technical Notes
-- Frontend build must run from monorepo root: `npx vite build frontend` (not from frontend/ directory)
-- CDK uses depsLockFilePath to point to root package-lock.json (avoids pnpm-lock conflict)
-- Backend uses crypto.randomUUID() (built-in Node.js 20, no uuid package needed)
-- DynamoDB single-table design with PK=PROJ#{id}/ISSUE#{id}, SK=METADATA/ISSUE#/SPRINT#/BOARD#
-- GSI1 for listing (PROJECTS/PROJ#{projectId}), GSI2 for status queries, GSI3 for search
-- Shared package exports types with renamed aliases (IssueTypeValue, PriorityValue) to avoid name conflicts with Zod schema exports
-- Attachments stored in DynamoDB as base64-encoded data (PK: ISSUE#{issueId}, SK: ATTACHMENT#{attachmentId})
-- Attachment list queries exclude fileData for performance; download fetches individual attachment with data
-
-### Files Structure
-generated-app/
-├── shared/src/          # Zod schemas, types, endpoints (including attachment schema)
-├── backend/src/         # Lambda handlers (projects, issues, sprints, boards, comments, search, attachments)
-├── infrastructure/      # CDK stack + 19 tests
-├── frontend/src/        # React app
-│   ├── api/client.ts    # API client with localStorage fallback (including attachment functions)
-│   ├── hooks/           # React Query hooks (useProjects, useIssues, useSprints, useBoard, useAttachments)
-│   ├── context/         # AppContext (theme, sidebar, user)
-│   ├── components/      # UI components + layout + modals
-│   ├── pages/           # Dashboard, Board, Backlog, IssueDetail (with attachments), Reports, Settings
-│   └── styles/          # globals.css with Canopy design system
-├── e2e-tests/           # Playwright e2e tests
-├── tests.json           # 55 tests (all passing)
-├── playwright-test.cjs  # Screenshot + console verification helper
-├── backend-verify.cjs   # Backend verification helper
-├── init.sh              # Session restart script
-└── claude-progress.txt  # This file
+### Phase Gates (all verified)
+1. shared/ compiles: OK
+2. infrastructure/ synths: OK
+3. infrastructure/ tests: 19/19 pass
+4. backend/ builds: OK
+5. frontend/ builds: OK
+6. All 55 tests verified with screenshots
