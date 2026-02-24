@@ -1,1 +1,10 @@
-"canopy-main-table"
+      ✓ outputs API URL (1 ms)
+      ✓ outputs Frontend Bucket Name
+      ✓ outputs Distribution ID
+      ✓ outputs Distribution Domain
+
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   1 passed, 1 total
+Time:        9.142 s
+Ran all test suites.

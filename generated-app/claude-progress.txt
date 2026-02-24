@@ -22,24 +22,23 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - CDK synth produces valid CloudFormation template
 - All resources use canopy- prefix (canopy-app-stack, canopy-main-table)
 
-### Phase 2b: Backend Deployment ✅
+### Phase 2b: Backend Deployment ✅ (partial)
 - Stack deployed: canopy-app-stack (CREATE_COMPLETE)
 - API URL: https://wuoq75966e.execute-api.us-east-1.amazonaws.com
-- All core endpoints working:
+- Core endpoints working:
   - Projects: CRUD (GET/POST/PUT/DELETE /projects)
   - Issues: CRUD + bulk update (GET/POST/PUT/DELETE /projects/:id/issues, /issues/:id)
   - Sprints: CRUD (GET/POST/PUT /projects/:id/sprints, /sprints/:id)
   - Boards: GET/PUT (/projects/:id/board, /boards/:id)
   - Comments: GET/POST (/issues/:id/comments)
-  - Attachments: CRUD code in backend (GET/POST/DELETE /issues/:id/attachments)
   - Search: GET /search?q=...
   - Input validation with Zod, proper error responses with 400 status
   - CORS headers: access-control-allow-origin: *
 - DynamoDB table: canopy-main-table with single-table design (PK/SK + 3 GSIs)
-- Note: CI/CD pipeline deploys on push but Lambda redeployment has been slow/stuck.
-  Multiple DEPLOY_VERSION bumps (8→9→10) pushed to trigger redeployment.
-  Core project/issue/sprint/board/comment/search endpoints work on the deployed Lambda.
-  Attachment routes are in the code but awaiting Lambda redeployment via CI/CD.
+- Note: CI/CD pipeline has a bug where `| tee` masks CDK deploy exit code.
+  The Lambda hasn't been updated since initial creation (Feb 20).
+  Attachment routes exist in code but Lambda redeployment is blocked by CI/CD.
+  Frontend uses localStorage fallback for attachments.
 
 ### Phase 3: Frontend ✅
 - VITE_API_URL set in frontend/.env pointing to deployed API
@@ -84,10 +83,10 @@ Implementation complete across all layers:
 
 4. **Infrastructure (CDK)**:
    - CDK stack unchanged (DynamoDB already supports attachment storage via single-table design)
-   - DEPLOY_VERSION bumped to trigger Lambda redeployment
+   - DEPLOY_VERSION bumped to 12 to trigger Lambda redeployment
    - 19/19 CDK tests pass
 
-### Phase Gates (all verified - session 3)
+### Phase Gates (all verified - session 4)
 1. shared/ compiles: OK (npx tsc --noEmit)
 2. infrastructure/ synths: OK (npx cdk synth)
 3. infrastructure/ tests: 19/19 pass (npm test)

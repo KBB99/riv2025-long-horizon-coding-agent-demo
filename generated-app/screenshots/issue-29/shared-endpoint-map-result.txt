@@ -1,5 +1,9 @@
 RESULT: PASS
 
-Command: cd shared && npx tsc --noEmit
+Command: cd shared && npm run build 2>&1 | tail -5
 
 Output:
+
+> @canopy/shared@1.0.0 build
+> tsc
+

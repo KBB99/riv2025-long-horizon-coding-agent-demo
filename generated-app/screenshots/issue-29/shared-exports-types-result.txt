@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: cd shared && npm run build
+Command: cd shared && npm run build 2>&1 | tail -5
 
 Output:
 

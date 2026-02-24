@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/issues/0571312f-4fe5-49ec-8e58-2b835fd2253e/comments
+Command: curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/issues/0571312f-4fe5-49ec-8e58-2b835fd2253e/comments | head -100
 
 Output:
 []
