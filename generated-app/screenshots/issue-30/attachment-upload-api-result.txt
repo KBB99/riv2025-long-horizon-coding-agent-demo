@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: curl -s -w '\n%{http_code}' -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/ad0c130e-e6c1-476a-8cc0-00d64136e2e2/attachments -H 'Content-Type: application/json' -d '{"issueId":"ad0c130e-e6c1-476a-8cc0-00d64136e2e2","fileName":"verify30.txt","fileSize":50,"mimeType":"text/plain","fileData":"dGVzdA=="}' | tail -1
+Command: curl -sf -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/49b95bcb-d53d-43f2-9ec1-b145dd36bb7a/attachments -H 'Content-Type: application/json' -d '{"fileName":"verify-test.txt","fileSize":50,"mimeType":"text/plain","fileData":"VmVyaWZ5IHRlc3Q="}' | jq '.id'
 
 Output:
-201
+"40a1cf62-e9df-40bb-90d6-282072bbc393"

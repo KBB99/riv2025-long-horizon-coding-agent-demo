@@ -1,0 +1,7 @@
+RESULT: PASS
+
+Command: cat frontend/.env && echo '' && grep -c 'VITE_API_URL' frontend/src/api/client.ts
+
+Output:
+VITE_API_URL=https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com
+3

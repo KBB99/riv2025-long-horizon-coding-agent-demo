@@ -1,1 +1,10 @@
-52
+{
+    "Items": [
+        {
+            "entityType": {
+                "S": "BOARD"
+            },
+            "SK": {
+                "S": "BOARD"
+            },
+            "PK": {

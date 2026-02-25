@@ -1,5 +1,5 @@
 Test Suites: 1 passed, 1 total
-Tests:       14 skipped, 5 passed, 19 total
+Tests:       15 skipped, 4 passed, 19 total
 Snapshots:   0 total
-Time:        9.133 s
-Ran all test suites with tests matching "Frontend".
+Time:        8.974 s, estimated 9 s
+Ran all test suites with tests matching "S3|CloudFront".

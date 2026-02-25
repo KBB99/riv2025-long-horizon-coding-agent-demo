@@ -1,8 +1,10 @@
 RESULT: PASS
 
-Command: cd infrastructure && npx cdk synth 2>&1 | tail -3
+Command: cd infrastructure && npx cdk synth 2>&1 | tail -5
 
 Output:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /cdk-bootstrap/hnb659fds/version
     Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
 
 72 feature flags are not configured. Run 'cdk flags --unstable=flags' to learn more.

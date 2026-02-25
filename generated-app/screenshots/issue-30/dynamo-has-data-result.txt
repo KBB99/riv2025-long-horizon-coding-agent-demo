@@ -1,6 +1,15 @@
 RESULT: PASS
 
-Command: aws dynamodb scan --table-name canopy-main-table --max-items 1 --region us-east-1 | jq .Count
+Command: aws dynamodb scan --table-name canopy-main-table --max-items 1 --region us-east-1 2>&1 | head -10
 
 Output:
-52
+{
+    "Items": [
+        {
+            "entityType": {
+                "S": "BOARD"
+            },
+            "SK": {
+                "S": "BOARD"
+            },
+            "PK": {

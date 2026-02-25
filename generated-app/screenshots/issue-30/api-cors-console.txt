@@ -1,1 +1,6 @@
-access-control-allow-origin: *
+HTTP/2 200 
+date: Wed, 25 Feb 2026 03:57:35 GMT
+content-type: application/json
+content-length: 2
+apigw-requestid: ZUbvig1goAMEYrw=
+

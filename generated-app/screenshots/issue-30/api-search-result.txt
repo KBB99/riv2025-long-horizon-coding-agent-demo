@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/search?q=test | jq .total
+Command: curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/search?q=test | jq '.total'
 
 Output:
-16
+18

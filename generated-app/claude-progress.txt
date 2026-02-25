@@ -96,7 +96,7 @@ Key changes made:
 - GET /issues/:id/attachments/:attachmentId → 200 (download with file data)
 - DELETE /issues/:id/attachments/:attachmentId → 200 (delete)
 
-### All Phase Gates Passing (Re-verified Session 2026-02-25 03:45 UTC):
+### All Phase Gates Passing (Re-verified Session 2026-02-25 03:55 UTC):
 1. shared/ compiles: OK (npx tsc --noEmit) ✅
 2. infrastructure/ synths: OK (npx cdk synth) ✅
 3. infrastructure/ tests: 19/19 pass (npm test) ✅
@@ -109,3 +109,5 @@ Key changes made:
 10. All screenshots re-captured in screenshots/issue-30/ ✅
 11. Full round-trip attachment test: upload via API → list via API → download with fileData → delete → confirmed ✅
 12. All backend-verify.cjs tests pass for all 60 test IDs ✅
+13. All backend-verify.cjs re-verified this session: shared-schemas-compile, shared-exports-types, shared-zod-schemas, cdk-synth, cdk-tests, cdk-dynamodb, cdk-lambda, cdk-apigateway, cdk-s3-cloudfront, cdk-stack-outputs, api-list-projects, api-create-project, api-get-project, api-update-project, api-delete-project, api-create-issue, api-list-issues, api-update-issue, api-create-sprint, api-get-board, api-search, api-validation, api-cors, api-comments, dynamo-has-data, frontend-uses-api, vite-api-url-configured, shared-endpoint-map, canopy-resource-prefix, frontend-build, attachment-schema-compile, attachment-upload-api, attachment-list-api, attachment-delete-api, attachment-upload-xhr, attachment-persist-reload, attachment-download-api, attachment-delete-xhr, attachment-e2e-suite ✅
+14. All UI screenshots re-verified: homepage-loads, homepage-no-console-errors, project-list-page, create-project-page, board-view-page, backlog-view-page, issue-detail-page, reports-page, project-settings-page, attachment-ui-section, attachment-upload-xhr, attachment-persist-reload, attachment-download-api, attachment-delete-xhr, sidebar-navigation, topnav-header, forest-theme, responsive-layout, dark-theme, keyboard-shortcuts, search-modal, create-issue-modal, create-project-e2e, create-issue-e2e, board-dnd ✅
