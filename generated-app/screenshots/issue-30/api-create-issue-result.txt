@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects/71481434-187f-41f8-83d4-81819983d22e/issues -H 'Content-Type: application/json' -d '{"projectId":"71481434-187f-41f8-83d4-81819983d22e","summary":"Verify Test Issue","type":"Task","priority":"Medium"}'
+Command: curl -sf -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects/411e733c-c843-4510-b323-c37614a27ca6/issues -H 'Content-Type: application/json' -d '{"summary":"Test Issue","type":"Task","priority":"Medium","status":"todo"}' | jq '.summary'
 
 Output:
-{"projectId":"71481434-187f-41f8-83d4-81819983d22e","type":"Task","summary":"Verify Test Issue","priority":"Medium","labels":[],"components":[],"id":"e3a3b487-6efa-469c-b784-4365149e8334","key":"TST-3","status":"todo","reporterId":"9617ef5b-4e55-4694-b30e-f25fe55ceeb0","sortOrder":3000,"timeSpent":0,"createdAt":"2026-02-25T03:06:39.790Z","updatedAt":"2026-02-25T03:06:39.790Z"}
+"Test Issue"

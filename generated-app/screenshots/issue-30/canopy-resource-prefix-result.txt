@@ -1,10 +1,6 @@
 RESULT: PASS
 
-Command: aws dynamodb describe-table --table-name canopy-main-table --region us-east-1 2>&1 | head -5
+Command: aws dynamodb describe-table --table-name canopy-main-table --region us-east-1 --query 'Table.TableName' --output text
 
 Output:
-{
-    "Table": {
-        "AttributeDefinitions": [
-            {
-                "AttributeName": "GSI1PK",
+canopy-main-table

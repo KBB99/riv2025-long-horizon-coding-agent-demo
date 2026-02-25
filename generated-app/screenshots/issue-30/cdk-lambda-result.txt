@@ -1,10 +1,7 @@
 RESULT: PASS
 
-Command: cd /app/workspace/agent-runtime/generated-app/infrastructure && npm test 2>&1 | grep -E '(PASS|FAIL|Lambda)'
+Command: cd infrastructure && npm test 2>&1 | grep -E '(PASS|FAIL|Tests:)'
 
 Output:
-PASS test/canopy-stack.test.ts (12.686 s)
-    Lambda
-      ✓ creates a Lambda function with Node.js 20 runtime (1 ms)
-      ✓ Lambda has correct environment variables (2 ms)
-      ✓ Lambda has DynamoDB read/write permissions (1 ms)
+PASS test/canopy-stack.test.ts (8.71 s)
+Tests:       19 passed, 19 total

@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: cat /app/workspace/agent-runtime/generated-app/frontend/.env
+Command: cat frontend/.env
 
 Output:
 VITE_API_URL=https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com

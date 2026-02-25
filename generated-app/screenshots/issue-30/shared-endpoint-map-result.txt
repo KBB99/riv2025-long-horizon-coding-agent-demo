@@ -1,6 +1,7 @@
 RESULT: PASS
 
-Command: cd /app/workspace/agent-runtime/generated-app/shared && npx tsc --noEmit && echo 'ENDPOINT_MAP_OK'
+Command: cd shared && npx tsc --noEmit && grep -c 'uploadAttachment' src/endpoints.ts && echo 'Endpoints with attachment routes verified'
 
 Output:
-ENDPOINT_MAP_OK
+1
+Endpoints with attachment routes verified

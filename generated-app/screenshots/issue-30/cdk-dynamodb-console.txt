@@ -1,8 +1,21 @@
-PASS test/canopy-stack.test.ts (13.107 s)
-    DynamoDB
-      ✓ creates a DynamoDB table with correct key schema (9 ms)
+PASS test/canopy-stack.test.ts (8.727 s)
+    ✓ matches snapshot (6 ms)
+      ✓ creates a DynamoDB table with correct key schema (6 ms)
       ✓ DynamoDB table has GSI1 (2 ms)
-      ✓ DynamoDB table has GSI2 (2 ms)
-      ✓ DynamoDB table has GSI3 (2 ms)
-      ✓ DynamoDB table has point-in-time recovery (2 ms)
-      ✓ Lambda has DynamoDB read/write permissions
+      ✓ DynamoDB table has GSI2 (1 ms)
+      ✓ DynamoDB table has GSI3 (1 ms)
+      ✓ DynamoDB table has point-in-time recovery (1 ms)
+      ✓ creates a Lambda function with Node.js 20 runtime
+      ✓ Lambda has correct environment variables (1 ms)
+      ✓ Lambda has DynamoDB read/write permissions (1 ms)
+      ✓ creates an HTTP API (1 ms)
+      ✓ API Gateway has CORS configured (1 ms)
+      ✓ creates an S3 bucket for frontend
+      ✓ S3 bucket blocks public access (1 ms)
+      ✓ creates a CloudFront distribution
+      ✓ CloudFront has SPA error handling (1 ms)
+      ✓ outputs API URL (1 ms)
+      ✓ outputs Frontend Bucket Name (1 ms)
+      ✓ outputs Distribution ID
+      ✓ outputs Distribution Domain (1 ms)
+Tests:       19 passed, 19 total

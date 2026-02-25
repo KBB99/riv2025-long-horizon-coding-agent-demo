@@ -96,7 +96,7 @@ Key changes made:
 - GET /issues/:id/attachments/:attachmentId → 200 (download with file data)
 - DELETE /issues/:id/attachments/:attachmentId → 200 (delete)
 
-### All Phase Gates Passing (Re-verified Session 2026-02-25 03:24 UTC):
+### All Phase Gates Passing (Re-verified Session 2026-02-25 03:35 UTC):
 1. shared/ compiles: OK (npx tsc --noEmit) ✅
 2. infrastructure/ synths: OK (npx cdk synth) ✅
 3. infrastructure/ tests: 19/19 pass (npm test) ✅
@@ -108,3 +108,4 @@ Key changes made:
 9. E2E test suite: 5/5 passed (attachment-upload.spec.ts) ✅
 10. All screenshots re-captured in screenshots/issue-30/ ✅
 11. Full round-trip attachment test: upload via API → list via API → download with fileData → delete → confirmed ✅
+12. All backend-verify.cjs tests pass for all 60 test IDs ✅

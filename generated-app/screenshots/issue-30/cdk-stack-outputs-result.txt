@@ -1,10 +1,7 @@
 RESULT: PASS
 
-Command: cd /app/workspace/agent-runtime/generated-app/infrastructure && npm test 2>&1 | grep -E '(PASS|FAIL|output)'
+Command: cd infrastructure && npm test 2>&1 | grep -E 'Tests:|PASS'
 
 Output:
-PASS test/canopy-stack.test.ts (12.869 s)
-      ✓ outputs API URL (1 ms)
-      ✓ outputs Frontend Bucket Name
-      ✓ outputs Distribution ID (1 ms)
-      ✓ outputs Distribution Domain
+PASS test/canopy-stack.test.ts (8.655 s)
+Tests:       19 passed, 19 total

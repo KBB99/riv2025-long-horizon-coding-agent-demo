@@ -1,7 +1,2 @@
-      This API will be removed in the next major release.
-      This API will be removed in the next major release.
-PASS test/canopy-stack.test.ts (12.712 s)
-    API Gateway
-      ✓ creates an HTTP API (1 ms)
-      ✓ API Gateway has CORS configured (1 ms)
-      ✓ outputs API URL (1 ms)
+PASS test/canopy-stack.test.ts (8.699 s)
+Tests:       19 passed, 19 total

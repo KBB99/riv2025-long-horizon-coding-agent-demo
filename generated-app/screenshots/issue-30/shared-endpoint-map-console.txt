@@ -1,1 +1,2 @@
-ENDPOINT_MAP_OK
+1
+Endpoints with attachment routes verified
