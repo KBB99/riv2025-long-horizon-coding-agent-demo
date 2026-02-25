@@ -1,5 +1,5 @@
-Test Suites: 1 passed, 1 total
-Tests:       19 passed, 19 total
-Snapshots:   1 passed, 1 total
-Time:        13.329 s, estimated 14 s
-Ran all test suites.
+PASS test/canopy-stack.test.ts (12.869 s)
+      ✓ outputs API URL (1 ms)
+      ✓ outputs Frontend Bucket Name
+      ✓ outputs Distribution ID (1 ms)
+      ✓ outputs Distribution Domain

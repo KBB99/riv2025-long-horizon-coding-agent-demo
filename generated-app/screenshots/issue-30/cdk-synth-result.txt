@@ -1,15 +1,6 @@
 RESULT: PASS
 
-Command: cd /app/workspace/agent-runtime/generated-app/infrastructure && npx cdk synth 2>&1 | tail -10
+Command: cd infrastructure && npx cdk synth > /dev/null 2>&1 && echo SYNTH_OK
 
 Output:
-      Fn::GetAtt:
-        - CanopyDistributionC5D57BD9
-        - DomainName
-Parameters:
-  BootstrapVersion:
-    Type: AWS::SSM::Parameter::Value<String>
-    Default: /cdk-bootstrap/hnb659fds/version
-    Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]
-
-72 feature flags are not configured. Run 'cdk flags --unstable=flags' to learn more.
+SYNTH_OK

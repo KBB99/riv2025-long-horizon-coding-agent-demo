@@ -5,4 +5,4 @@ Command: cd /app/workspace/agent-runtime/generated-app/frontend && npx vite buil
 Output:
 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
-✓ built in 14.64s
+✓ built in 15.76s

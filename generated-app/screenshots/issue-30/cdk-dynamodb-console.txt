@@ -1,5 +1,8 @@
-Test Suites: 1 passed, 1 total
-Tests:       19 passed, 19 total
-Snapshots:   1 passed, 1 total
-Time:        13.279 s, estimated 14 s
-Ran all test suites.
+PASS test/canopy-stack.test.ts (13.107 s)
+    DynamoDB
+      ✓ creates a DynamoDB table with correct key schema (9 ms)
+      ✓ DynamoDB table has GSI1 (2 ms)
+      ✓ DynamoDB table has GSI2 (2 ms)
+      ✓ DynamoDB table has GSI3 (2 ms)
+      ✓ DynamoDB table has point-in-time recovery (2 ms)
+      ✓ Lambda has DynamoDB read/write permissions
