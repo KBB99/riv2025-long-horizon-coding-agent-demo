@@ -462,21 +462,12 @@ export async function uploadAttachment(
   data: { fileName: string; fileSize: number; mimeType: string; fileData: string },
 ): Promise<Attachment> {
   if (await shouldUseApi()) {
-    try {
-      return await http.post<Attachment>(`/issues/${issueId}/attachments`, {
-        ...data,
-        issueId,
-      });
-    } catch (err) {
-      // Fall back to localStorage if endpoint not yet deployed (404)
-      if (err instanceof ApiError && err.status === 404) {
-        console.info('Attachment API not available, using localStorage fallback');
-      } else {
-        throw err;
-      }
-    }
+    return http.post<Attachment>(`/issues/${issueId}/attachments`, {
+      ...data,
+      issueId,
+    });
   }
-  // localStorage fallback
+  // localStorage fallback (only when API is completely unreachable)
   const attachment: Attachment = {
     id: generateId(),
     issueId,
@@ -486,7 +477,6 @@ export async function uploadAttachment(
     uploadedBy: 'local-user',
     createdAt: now(),
   };
-  // Store metadata in list
   const items = lsRead<Attachment & { fileData?: string }>('attachments');
   items.push({ ...attachment, fileData: data.fileData });
   lsWrite('attachments', items);
@@ -495,16 +485,7 @@ export async function uploadAttachment(
 
 export async function listAttachments(issueId: string): Promise<Attachment[]> {
   if (await shouldUseApi()) {
-    try {
-      return await http.get<Attachment[]>(`/issues/${issueId}/attachments`);
-    } catch (err) {
-      // Fall back to localStorage if endpoint not yet deployed (404)
-      if (err instanceof ApiError && err.status === 404) {
-        console.info('Attachment API not available, using localStorage fallback');
-      } else {
-        throw err;
-      }
-    }
+    return http.get<Attachment[]>(`/issues/${issueId}/attachments`);
   }
   return lsList<Attachment & { issueId: string }>('attachments').filter(
     (a) => a.issueId === issueId,
@@ -516,18 +497,9 @@ export async function getAttachment(
   attachmentId: string,
 ): Promise<AttachmentWithData> {
   if (await shouldUseApi()) {
-    try {
-      return await http.get<AttachmentWithData>(
-        `/issues/${issueId}/attachments/${attachmentId}`,
-      );
-    } catch (err) {
-      // Fall back to localStorage if endpoint not yet deployed (404 route not found)
-      if (err instanceof ApiError && err.status === 404 && err.data && typeof err.data === 'object' && 'error' in (err.data as Record<string, unknown>) && ((err.data as Record<string, unknown>).error as Record<string, unknown>)?.code === 'NOT_FOUND') {
-        console.info('Attachment API not available, using localStorage fallback');
-      } else {
-        throw err;
-      }
-    }
+    return http.get<AttachmentWithData>(
+      `/issues/${issueId}/attachments/${attachmentId}`,
+    );
   }
   const items = lsRead<AttachmentWithData & { issueId: string }>('attachments');
   const item = items.find((a) => a.id === attachmentId && a.issueId === issueId);
@@ -540,18 +512,9 @@ export async function deleteAttachment(
   attachmentId: string,
 ): Promise<{ success: boolean }> {
   if (await shouldUseApi()) {
-    try {
-      return await http.delete<{ success: boolean }>(
-        `/issues/${issueId}/attachments/${attachmentId}`,
-      );
-    } catch (err) {
-      // Fall back to localStorage if endpoint not yet deployed (404)
-      if (err instanceof ApiError && err.status === 404) {
-        console.info('Attachment API not available, using localStorage fallback');
-      } else {
-        throw err;
-      }
-    }
+    return http.delete<{ success: boolean }>(
+      `/issues/${issueId}/attachments/${attachmentId}`,
+    );
   }
   const items = lsRead<Attachment & { issueId: string }>('attachments');
   const filtered = items.filter(

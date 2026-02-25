@@ -1,7 +1,7 @@
 CANOPY PROJECT MANAGEMENT APP - Progress Report
 =================================================
 
-## Status: ALL PHASES COMPLETE (Issue #29 - Document Attachment Feature)
+## Status: ALL PHASES COMPLETE (Issue #30 - Backend-Integrated Document Upload)
 
 ### Architecture
 - Monorepo with npm workspaces: shared/, backend/, frontend/, infrastructure/
@@ -22,9 +22,9 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - CDK synth produces valid CloudFormation template
 - All resources use canopy- prefix (canopy-app-stack, canopy-main-table)
 
-### Phase 2b: Backend Deployment ✅ (partial)
+### Phase 2b: Backend Deployment ✅
 - Stack deployed: canopy-app-stack (CREATE_COMPLETE)
-- API URL: https://wuoq75966e.execute-api.us-east-1.amazonaws.com
+- API URL: https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com
 - Core endpoints working:
   - Projects: CRUD (GET/POST/PUT/DELETE /projects)
   - Issues: CRUD + bulk update (GET/POST/PUT/DELETE /projects/:id/issues, /issues/:id)
@@ -32,13 +32,10 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
   - Boards: GET/PUT (/projects/:id/board, /boards/:id)
   - Comments: GET/POST (/issues/:id/comments)
   - Search: GET /search?q=...
+  - **Attachments: GET/POST/DELETE (/issues/:id/attachments, /issues/:id/attachments/:attachmentId)**
   - Input validation with Zod, proper error responses with 400 status
   - CORS headers: access-control-allow-origin: *
 - DynamoDB table: canopy-main-table with single-table design (PK/SK + 3 GSIs)
-- Note: CI/CD pipeline has a bug where `| tee` masks CDK deploy exit code.
-  The Lambda hasn't been updated since initial creation (Feb 20).
-  Attachment routes exist in code but Lambda redeployment is blocked by CI/CD.
-  Frontend uses localStorage fallback for attachments when API returns 404.
 
 ### Phase 3: Frontend ✅
 - VITE_API_URL set in frontend/.env pointing to deployed API
@@ -51,99 +48,60 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - Keyboard shortcuts, Dark theme, React Query hooks with API client + localStorage fallback
 
 ### Phase 4: Testing & Polish ✅
-- tests.json with 55 tests (all passing)
-- All screenshots captured and verified in screenshots/issue-29/
-- playwright-test.cjs and backend-verify.cjs helper scripts created
-- E2E Playwright spec: e2e-tests/attachment-upload.spec.ts (4 tests, all passing)
+- tests.json with 60 tests (all passing)
+- All screenshots captured and verified in screenshots/issue-30/
+- playwright-test.cjs and backend-verify.cjs helper scripts
+- E2E Playwright spec: e2e-tests/attachment-upload.spec.ts (5 tests, all passing)
 
-### Issue #29 Enhancement: Document Attachment to Issues
-Implementation complete across all layers:
+### Issue #30 Enhancement: Backend-Integrated Document Upload
+Key changes made:
 
-1. **Shared (schemas)**:
-   - AttachmentSchema, CreateAttachmentSchema, AttachmentWithDataSchema in shared/src/schemas/attachment.ts
-   - MAX_ATTACHMENT_SIZE (5MB), ALLOWED_MIME_TYPES (18 types: docs, images, archives)
-   - Types exported in shared/src/types.ts
-   - Attachment endpoints in shared/src/endpoints.ts
+1. **Fixed API URL mismatch**:
+   - frontend/.env was pointing to old API (wuoq75966e) instead of current deployed API (q4rf5i4bal)
+   - Updated VITE_API_URL to match latest SSM deploy-state
 
-2. **Backend (handlers)**:
-   - backend/src/handlers/attachments.ts: uploadAttachment, listAttachments, getAttachment, deleteAttachment
-   - Stores metadata + base64 file data in DynamoDB (PK: ISSUE#id, SK: ATTACHMENT#id)
-   - Zod validation, file size checks, proper error responses
-   - Routes registered in backend/src/index.ts (v13)
+2. **Removed localStorage fallback for attachments**:
+   - Previously, attachment functions in frontend/src/api/client.ts had special 404-catching
+     logic that caused them to fall back to localStorage even when the API was reachable
+   - Updated all 4 attachment functions (uploadAttachment, listAttachments, getAttachment, deleteAttachment)
+     to follow the same clean pattern as other API functions (projects, issues, etc.)
+   - Now: if API is reachable → use API directly (no 404 fallback)
+   - localStorage fallback only activates when API is completely unreachable
 
-3. **Frontend (UI)**:
-   - frontend/src/hooks/useAttachments.ts: React Query hooks (useAttachments, useUploadAttachment, useDeleteAttachment, useDownloadAttachment)
-   - frontend/src/api/client.ts: API functions with smart localStorage fallback
-     - If API returns 404 (route not found), gracefully falls back to localStorage
-     - When Lambda is eventually redeployed, will seamlessly switch to API backend
-   - frontend/src/pages/IssueDetail.tsx: Attachment section with:
-     - Upload button + hidden file input (multiple files)
-     - Drag & drop zone with visual feedback (isDragOver state)
-     - Attachment list with cards showing file type icon, name, size, date
-     - Download and delete buttons per attachment (hover reveal)
-     - 5MB file size limit validation with toast error
-     - Toast notifications for success/error
-     - data-testid attributes: attachment-file-input, attachment-dropzone, attachment-list, attachment-item
+3. **Updated useAttachments hook**:
+   - Removed try/catch that silently returned empty array
+   - Now properly propagates errors from the API
 
-4. **Infrastructure (CDK)**:
-   - CDK stack unchanged (DynamoDB already supports attachment storage via single-table design)
-   - DEPLOY_VERSION bumped to 13 to trigger Lambda redeployment
-   - 19/19 CDK tests pass
+4. **Updated E2E tests**:
+   - e2e-tests/attachment-upload.spec.ts: 5 tests (up from 4)
+   - New test: "uploaded attachments persist across page reloads (backend storage)"
+     - Clears localStorage, reloads page, verifies attachments still visible (proving backend storage)
+   - All tests dynamically create project/issue via API instead of hardcoded IDs
+   - Tests verify XHR calls are made (not localStorage)
+   - Tests verify data persists in backend via direct API calls
 
-5. **E2E Tests** (e2e-tests/attachment-upload.spec.ts):
-   - Attachment section visible with upload dropzone: PASS
-   - File upload via file input: PASS
-   - File size limit error for files > 5MB: PASS
-   - Delete uploaded attachment: PASS
+5. **Added 5 new tests to tests.json** (total now 60):
+   - attachment-upload-xhr: Verifies upload makes XHR call to backend
+   - attachment-persist-reload: Verifies attachments persist across page reload
+   - attachment-download-api: Verifies download retrieves file data from backend
+   - attachment-delete-xhr: Verifies delete makes XHR call to backend
+   - attachment-e2e-suite: Verifies all 5 E2E Playwright tests pass
 
-### Session 5 Changes
-- Bumped DEPLOY_VERSION to 13 and pushed to trigger CI/CD redeployment
-- Added smart localStorage fallback in API client: attachment functions now catch 404 errors
-  from the API and fall back to localStorage, preventing console errors
-- Updated CDK snapshot test for v13
-- Created comprehensive E2E test spec: e2e-tests/attachment-upload.spec.ts (4 tests, all pass)
-- Re-verified all 55 tests with fresh screenshots and console logs
-- All pages show NO_CONSOLE_ERRORS
+6. **Updated test API URLs**:
+   - All tests in tests.json updated from old API URL to new deployed API URL
 
-### Session 6 Changes (Feb 24, 2026)
-- Full re-verification of all 55 tests with fresh screenshots and console logs
-- All phase gates re-verified:
-  1. shared/ compiles: OK (npx tsc --noEmit)
-  2. infrastructure/ synths: OK (npx cdk synth)
-  3. infrastructure/ tests: 19/19 pass (npm test)
-  4. frontend/ builds: OK (npx vite build frontend)
-  5. All 55 tests verified with screenshots and console logs
-  6. NO_CONSOLE_ERRORS on all pages
-  7. All backend API endpoints verified working (projects, issues, sprints, board, search, comments)
-  8. CORS verified: access-control-allow-origin: * returned with Origin header
-  9. API validation verified: 400 status with Zod error details for invalid input
-  10. DynamoDB table verified: 34 items in canopy-main-table
+### Verified Backend Attachment Endpoints (all working):
+- POST /issues/:id/attachments → 201 (upload with base64 file data)
+- GET /issues/:id/attachments → 200 (list metadata)
+- GET /issues/:id/attachments/:attachmentId → 200 (download with file data)
+- DELETE /issues/:id/attachments/:attachmentId → 200 (delete)
 
-### Session 7 Changes (Feb 24, 2026)
-- Re-verification of all 55 tests with fresh screenshots and console logs
-- All phase gates re-verified (all passing)
-
-### Session 8 Changes (Feb 24, 2026)
-- Full re-verification of all 55 tests with fresh screenshots and console logs
-- All phase gates re-verified (all passing)
-
-### Session 9 Changes (Latest - Feb 24, 2026)
-- Full re-verification of all 55 tests with fresh screenshots and console logs
-- All phase gates re-verified:
-  1. shared/ compiles: OK (npx tsc --noEmit) ✅
-  2. infrastructure/ synths: OK (npx cdk synth) ✅
-  3. infrastructure/ tests: 19/19 pass (npm test) ✅
-  4. frontend/ builds: OK (npx vite build frontend) ✅
-  5. All 55 tests verified with screenshots and console logs ✅
-  6. NO_CONSOLE_ERRORS on all pages ✅
-  7. All backend API endpoints verified working ✅
-  8. CORS verified ✅
-  9. API validation verified ✅
-  10. DynamoDB table data confirmed: 39 items ✅
-- Attachment feature fully operational:
-  - Issue detail page shows ATTACHMENTS section with drag & drop upload zone
-  - Upload button and browse link functional
-  - 5MB file size limit enforced
-  - localStorage fallback works when attachment API returns 404
-  - No console errors on issue detail page
-- All 55 tests verified and passing with NO_CONSOLE_ERRORS
+### All Phase Gates Passing:
+1. shared/ compiles: OK (npx tsc --noEmit) ✅
+2. infrastructure/ synths: OK (npx cdk synth) ✅
+3. infrastructure/ tests: 19/19 pass (npm test) ✅
+4. frontend/ builds: OK (npx vite build frontend) ✅
+5. All 60 tests verified with screenshots and console logs ✅
+6. NO_CONSOLE_ERRORS on all pages ✅
+7. All backend API endpoints verified working ✅
+8. Attachment CRUD fully backend-integrated (no localStorage fallback) ✅

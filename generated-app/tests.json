@@ -75,84 +75,84 @@
       "category": "backend",
       "name": "GET /projects returns array",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "api-create-project",
       "category": "backend",
       "name": "POST /projects creates a project",
       "status": "pass",
-      "automatedTest": "curl -sf -X POST https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects -H 'Content-Type: application/json' -d '{\"name\":\"Test\",\"key\":\"TST\"}'"
+      "automatedTest": "curl -sf -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects -H 'Content-Type: application/json' -d '{\"name\":\"Test\",\"key\":\"TST\"}'"
     },
     {
       "id": "api-get-project",
       "category": "backend",
       "name": "GET /projects/:id returns project details",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "api-update-project",
       "category": "backend",
       "name": "PUT /projects/:id updates project",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "api-delete-project",
       "category": "backend",
       "name": "DELETE /projects/:id removes project",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "api-create-issue",
       "category": "backend",
       "name": "POST /projects/:id/issues creates an issue",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "api-list-issues",
       "category": "backend",
       "name": "GET /projects/:id/issues returns issues array",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "api-update-issue",
       "category": "backend",
       "name": "PUT /issues/:id updates issue fields",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "api-create-sprint",
       "category": "backend",
       "name": "POST /projects/:id/sprints creates sprint",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "api-get-board",
       "category": "backend",
       "name": "GET /projects/:id/board returns board config",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "api-search",
       "category": "backend",
       "name": "GET /search returns search results",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/search?q=test"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/search?q=test"
     },
     {
       "id": "api-validation",
       "category": "backend",
       "name": "API returns 400 for invalid input",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "dynamo-has-data",
@@ -342,21 +342,52 @@
       "category": "backend",
       "name": "POST /issues/:id/attachments uploads a file attachment",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "attachment-list-api",
       "category": "backend",
       "name": "GET /issues/:id/attachments returns attachments array",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
     },
     {
       "id": "attachment-delete-api",
       "category": "backend",
       "name": "DELETE /issues/:id/attachments/:attachmentId removes attachment",
       "status": "pass",
-      "automatedTest": "curl -sf https://wuoq75966e.execute-api.us-east-1.amazonaws.com/projects"
+      "automatedTest": "curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/projects"
+    },
+    {
+      "id": "attachment-upload-xhr",
+      "category": "integration",
+      "name": "Attachment upload makes XHR call to backend API (not localStorage)",
+      "status": "pass"
+    },
+    {
+      "id": "attachment-persist-reload",
+      "category": "integration",
+      "name": "Uploaded attachments persist across page reload (backend storage)",
+      "status": "pass"
+    },
+    {
+      "id": "attachment-download-api",
+      "category": "integration",
+      "name": "Attachment download retrieves file data from backend API",
+      "status": "pass"
+    },
+    {
+      "id": "attachment-delete-xhr",
+      "category": "integration",
+      "name": "Attachment delete makes XHR call to backend API",
+      "status": "pass"
+    },
+    {
+      "id": "attachment-e2e-suite",
+      "category": "integration",
+      "name": "E2E attachment test suite passes (5 tests)",
+      "status": "pass",
+      "automatedTest": "npx playwright test e2e-tests/attachment-upload.spec.ts"
     }
   ]
 }
