@@ -1,10 +1,7 @@
 RESULT: PASS
 
-Command: cd infrastructure && npm test -- --testNamePattern='S3|CloudFront' 2>&1 | tail -5
+Command: cd infrastructure && npm test 2>&1 | grep -E 'PASS|FAIL|Tests:'
 
 Output:
-Test Suites: 1 passed, 1 total
-Tests:       15 skipped, 4 passed, 19 total
-Snapshots:   0 total
-Time:        8.974 s, estimated 9 s
-Ran all test suites with tests matching "S3|CloudFront".
+PASS test/canopy-stack.test.ts (8.987 s)
+Tests:       19 passed, 19 total

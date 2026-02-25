@@ -1,10 +1,9 @@
 RESULT: PASS
 
-Command: cd infrastructure && npm test -- --testNamePattern='canopy' 2>&1 | tail -5
+Command: cd infrastructure && grep -r 'canopy-' lib/ | head -10
 
 Output:
-Test Suites: 1 passed, 1 total
-Tests:       19 passed, 19 total
-Snapshots:   1 passed, 1 total
-Time:        9.121 s
-Ran all test suites with tests matching "canopy".
+lib/canopy-stack.ts:      tableName: 'canopy-main-table',
+lib/canopy-stack.ts:      functionName: 'canopy-api-handler',
+lib/canopy-stack.ts:      apiName: 'canopy-api',
+lib/canopy-stack.ts:      bucketName: `canopy-frontend-${this.account}-${this.region}`,

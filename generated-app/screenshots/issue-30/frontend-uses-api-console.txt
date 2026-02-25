@@ -1,2 +1,3 @@
-VITE_API_URL=https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com
-3
+ * Uses VITE_API_URL environment variable for the base URL.
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+/** Whether VITE_API_URL was provided at build/dev time. */

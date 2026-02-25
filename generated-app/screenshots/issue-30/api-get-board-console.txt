@@ -1,1 +1,2 @@
-4
+{"createdAt":"2026-02-25T02:34:51.327Z","columns":[{"name":"To Do","id":"2daba7f1-f2ec-4620-9636-6d1ebec8bc83","statusCategory":"todo","color":"#8896A6","sortOrder":0},{"name":"In Progress","id":"c69f2382-f4e8-42c4-a620-c88af052ce66","statusCategory":"in_progress","color":"#2196F3","sortOrder":1},{"name":"In Review","id":"7f729c57-8934-435e-a5b8-c71f6f838272","statusCategory":"in_progress","color":"#E9C46A","sortOrder":2},{"name":"Done","id":"50aa6103-17cb-48d4-80be-1a2b6c921f3a","statusCategory":"done","color":"#40916C","sortOrder":3}],"name":"Board","id":"4d35878d-19fa-4c65-ab83-3cb552d0f876","projectId":"71481434-187f-41f8-83d4-81819983d22e","swimlaneBy":"none","updatedAt":"2026-02-25T02:34:51.327Z"}
+200
