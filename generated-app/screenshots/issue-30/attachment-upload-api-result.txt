@@ -1,0 +1,6 @@
+RESULT: PASS
+
+Command: curl -sf -X POST 'https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/837b8cc3-0232-4e02-ab30-127e32f4de3a/attachments' -H 'Content-Type: application/json' -d '{"fileName":"verify-test.txt","fileSize":100,"mimeType":"text/plain","fileData":"dGVzdA==","issueId":"837b8cc3-0232-4e02-ab30-127e32f4de3a"}'
+
+Output:
+{"id":"4e3efc8a-4fac-49f3-8b3d-f3a33982cbf2","issueId":"837b8cc3-0232-4e02-ab30-127e32f4de3a","fileName":"verify-test.txt","fileSize":100,"mimeType":"text/plain","uploadedBy":"94b37cb2-70a6-4586-b6f4-8fc5d0c46519","createdAt":"2026-02-25T02:47:24.258Z"}

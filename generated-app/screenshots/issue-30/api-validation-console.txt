@@ -1,0 +1,2 @@
+{"error":{"code":"VALIDATION_ERROR","message":"[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"name\"\n    ],\n    \"message\": \"Required\"\n  },\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"string\",\n    \"received\": \"undefined\",\n    \"path\": [\n      \"key\"\n    ],\n    \"message\": \"Required\"\n  }\n]"}}
+400

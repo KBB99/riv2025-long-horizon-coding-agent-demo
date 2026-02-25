@@ -1,0 +1,10 @@
+      ✓ outputs API URL (2 ms)
+      ✓ outputs Frontend Bucket Name (1 ms)
+      ✓ outputs Distribution ID
+      ✓ outputs Distribution Domain
+
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   1 passed, 1 total
+Time:        13.363 s
+Ran all test suites.

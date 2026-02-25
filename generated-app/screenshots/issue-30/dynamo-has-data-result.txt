@@ -1,0 +1,52 @@
+RESULT: PASS
+
+Command: aws dynamodb scan --table-name canopy-main-table --max-items 1 --region us-east-1
+
+Output:
+{
+    "Items": [
+        {
+            "entityType": {
+                "S": "ATTACHMENT"
+            },
+            "SK": {
+                "S": "ATTACHMENT#0b7dde0a-c74c-4fa0-8ed5-59a5b38f6138"
+            },
+            "fileData": {
+                "S": "SGVsbG8gZnJvbSBFMkUgdGVzdCEgVGhpcyB2ZXJpZmllcyBiYWNrZW5kIGF0dGFjaG1lbnQgdXBsb2FkLg=="
+            },
+            "PK": {
+                "S": "ISSUE#837b8cc3-0232-4e02-ab30-127e32f4de3a"
+            },
+            "data": {
+                "M": {
+                    "createdAt": {
+                        "S": "2026-02-25T02:29:25.189Z"
+                    },
+                    "issueId": {
+                        "S": "837b8cc3-0232-4e02-ab30-127e32f4de3a"
+                    },
+                    "fileName": {
+                        "S": "e2e-test-doc.txt"
+                    },
+                    "fileSize": {
+                        "N": "61"
+                    },
+                    "id": {
+                        "S": "0b7dde0a-c74c-4fa0-8ed5-59a5b38f6138"
+                    },
+                    "mimeType": {
+                        "S": "text/plain"
+                    },
+                    "uploadedBy": {
+                        "S": "3cda09de-cd26-4842-8ad7-a643da20377b"
+                    }
+                }
+            }
+        }
+    ],
+    "Count": 12,
+    "ScannedCount": 12,
+    "ConsumedCapacity": null,
+    "NextToken": "eyJFeGNsdXNpdmVTdGFydEtleSI6IG51bGwsICJib3RvX3RydW5jYXRlX2Ftb3VudCI6IDF9"
+}

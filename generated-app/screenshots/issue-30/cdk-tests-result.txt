@@ -1,0 +1,15 @@
+RESULT: PASS
+
+Command: cd /app/workspace/agent-runtime/generated-app/infrastructure && npm test 2>&1 | tail -10
+
+Output:
+      ✓ outputs API URL (2 ms)
+      ✓ outputs Frontend Bucket Name (1 ms)
+      ✓ outputs Distribution ID
+      ✓ outputs Distribution Domain
+
+Test Suites: 1 passed, 1 total
+Tests:       19 passed, 19 total
+Snapshots:   1 passed, 1 total
+Time:        13.363 s
+Ran all test suites.

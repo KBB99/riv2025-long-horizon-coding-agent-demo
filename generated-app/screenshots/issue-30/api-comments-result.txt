@@ -1,0 +1,6 @@
+RESULT: PASS
+
+Command: curl -sf -X POST 'https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/837b8cc3-0232-4e02-ab30-127e32f4de3a/comments' -H 'Content-Type: application/json' -d '{"body":"Test comment","issueId":"837b8cc3-0232-4e02-ab30-127e32f4de3a"}'
+
+Output:
+{"issueId":"837b8cc3-0232-4e02-ab30-127e32f4de3a","body":"Test comment","id":"fe2b1dfd-d340-46b1-9bff-e7740dba8138","authorId":"01989c90-3d03-4d37-8019-7925392a055e","isEdited":false,"createdAt":"2026-02-25T02:54:28.910Z","updatedAt":"2026-02-25T02:54:28.910Z"}

@@ -1,0 +1,6 @@
+RESULT: PASS
+
+Command: curl -sf -X DELETE 'https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/837b8cc3-0232-4e02-ab30-127e32f4de3a/attachments/4e3efc8a-4fac-49f3-8b3d-f3a33982cbf2'
+
+Output:
+{"success":true}
