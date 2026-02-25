@@ -1,3 +1,18 @@
+    Description: S3 bucket for frontend assets
+    Value:
+      Ref: CanopyFrontendBucket7E29486D
+  DistributionId:
+    Description: CloudFront distribution ID
+    Value:
+      Ref: CanopyDistributionC5D57BD9
+  DistributionDomain:
+    Description: CloudFront domain name
+    Value:
+      Fn::GetAtt:
+        - CanopyDistributionC5D57BD9
+        - DomainName
+Parameters:
+  BootstrapVersion:
     Type: AWS::SSM::Parameter::Value<String>
     Default: /cdk-bootstrap/hnb659fds/version
     Description: Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]

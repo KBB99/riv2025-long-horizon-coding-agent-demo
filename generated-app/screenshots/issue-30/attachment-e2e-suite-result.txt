@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: npx playwright test e2e-tests/attachment-upload.spec.ts --reporter=list 2>&1 | tail -10
+Command: npx playwright test e2e-tests/attachment-upload.spec.ts 2>&1 | tail -20
 
 Output:
 

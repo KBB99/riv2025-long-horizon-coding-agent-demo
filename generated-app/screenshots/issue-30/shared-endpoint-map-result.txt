@@ -1,6 +1,5 @@
 RESULT: PASS
 
-Command: cd shared && npx tsc --noEmit && echo 'Endpoint map valid'
+Command: cd shared && npx tsc --noEmit
 
 Output:
-Endpoint map valid
