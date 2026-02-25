@@ -1,29 +1,33 @@
-# Feature Request: Issue #29
+# Feature Request: Issue #30
 
 ## Title
-[FEATURE] Add the ability to upload a doc to an issue
+[BUG] Add the ability to upload a doc to an issue
 
 ## Description
-### Feature Name
+### Bug Summary
 
-Doc attachment to issue
+Add the ability to upload a doc to an issue
 
-### Feature Specification
+### Bug Description
 
-I want to be able to also upload a document to an issue so it is then attached.
+Verify this functionality is working with the back-end integrated for now I believe we are falling back to local storage, but we want to use a functional back-end.
 
-### Acceptance Criteria
+### Steps to Reproduce
+
+Right now we are not making XHR calls and we are falling back to local storage.
+
+### Expected Fix
 
 _No response_
 
-### Estimated Complexity
+### Severity
 
-Small (< 1 hour)
+Low (cosmetic, minor annoyance)
 
 
 ## Branch
 All work should be committed to the `agent-runtime` branch.
-Commits should reference this issue: `Ref: #29`
+Commits should reference this issue: `Ref: #30`
 
 ## Mode
 Enhancement - Modify existing app in generated-app/
