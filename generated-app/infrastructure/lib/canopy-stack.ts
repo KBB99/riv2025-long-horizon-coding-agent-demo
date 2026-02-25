@@ -49,6 +49,21 @@ export class CanopyStack extends cdk.Stack {
       projectionType: dynamodb.ProjectionType.ALL,
     });
 
+    // S3 Bucket for Attachments (stores file data to avoid DynamoDB 400KB item limit)
+    const attachmentBucket = new s3.Bucket(this, 'CanopyAttachmentBucket', {
+      bucketName: `canopy-attachments-${this.account}-${this.region}`,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+      blockPublicAccess: s3.BlockPublicAccess.BLOCK_ALL,
+      encryption: s3.BucketEncryption.S3_MANAGED,
+      lifecycleRules: [
+        {
+          id: 'cleanup-incomplete-uploads',
+          abortIncompleteMultipartUploadAfter: cdk.Duration.days(1),
+        },
+      ],
+    });
+
     // Lambda Function
     const apiHandler = new NodejsFunction(this, 'CanopyApiHandler', {
       functionName: 'canopy-api-handler',
@@ -56,13 +71,14 @@ export class CanopyStack extends cdk.Stack {
       handler: 'handler',
       entry: path.join(__dirname, '../../backend/src/index.ts'),
       depsLockFilePath: path.join(__dirname, '../../package-lock.json'),
-      description: 'Canopy API handler with attachment routes v13',
+      description: 'Canopy API handler with S3 attachment storage v14',
       memorySize: 1024,
       timeout: cdk.Duration.seconds(30),
       environment: {
         TABLE_NAME: table.tableName,
+        ATTACHMENT_BUCKET: attachmentBucket.bucketName,
         NODE_OPTIONS: '--enable-source-maps',
-        DEPLOY_VERSION: '13',
+        DEPLOY_VERSION: '14',
       },
       bundling: {
         externalModules: ['@aws-sdk/*'],
@@ -73,6 +89,9 @@ export class CanopyStack extends cdk.Stack {
 
     // Grant DynamoDB permissions
     table.grantReadWriteData(apiHandler);
+
+    // Grant S3 permissions for attachment storage
+    attachmentBucket.grantReadWrite(apiHandler);
 
     // HTTP API Gateway
     const httpApi = new apigateway.HttpApi(this, 'CanopyHttpApi', {

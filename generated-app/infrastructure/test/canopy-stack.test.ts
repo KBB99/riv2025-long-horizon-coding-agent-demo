@@ -131,11 +131,11 @@ describe('CanopyStack', () => {
 
   // S3 + CloudFront Tests
   describe('Frontend Hosting', () => {
-    test('creates an S3 bucket for frontend', () => {
-      template.resourceCountIs('AWS::S3::Bucket', 1);
+    test('creates S3 buckets for frontend and attachments', () => {
+      template.resourceCountIs('AWS::S3::Bucket', 2);
     });
 
-    test('S3 bucket blocks public access', () => {
+    test('S3 buckets block public access', () => {
       template.hasResourceProperties('AWS::S3::Bucket', {
         PublicAccessBlockConfiguration: {
           BlockPublicAcls: true,
@@ -166,6 +166,33 @@ describe('CanopyStack', () => {
             }),
           ]),
         }),
+      });
+    });
+  });
+
+  // Attachment Storage Tests
+  describe('Attachment Storage', () => {
+    test('creates S3 bucket for attachments with encryption', () => {
+      template.hasResourceProperties('AWS::S3::Bucket', {
+        BucketEncryption: {
+          ServerSideEncryptionConfiguration: [
+            {
+              ServerSideEncryptionByDefault: {
+                SSEAlgorithm: 'AES256',
+              },
+            },
+          ],
+        },
+      });
+    });
+
+    test('Lambda has ATTACHMENT_BUCKET environment variable', () => {
+      template.hasResourceProperties('AWS::Lambda::Function', {
+        Environment: {
+          Variables: Match.objectLike({
+            ATTACHMENT_BUCKET: Match.anyValue(),
+          }),
+        },
       });
     });
   });

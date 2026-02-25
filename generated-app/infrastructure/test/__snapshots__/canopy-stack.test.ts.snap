@@ -50,12 +50,15 @@ exports[`CanopyStack matches snapshot 1`] = `
       "Properties": {
         "Code": {
           "S3Bucket": "cdk-hnb659fds-assets-123456789012-us-east-1",
-          "S3Key": "c37ab78328f5f9071b963162b3dca7ea8ad77c074ae6c337ac95694dbb6bd167.zip",
+          "S3Key": "03f4d12ec135d612fcf0187739b01f25158002a18551926f11dc9d839368fae2.zip",
         },
-        "Description": "Canopy API handler with attachment routes v13",
+        "Description": "Canopy API handler with S3 attachment storage v14",
         "Environment": {
           "Variables": {
-            "DEPLOY_VERSION": "13",
+            "ATTACHMENT_BUCKET": {
+              "Ref": "CanopyAttachmentBucket917BBF0F",
+            },
+            "DEPLOY_VERSION": "14",
             "NODE_OPTIONS": "--enable-source-maps",
             "TABLE_NAME": {
               "Ref": "CanopyTable8B388EA1",
@@ -177,6 +180,43 @@ exports[`CanopyStack matches snapshot 1`] = `
                 },
               ],
             },
+            {
+              "Action": [
+                "s3:GetObject*",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+                "s3:PutObject",
+                "s3:PutObjectLegalHold",
+                "s3:PutObjectRetention",
+                "s3:PutObjectTagging",
+                "s3:PutObjectVersionTagging",
+                "s3:Abort*",
+              ],
+              "Effect": "Allow",
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "CanopyAttachmentBucket917BBF0F",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "CanopyAttachmentBucket917BBF0F",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
           ],
           "Version": "2012-10-17",
         },
@@ -188,6 +228,117 @@ exports[`CanopyStack matches snapshot 1`] = `
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "CanopyAttachmentBucket917BBF0F": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256",
+              },
+            },
+          ],
+        },
+        "BucketName": "canopy-attachments-123456789012-us-east-1",
+        "LifecycleConfiguration": {
+          "Rules": [
+            {
+              "AbortIncompleteMultipartUpload": {
+                "DaysAfterInitiation": 1,
+              },
+              "Id": "cleanup-incomplete-uploads",
+              "Status": "Enabled",
+            },
+          ],
+        },
+        "PublicAccessBlockConfiguration": {
+          "BlockPublicAcls": true,
+          "BlockPublicPolicy": true,
+          "IgnorePublicAcls": true,
+          "RestrictPublicBuckets": true,
+        },
+        "Tags": [
+          {
+            "Key": "aws-cdk:auto-delete-objects",
+            "Value": "true",
+          },
+        ],
+      },
+      "Type": "AWS::S3::Bucket",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "CanopyAttachmentBucketAutoDeleteObjectsCustomResource6F7E5FE3": {
+      "DeletionPolicy": "Delete",
+      "DependsOn": [
+        "CanopyAttachmentBucketPolicyC4B8F8A6",
+      ],
+      "Properties": {
+        "BucketName": {
+          "Ref": "CanopyAttachmentBucket917BBF0F",
+        },
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "CustomS3AutoDeleteObjectsCustomResourceProviderHandler9D90184F",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "Custom::S3AutoDeleteObjects",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "CanopyAttachmentBucketPolicyC4B8F8A6": {
+      "Properties": {
+        "Bucket": {
+          "Ref": "CanopyAttachmentBucket917BBF0F",
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:PutBucketPolicy",
+                "s3:GetBucket*",
+                "s3:List*",
+                "s3:DeleteObject*",
+              ],
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": {
+                  "Fn::GetAtt": [
+                    "CustomS3AutoDeleteObjectsCustomResourceProviderRole3B1BD092",
+                    "Arn",
+                  ],
+                },
+              },
+              "Resource": [
+                {
+                  "Fn::GetAtt": [
+                    "CanopyAttachmentBucket917BBF0F",
+                    "Arn",
+                  ],
+                },
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      {
+                        "Fn::GetAtt": [
+                          "CanopyAttachmentBucket917BBF0F",
+                          "Arn",
+                        ],
+                      },
+                      "/*",
+                    ],
+                  ],
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+      },
+      "Type": "AWS::S3::BucketPolicy",
     },
     "CanopyDistributionC5D57BD9": {
       "Properties": {
@@ -678,7 +829,7 @@ exports[`CanopyStack matches snapshot 1`] = `
             [
               "Lambda function for auto-deleting objects in ",
               {
-                "Ref": "CanopyFrontendBucket7E29486D",
+                "Ref": "CanopyAttachmentBucket917BBF0F",
               },
               " S3 bucket.",
             ],
