@@ -6,5 +6,5 @@ Output:
 Test Suites: 1 passed, 1 total
 Tests:       19 passed, 19 total
 Snapshots:   1 passed, 1 total
-Time:        9.026 s
+Time:        9.073 s
 Ran all test suites.

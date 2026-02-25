@@ -1,10 +1,7 @@
 RESULT: PASS
 
-Command: cd infrastructure && npm test -- --testNamePattern='Lambda' 2>&1 | tail -5
+Command: cd infrastructure && npm test 2>&1 | grep -E 'PASS|FAIL|Tests:'
 
 Output:
-Test Suites: 1 passed, 1 total
-Tests:       16 skipped, 3 passed, 19 total
-Snapshots:   0 total
-Time:        9.089 s
-Ran all test suites with tests matching "Lambda".
+PASS test/canopy-stack.test.ts (8.861 s)
+Tests:       19 passed, 19 total

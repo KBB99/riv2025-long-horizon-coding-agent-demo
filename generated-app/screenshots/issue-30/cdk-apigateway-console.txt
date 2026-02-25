@@ -1,5 +1,2 @@
-Test Suites: 1 passed, 1 total
-Tests:       18 skipped, 1 passed, 19 total
-Snapshots:   0 total
-Time:        9.223 s
-Ran all test suites with tests matching "CORS".
+PASS test/canopy-stack.test.ts (8.874 s)
+Tests:       19 passed, 19 total
