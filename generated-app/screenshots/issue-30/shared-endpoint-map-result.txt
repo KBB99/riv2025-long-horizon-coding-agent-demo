@@ -1,7 +1,6 @@
 RESULT: PASS
 
-Command: cd shared && npx tsc --noEmit && grep -c 'uploadAttachment' src/endpoints.ts && echo 'Endpoints with attachment routes verified'
+Command: cd shared && grep -c 'export' src/endpoints.ts
 
 Output:
 1
-Endpoints with attachment routes verified

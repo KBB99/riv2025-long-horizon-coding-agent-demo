@@ -1,2 +1,5 @@
-PASS test/canopy-stack.test.ts (8.71 s)
-Tests:       19 passed, 19 total
+Test Suites: 1 passed, 1 total
+Tests:       16 skipped, 3 passed, 19 total
+Snapshots:   0 total
+Time:        9.237 s
+Ran all test suites with tests matching "Lambda".

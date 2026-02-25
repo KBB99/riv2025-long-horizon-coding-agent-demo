@@ -1,10 +1,10 @@
 
 Running 5 tests using 1 worker
 
-  ✓  1 [chromium] › e2e-tests/attachment-upload.spec.ts:32:7 › Issue Attachment Feature - Backend Integration › attachment section is visible on issue detail page (4.2s)
-  ✓  2 [chromium] › e2e-tests/attachment-upload.spec.ts:54:7 › Issue Attachment Feature - Backend Integration › can upload a file via file input and it persists via API (7.2s)
-  ✓  3 [chromium] › e2e-tests/attachment-upload.spec.ts:96:7 › Issue Attachment Feature - Backend Integration › shows file size limit error for large files (6.3s)
-  ✓  4 [chromium] › e2e-tests/attachment-upload.spec.ts:118:7 › Issue Attachment Feature - Backend Integration › can delete an uploaded attachment via API (7.9s)
-  ✓  5 [chromium] › e2e-tests/attachment-upload.spec.ts:174:7 › Issue Attachment Feature - Backend Integration › uploaded attachments persist across page reloads (backend storage) (9.8s)
+  ✓  1 [chromium] › e2e-tests/attachment-upload.spec.ts:32:7 › Issue Attachment Feature - Backend Integration › attachment section is visible on issue detail page (3.8s)
+  ✓  2 [chromium] › e2e-tests/attachment-upload.spec.ts:54:7 › Issue Attachment Feature - Backend Integration › can upload a file via file input and it persists via API (6.8s)
+  ✓  3 [chromium] › e2e-tests/attachment-upload.spec.ts:96:7 › Issue Attachment Feature - Backend Integration › shows file size limit error for large files (5.6s)
+  ✓  4 [chromium] › e2e-tests/attachment-upload.spec.ts:118:7 › Issue Attachment Feature - Backend Integration › can delete an uploaded attachment via API (7.4s)
+  ✓  5 [chromium] › e2e-tests/attachment-upload.spec.ts:174:7 › Issue Attachment Feature - Backend Integration › uploaded attachments persist across page reloads (backend storage) (9.4s)
 
-  5 passed (38.1s)
+  5 passed (34.8s)

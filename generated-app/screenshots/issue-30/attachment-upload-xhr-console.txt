@@ -1,6 +1,6 @@
+NO_CONSOLE_ERRORS
 
-Running 1 test using 1 worker
-
-  ✓  1 [chromium] › e2e-tests/attachment-upload.spec.ts:54:7 › Issue Attachment Feature - Backend Integration › can upload a file via file input and it persists via API (7.2s)
-
-  1 passed (9.6s)
+All Messages:
+[debug] [vite] connecting...
+[debug] [vite] connected.
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold

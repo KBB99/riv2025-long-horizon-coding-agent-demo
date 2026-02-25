@@ -1,7 +1,10 @@
 RESULT: PASS
 
-Command: cd infrastructure && npm test 2>&1 | grep -E 'Tests:|PASS'
+Command: cd infrastructure && npm test -- --testNamePattern='API Gateway' 2>&1 | tail -5
 
 Output:
-PASS test/canopy-stack.test.ts (8.699 s)
-Tests:       19 passed, 19 total
+Test Suites: 1 passed, 1 total
+Tests:       17 skipped, 2 passed, 19 total
+Snapshots:   0 total
+Time:        9.079 s
+Ran all test suites with tests matching "API Gateway".

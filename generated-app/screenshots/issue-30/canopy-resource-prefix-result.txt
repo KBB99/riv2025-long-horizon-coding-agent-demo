@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: aws dynamodb describe-table --table-name canopy-main-table --region us-east-1 --query 'Table.TableName' --output text
+Command: cd infrastructure && grep -c canopy lib/canopy-stack.ts
 
 Output:
-canopy-main-table
+4

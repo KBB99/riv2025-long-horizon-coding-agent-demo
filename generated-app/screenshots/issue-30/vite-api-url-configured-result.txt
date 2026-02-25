@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: cat frontend/.env
+Command: grep VITE_API_URL frontend/.env
 
 Output:
 VITE_API_URL=https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com

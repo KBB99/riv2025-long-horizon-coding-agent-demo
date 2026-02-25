@@ -1,10 +1,1 @@
-HTTP/2 200 
-date: Wed, 25 Feb 2026 03:25:17 GMT
-content-type: application/json
-content-length: 2
 access-control-allow-origin: *
-access-control-allow-methods: DELETE,GET,OPTIONS,POST,PUT
-access-control-allow-headers: authorization,content-type
-access-control-max-age: 3600
-apigw-requestid: ZUXAnhp8IAMEJ4Q=
-

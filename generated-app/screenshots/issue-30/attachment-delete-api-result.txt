@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/ad0c130e-e6c1-476a-8cc0-00d64136e2e2/attachments | jq 'length'
+Command: curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/ad0c130e-e6c1-476a-8cc0-00d64136e2e2/attachments | jq '.[0].id'
 
 Output:
-1
+"ae3ed830-ebf3-4eb6-bf38-7bc5206425e8"
