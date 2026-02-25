@@ -1,2 +1,2 @@
-{"projectId":"411e733c-c843-4510-b323-c37614a27ca6","type":"Task","summary":"AC test issue","acceptanceCriteria":"- [ ] Step 1\n- [ ] Step 2","priority":"Medium","labels":[],"components":[],"id":"7ed24db1-5481-4e06-8897-80b06779fdda","key":"EAT-6","status":"todo","reporterId":"1b15ac7b-bed1-441d-ad3b-ead2f133607c","sortOrder":6000,"timeSpent":0,"createdAt":"2026-02-25T18:58:28.473Z","updatedAt":"2026-02-25T18:58:28.473Z"}
-HTTP_CODE:201
+{"projectId":"e31c4e06-c561-4d66-83d6-46ccd7813a6b","type":"Task","summary":"AC Backend Test","acceptanceCriteria":"Verify AC field","priority":"Medium","labels":[],"components":[],"id":"bfc3bfdf-0d61-4db8-b394-5855391a6822","key":"ACV-2","status":"todo","reporterId":"6415358c-3e92-431d-8874-e90626d75efe","sortOrder":2000,"timeSpent":0,"createdAt":"2026-02-25T19:04:54.584Z","updatedAt":"2026-02-25T19:04:54.584Z"}
+201

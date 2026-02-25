@@ -1,7 +1,7 @@
 RESULT: PASS
 
-Command: curl -s -w '\nHTTP_CODE:%{http_code}' -X PUT https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/7ed24db1-5481-4e06-8897-80b06779fdda -H 'Content-Type: application/json' -d '{"acceptanceCriteria":"- [x] Step 1 done\n- [ ] Step 2 pending\n- [ ] Step 3 new"}'
+Command: curl -s -w '\n%{http_code}' -X PUT https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/bfc3bfdf-0d61-4db8-b394-5855391a6822 -H 'Content-Type: application/json' -d '{"acceptanceCriteria":"Updated AC field"}'
 
 Output:
-{"summary":"AC test issue","components":[],"timeSpent":0,"type":"Task","priority":"Medium","labels":[],"acceptanceCriteria":"- [x] Step 1 done\n- [ ] Step 2 pending\n- [ ] Step 3 new","createdAt":"2026-02-25T18:58:28.473Z","sortOrder":6000,"reporterId":"1b15ac7b-bed1-441d-ad3b-ead2f133607c","id":"7ed24db1-5481-4e06-8897-80b06779fdda","projectId":"411e733c-c843-4510-b323-c37614a27ca6","key":"EAT-6","status":"todo","updatedAt":"2026-02-25T18:58:35.699Z"}
-HTTP_CODE:200
+{"summary":"AC Backend Test","components":[],"timeSpent":0,"type":"Task","priority":"Medium","labels":[],"acceptanceCriteria":"Updated AC field","createdAt":"2026-02-25T19:04:54.584Z","sortOrder":2000,"reporterId":"6415358c-3e92-431d-8874-e90626d75efe","id":"bfc3bfdf-0d61-4db8-b394-5855391a6822","projectId":"e31c4e06-c561-4d66-83d6-46ccd7813a6b","key":"ACV-2","status":"todo","updatedAt":"2026-02-25T19:05:00.612Z"}
+200
