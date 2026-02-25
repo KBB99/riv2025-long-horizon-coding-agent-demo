@@ -6,6 +6,7 @@ export const CreateIssueSchema = z.object({
   type: IssueType,
   summary: z.string().min(1).max(255),
   description: z.string().optional(),
+  acceptanceCriteria: z.string().optional(),
   priority: Priority.default('Medium'),
   assigneeId: z.string().uuid().optional(),
   epicId: z.string().uuid().optional(),

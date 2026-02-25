@@ -28,6 +28,7 @@ export function CreateIssueModal() {
 
   const [summary, setSummary] = useState('');
   const [description, setDescription] = useState('');
+  const [acceptanceCriteria, setAcceptanceCriteria] = useState('');
   const [type, setType] = useState<IssueTypeValue>('Task');
   const [priority, setPriority] = useState<PriorityValue>('Medium');
   const [assigneeId, setAssigneeId] = useState<string>('');
@@ -46,6 +47,7 @@ export function CreateIssueModal() {
   const resetForm = () => {
     setSummary('');
     setDescription('');
+    setAcceptanceCriteria('');
     setType('Task');
     setPriority('Medium');
     setAssigneeId('');
@@ -71,6 +73,7 @@ export function CreateIssueModal() {
       type,
       summary: summary.trim(),
       description: description.trim() || undefined,
+      acceptanceCriteria: acceptanceCriteria.trim() || undefined,
       priority,
       assigneeId: (assigneeId && assigneeId !== 'none') ? assigneeId : undefined,
       sprintId: (sprintId && sprintId !== 'none') ? sprintId : undefined,
@@ -166,6 +169,18 @@ export function CreateIssueModal() {
               onChange={e => setDescription(e.target.value)}
               rows={3}
               className="text-sm"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs">Acceptance Criteria</Label>
+            <Textarea
+              placeholder="Define the conditions that must be met..."
+              value={acceptanceCriteria}
+              onChange={e => setAcceptanceCriteria(e.target.value)}
+              rows={3}
+              className="text-sm"
+              data-testid="acceptance-criteria-input"
             />
           </div>
 

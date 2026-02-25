@@ -22,7 +22,7 @@ export async function search(event: APIGatewayProxyEventV2) {
       const allIssues = (result.Items || []).map(item => item.data).filter(Boolean);
       const filtered = allIssues.filter((issue: any) => {
         if (projectId && issue.projectId !== projectId) return false;
-        const searchable = `${issue.summary} ${issue.description || ''} ${issue.key}`.toLowerCase();
+        const searchable = `${issue.summary} ${issue.description || ''} ${issue.acceptanceCriteria || ''} ${issue.key}`.toLowerCase();
         return searchable.includes(q);
       });
       issues.push(...filtered.slice(0, limit));

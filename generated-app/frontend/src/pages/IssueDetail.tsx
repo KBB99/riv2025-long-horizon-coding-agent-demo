@@ -170,12 +170,15 @@ export default function IssueDetail() {
   const [editTitle, setEditTitle] = useState('');
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const [editDescription, setEditDescription] = useState('');
+  const [isEditingAcceptanceCriteria, setIsEditingAcceptanceCriteria] = useState(false);
+  const [editAcceptanceCriteria, setEditAcceptanceCriteria] = useState('');
   const [newComment, setNewComment] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
 
   const titleInputRef = useRef<HTMLInputElement>(null);
   const descriptionRef = useRef<HTMLTextAreaElement>(null);
+  const acceptanceCriteriaRef = useRef<HTMLTextAreaElement>(null);
   const commentRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -184,6 +187,7 @@ export default function IssueDetail() {
     if (issue) {
       setEditTitle(issue.summary);
       setEditDescription(issue.description || '');
+      setEditAcceptanceCriteria(issue.acceptanceCriteria || '');
     }
   }, [issue]);
 
@@ -203,6 +207,7 @@ export default function IssueDetail() {
         } else {
           setIsEditingTitle(false);
           setIsEditingDescription(false);
+          setIsEditingAcceptanceCriteria(false);
         }
       }
     }
@@ -255,6 +260,15 @@ export default function IssueDetail() {
     handleUpdateField('description', editDescription);
     setIsEditingDescription(false);
   }, [issue, editDescription, handleUpdateField]);
+
+  const handleSaveAcceptanceCriteria = useCallback(() => {
+    if (!issue || editAcceptanceCriteria === (issue.acceptanceCriteria || '')) {
+      setIsEditingAcceptanceCriteria(false);
+      return;
+    }
+    handleUpdateField('acceptanceCriteria', editAcceptanceCriteria);
+    setIsEditingAcceptanceCriteria(false);
+  }, [issue, editAcceptanceCriteria, handleUpdateField]);
 
   const handleDelete = useCallback(() => {
     if (!issue) return;
@@ -510,6 +524,7 @@ export default function IssueDetail() {
                   } else {
                     setIsEditingTitle(false);
                     setIsEditingDescription(false);
+                    setIsEditingAcceptanceCriteria(false);
                   }
                 }}
                 className={cn(editMode && 'bg-primary/10 text-primary')}
@@ -766,6 +781,139 @@ export default function IssueDetail() {
                 ) : (
                   <span className="text-sm text-muted-foreground italic">
                     Click to add a description...
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Acceptance Criteria */}
+          <div className="space-y-2" data-testid="acceptance-criteria-section">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+                Acceptance Criteria
+              </h3>
+              {!isEditingAcceptanceCriteria && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-7 text-xs text-muted-foreground hover:text-foreground"
+                  onClick={() => {
+                    setIsEditingAcceptanceCriteria(true);
+                    setTimeout(() => acceptanceCriteriaRef.current?.focus(), 50);
+                  }}
+                >
+                  <Edit3 className="w-3 h-3 mr-1" />
+                  Edit
+                </Button>
+              )}
+            </div>
+
+            {isEditingAcceptanceCriteria ? (
+              <div className="space-y-2">
+                <Textarea
+                  ref={acceptanceCriteriaRef}
+                  value={editAcceptanceCriteria}
+                  onChange={(e) => setEditAcceptanceCriteria(e.target.value)}
+                  placeholder="Define what must be true for this issue to be considered complete..."
+                  className="min-h-[120px] text-sm leading-relaxed resize-y border-primary/30 focus-visible:border-primary"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') {
+                      setEditAcceptanceCriteria(issue.acceptanceCriteria || '');
+                      setIsEditingAcceptanceCriteria(false);
+                    }
+                  }}
+                  autoFocus
+                  data-testid="acceptance-criteria-textarea"
+                />
+                <div className="flex items-center gap-2">
+                  <Button size="sm" onClick={handleSaveAcceptanceCriteria}>
+                    <Check className="w-3.5 h-3.5 mr-1" />
+                    Save
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      setEditAcceptanceCriteria(issue.acceptanceCriteria || '');
+                      setIsEditingAcceptanceCriteria(false);
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                  <span className="text-[10px] text-muted-foreground ml-auto">
+                    Markdown supported
+                  </span>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={cn(
+                  'bg-card border border-border/50 rounded-lg p-4 min-h-[60px] cursor-pointer transition-colors',
+                  'hover:border-border',
+                  editMode && 'ring-1 ring-primary/20',
+                  !issue.acceptanceCriteria && 'flex items-center justify-center',
+                )}
+                onClick={() => {
+                  setIsEditingAcceptanceCriteria(true);
+                  setTimeout(() => acceptanceCriteriaRef.current?.focus(), 50);
+                }}
+                data-testid="acceptance-criteria-display"
+              >
+                {issue.acceptanceCriteria ? (
+                  <div className="prose prose-sm max-w-none text-foreground/90 leading-relaxed">
+                    {issue.acceptanceCriteria.split('\n').map((line, i) => {
+                      if (!line.trim()) return <br key={i} />;
+
+                      // Checkbox-style criteria
+                      if (line.startsWith('- [ ] ') || line.startsWith('- [x] ')) {
+                        const checked = line.startsWith('- [x] ');
+                        return (
+                          <div key={i} className="flex items-start gap-2 ml-1">
+                            <span className={cn(
+                              'inline-flex items-center justify-center w-4 h-4 mt-0.5 rounded border shrink-0',
+                              checked ? 'bg-primary/20 border-primary/40 text-primary' : 'border-border'
+                            )}>
+                              {checked && <Check className="w-3 h-3" />}
+                            </span>
+                            <span className={cn(checked && 'line-through text-muted-foreground')}>
+                              {renderInlineMarkdown(line.slice(6))}
+                            </span>
+                          </div>
+                        );
+                      }
+
+                      // Bullet list support
+                      if (line.startsWith('- ') || line.startsWith('* ')) {
+                        return (
+                          <div key={i} className="flex items-start gap-2 ml-2">
+                            <span className="text-muted-foreground mt-1.5 shrink-0">
+                              &bull;
+                            </span>
+                            <span>{renderInlineMarkdown(line.slice(2))}</span>
+                          </div>
+                        );
+                      }
+
+                      // Numbered list support
+                      const numberedMatch = line.match(/^(\d+)\.\s+(.*)/);
+                      if (numberedMatch) {
+                        return (
+                          <div key={i} className="flex items-start gap-2 ml-2">
+                            <span className="text-muted-foreground shrink-0">
+                              {numberedMatch[1]}.
+                            </span>
+                            <span>{renderInlineMarkdown(numberedMatch[2])}</span>
+                          </div>
+                        );
+                      }
+
+                      return <p key={i}>{renderInlineMarkdown(line)}</p>;
+                    })}
+                  </div>
+                ) : (
+                  <span className="text-sm text-muted-foreground italic">
+                    Click to add acceptance criteria...
                   </span>
                 )}
               </div>
