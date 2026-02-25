@@ -401,6 +401,50 @@
       "category": "backend",
       "name": "Large file upload (500KB+) succeeds via S3 storage (previously failed with DynamoDB 400KB limit)",
       "status": "pass"
+    },
+    {
+      "id": "ac-schema-field",
+      "category": "shared",
+      "name": "Shared schema includes optional acceptanceCriteria field on CreateIssue/UpdateIssue/Issue types",
+      "status": "pass",
+      "automatedTest": "cd shared && npx --package typescript tsc --noEmit"
+    },
+    {
+      "id": "ac-api-create",
+      "category": "backend",
+      "name": "POST /projects/:id/issues accepts and stores acceptanceCriteria field",
+      "status": "pass"
+    },
+    {
+      "id": "ac-api-update",
+      "category": "backend",
+      "name": "PUT /issues/:id can update acceptanceCriteria field",
+      "status": "pass"
+    },
+    {
+      "id": "ac-create-modal",
+      "category": "frontend",
+      "name": "Create Issue modal shows Acceptance Criteria textarea field",
+      "status": "pass"
+    },
+    {
+      "id": "ac-issue-detail-display",
+      "category": "frontend",
+      "name": "Issue detail page displays Acceptance Criteria section with markdown/checklist rendering",
+      "status": "pass"
+    },
+    {
+      "id": "ac-issue-detail-edit",
+      "category": "frontend",
+      "name": "Issue detail page allows editing and saving Acceptance Criteria",
+      "status": "pass"
+    },
+    {
+      "id": "ac-e2e-suite",
+      "category": "integration",
+      "name": "E2E acceptance criteria test suite passes (3 tests)",
+      "status": "pass",
+      "automatedTest": "npx playwright test e2e-tests/acceptance-criteria.spec.ts"
     }
   ]
 }

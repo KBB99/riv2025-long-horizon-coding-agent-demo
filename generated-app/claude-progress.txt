@@ -1,7 +1,44 @@
 CANOPY PROJECT MANAGEMENT APP - Progress Report
 =================================================
 
-## Status: ALL PHASES COMPLETE (Issue #30 - Backend-Integrated Document Upload with S3 Storage)
+## Status: ALL PHASES COMPLETE (Issue #31 - Add Acceptance Criteria Field to Issues)
+
+### Issue #31 Enhancement: Acceptance Criteria Field
+Key changes made:
+
+1. **Shared Schema** (`shared/src/schemas/issue.ts`):
+   - Added `acceptanceCriteria: z.string().optional()` to `CreateIssueSchema`
+   - Automatically inherited by `UpdateIssueSchema` (via `.partial()`) and `IssueSchema` (via `.extend()`)
+
+2. **Backend** (`backend/src/handlers/search.ts`):
+   - Updated search handler to include `acceptanceCriteria` in searchable text
+
+3. **Frontend - CreateIssueModal** (`frontend/src/components/CreateIssueModal.tsx`):
+   - Added `acceptanceCriteria` state and form field (textarea)
+   - Included in form submission payload and reset logic
+
+4. **Frontend - IssueDetail** (`frontend/src/pages/IssueDetail.tsx`):
+   - Added editing state (`isEditingAcceptanceCriteria`, `editAcceptanceCriteria`)
+   - Added ref for acceptance criteria textarea
+   - Added `handleSaveAcceptanceCriteria` handler
+   - Added full "ACCEPTANCE CRITERIA" section with:
+     - View mode: markdown rendering with checklist support (`- [ ]` / `- [x]`)
+     - Edit mode: textarea with Save/Cancel buttons
+     - Edit button in section header
+     - Empty state: "Click to add acceptance criteria..."
+
+5. **Infrastructure**: Updated CDK snapshot test
+
+6. **E2E Tests**: `e2e-tests/acceptance-criteria.spec.ts` (3 tests, all passing)
+   - CreateIssueModal shows acceptance criteria textarea
+   - IssueDetail shows acceptance criteria section
+   - IssueDetail acceptance criteria can be edited
+
+7. **Tests**: 7 new tests added to tests.json (total now 69, all passing):
+   - ac-schema-field, ac-api-create, ac-api-update, ac-create-modal
+   - ac-issue-detail-display, ac-issue-detail-edit, ac-e2e-suite
+
+### Previous Status: ALL PHASES COMPLETE (Issue #30 - Backend-Integrated Document Upload with S3 Storage)
 
 ### Architecture
 - Monorepo with npm workspaces: shared/, backend/, frontend/, infrastructure/
