@@ -1,5 +1,5 @@
 RESULT: PASS
 
-Command: cd shared && npx tsc --noEmit
+Command: cd shared && npx tsc --noEmit 2>&1
 
 Output:

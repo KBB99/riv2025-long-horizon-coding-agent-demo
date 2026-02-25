@@ -1,6 +1,9 @@
 RESULT: PASS
 
-Command: curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/ad0c130e-e6c1-476a-8cc0-00d64136e2e2/attachments | jq '.[0].fileName'
+Command: curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/49b95bcb-d53d-43f2-9ec1-b145dd36bb7a/attachments/25684408-93c7-418b-bba4-679174fc0399 | jq '{hasData: (.fileData | length > 0), fileName: .fileName}'
 
 Output:
-"verify-test.pdf"
+{
+  "hasData": true,
+  "fileName": "verify-test.txt"
+}

@@ -1,2 +1,0 @@
-[{"createdAt":"2026-02-25T03:06:49.872Z","endDate":"2026-03-11T00:00:00.000Z","name":"Sprint 1","id":"7b97c2b7-3143-4f8e-a615-a5f2a71e45e3","velocity":0,"projectId":"71481434-187f-41f8-83d4-81819983d22e","startDate":"2026-02-25T00:00:00.000Z","status":"future","updatedAt":"2026-02-25T03:06:49.872Z"}]
-200

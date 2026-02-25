@@ -1,7 +1,6 @@
 RESULT: PASS
 
-Command: curl -s -w '\n%{http_code}' https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/ad0c130e-e6c1-476a-8cc0-00d64136e2e2/comments
+Command: curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/49b95bcb-d53d-43f2-9ec1-b145dd36bb7a/comments | jq 'type'
 
 Output:
-[]
-200
+"array"

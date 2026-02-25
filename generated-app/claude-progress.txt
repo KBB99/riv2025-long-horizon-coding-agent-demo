@@ -1,12 +1,12 @@
 CANOPY PROJECT MANAGEMENT APP - Progress Report
 =================================================
 
-## Status: ALL PHASES COMPLETE (Issue #30 - Backend-Integrated Document Upload)
+## Status: ALL PHASES COMPLETE (Issue #30 - Backend-Integrated Document Upload with S3 Storage)
 
 ### Architecture
 - Monorepo with npm workspaces: shared/, backend/, frontend/, infrastructure/
 - Frontend: React 19 + Vite 7 + Tailwind CSS v4 + React Router v7 + React Query v5
-- Backend: AWS Lambda (Node.js 20) + API Gateway HTTP API + DynamoDB
+- Backend: AWS Lambda (Node.js 20) + API Gateway HTTP API + DynamoDB + S3
 - Infrastructure: AWS CDK v2 with NodejsFunction
 - Shared: Zod schemas as API contract
 
@@ -17,13 +17,14 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - Compiles with zero errors
 
 ### Phase 2a: Infrastructure ✅
-- CDK stack with: DynamoDB (3 GSIs), Lambda (NodejsFunction, 1024MB), HTTP API with CORS, S3, CloudFront
-- 19 CDK tests all passing (snapshot + assertions)
+- CDK stack with: DynamoDB (3 GSIs), Lambda (NodejsFunction, 1024MB), HTTP API with CORS, S3 (frontend + attachments), CloudFront
+- **S3 attachment bucket**: canopy-attachments-{account}-{region} with AES256 encryption
+- 21 CDK tests all passing (snapshot + assertions, including 2 new attachment storage tests)
 - CDK synth produces valid CloudFormation template
-- All resources use canopy- prefix (canopy-app-stack, canopy-main-table)
+- All resources use canopy- prefix (canopy-app-stack, canopy-main-table, canopy-attachments-*)
 
 ### Phase 2b: Backend Deployment ✅
-- Stack deployed: canopy-app-stack (CREATE_COMPLETE)
+- Stack deployed: canopy-app-stack (UPDATE_COMPLETE with S3 attachment bucket)
 - API URL: https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com
 - Core endpoints working:
   - Projects: CRUD (GET/POST/PUT/DELETE /projects)
@@ -33,6 +34,10 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
   - Comments: GET/POST (/issues/:id/comments)
   - Search: GET /search?q=...
   - **Attachments: GET/POST/DELETE (/issues/:id/attachments, /issues/:id/attachments/:attachmentId)**
+    - File data stored in S3 (not DynamoDB) to support files up to 5MB
+    - Metadata stored in DynamoDB with storageType='S3'
+    - Download reads from S3 and returns base64-encoded file data
+    - Delete removes from both S3 and DynamoDB
   - Input validation with Zod, proper error responses with 400 status
   - CORS headers: access-control-allow-origin: *
 - DynamoDB table: canopy-main-table with single-table design (PK/SK + 3 GSIs)
@@ -48,60 +53,57 @@ CANOPY PROJECT MANAGEMENT APP - Progress Report
 - Keyboard shortcuts, Dark theme, React Query hooks with API client + localStorage fallback
 
 ### Phase 4: Testing & Polish ✅
-- tests.json with 60 tests (all passing)
+- tests.json with 62 tests (all passing)
 - All screenshots captured and verified in screenshots/issue-30/
 - playwright-test.cjs and backend-verify.cjs helper scripts
 - E2E Playwright spec: e2e-tests/attachment-upload.spec.ts (5 tests, all passing)
 
-### Issue #30 Enhancement: Backend-Integrated Document Upload
-Key changes made:
+### Issue #30 Enhancement: Backend-Integrated Document Upload with S3 Storage
+Key changes made across sessions:
 
-1. **Fixed API URL mismatch**:
-   - frontend/.env was pointing to old API (wuoq75966e) instead of current deployed API (q4rf5i4bal)
-   - Updated VITE_API_URL to match latest SSM deploy-state
+**Session 1 - Initial Backend Integration:**
+1. Fixed API URL mismatch (frontend/.env pointing to old API)
+2. Removed localStorage fallback for attachments when API is reachable
+3. Updated useAttachments hook to properly propagate errors
+4. Added E2E tests for attachment CRUD operations
 
-2. **Removed localStorage fallback for attachments**:
-   - Previously, attachment functions in frontend/src/api/client.ts had special 404-catching
-     logic that caused them to fall back to localStorage even when the API was reachable
-   - Updated all 4 attachment functions (uploadAttachment, listAttachments, getAttachment, deleteAttachment)
-     to follow the same clean pattern as other API functions (projects, issues, etc.)
-   - Now: if API is reachable → use API directly (no 404 fallback)
-   - localStorage fallback only activates when API is completely unreachable
+**Session 2 - S3 Storage Fix (CRITICAL BUG FIX):**
+1. **Discovered DynamoDB 400KB item size limit** - files > ~300KB were failing with 500 error
+   because DynamoDB items cannot exceed 400KB, but the app advertised 5MB file uploads
+2. **Added S3 bucket for attachment file storage** to CDK stack:
+   - `canopy-attachments-{account}-{region}` with AES256 encryption
+   - Lifecycle rules for cleaning up incomplete multipart uploads
+   - Block all public access
+   - Lambda has read/write permissions via grantReadWrite()
+3. **Updated backend Lambda handler** (attachments.ts):
+   - Upload: stores file bytes in S3, metadata only in DynamoDB (storageType='S3')
+   - Download: reads from S3 and returns base64-encoded data
+   - Delete: removes from both S3 and DynamoDB
+   - Backward-compatible: reads legacy items stored in DynamoDB (storageType='DYNAMODB')
+   - Falls back to DynamoDB storage when ATTACHMENT_BUCKET env var not set
+4. **Updated CDK tests**: 21 tests (up from 19), including:
+   - Attachment S3 bucket has AES256 encryption
+   - Lambda has ATTACHMENT_BUCKET environment variable
+5. **Added 2 new tests to tests.json** (total now 62):
+   - attachment-s3-storage: CDK includes S3 attachment bucket with encryption
+   - attachment-large-file-s3: 500KB+ file upload succeeds via S3
 
-3. **Updated useAttachments hook**:
-   - Removed try/catch that silently returned empty array
-   - Now properly propagates errors from the API
+### Verified API Endpoints (all working with S3 storage):
+- POST /issues/:id/attachments → 201 (stores file in S3)
+- GET /issues/:id/attachments → 200 (list metadata from DynamoDB)
+- GET /issues/:id/attachments/:attachmentId → 200 (reads file from S3)
+- DELETE /issues/:id/attachments/:attachmentId → 200 (deletes from S3 + DynamoDB)
+- 500KB file upload: ✅ (previously failed with DynamoDB-only storage)
+- 2MB file upload: ✅ (previously failed with DynamoDB-only storage)
 
-4. **Updated E2E tests**:
-   - e2e-tests/attachment-upload.spec.ts: 5 tests (up from 4)
-   - New test: "uploaded attachments persist across page reloads (backend storage)"
-     - Clears localStorage, reloads page, verifies attachments still visible (proving backend storage)
-   - All tests dynamically create project/issue via API instead of hardcoded IDs
-   - Tests verify XHR calls are made (not localStorage)
-   - Tests verify data persists in backend via direct API calls
-
-5. **Added 5 new tests to tests.json** (total now 60):
-   - attachment-upload-xhr: Verifies upload makes XHR call to backend
-   - attachment-persist-reload: Verifies attachments persist across page reload
-   - attachment-download-api: Verifies download retrieves file data from backend
-   - attachment-delete-xhr: Verifies delete makes XHR call to backend
-   - attachment-e2e-suite: Verifies all 5 E2E Playwright tests pass
-
-### Verified Backend Attachment Endpoints (all working):
-- POST /issues/:id/attachments → 201 (upload with base64 file data)
-- GET /issues/:id/attachments → 200 (list metadata)
-- GET /issues/:id/attachments/:attachmentId → 200 (download with file data)
-- DELETE /issues/:id/attachments/:attachmentId → 200 (delete)
-
-### All Phase Gates Passing (Re-verified Session 2026-02-25 04:25 UTC):
+### All Phase Gates Passing:
 1. shared/ compiles: OK (npx tsc --noEmit) ✅
 2. infrastructure/ synths: OK (npx cdk synth) ✅
-3. infrastructure/ tests: 19/19 pass (npm test) ✅
+3. infrastructure/ tests: 21/21 pass (npm test) ✅
 4. frontend/ builds: OK (cd frontend && npx vite build) ✅
-5. All 60 tests verified with screenshots and console logs ✅
+5. All 62 tests verified with screenshots and console logs ✅
 6. NO_CONSOLE_ERRORS on all pages ✅
 7. All backend API endpoints verified working ✅
-8. Attachment CRUD fully backend-integrated (no localStorage fallback) ✅
-9. E2E test suite: 5/5 passed (attachment-upload.spec.ts) ✅
-10. All screenshots re-captured in screenshots/issue-30/ ✅
-11. check-tests.cjs: ALL 60 TESTS HAVE VERIFICATION FILES ✅
+8. Attachment CRUD fully backend-integrated with S3 file storage ✅
+9. Large file uploads (500KB+, 2MB+) now work ✅
+10. Deployment succeeded with new S3 bucket (commit 3e86513) ✅

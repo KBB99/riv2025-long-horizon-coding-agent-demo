@@ -1,2 +1,10 @@
-PASS test/canopy-stack.test.ts (8.987 s)
-Tests:       19 passed, 19 total
+      ○ skipped outputs API URL
+      ○ skipped outputs Frontend Bucket Name
+      ○ skipped outputs Distribution ID
+      ○ skipped outputs Distribution Domain
+
+Test Suites: 1 passed, 1 total
+Tests:       17 skipped, 4 passed, 21 total
+Snapshots:   0 total
+Time:        9.323 s, estimated 10 s
+Ran all test suites with tests matching "Frontend Hosting".

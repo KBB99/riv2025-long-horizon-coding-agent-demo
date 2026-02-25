@@ -1,9 +1,6 @@
 RESULT: PASS
 
-Command: cd infrastructure && grep -r 'canopy-' lib/ | head -10
+Command: aws dynamodb describe-table --table-name canopy-main-table --region us-east-1 | jq '.Table.TableName'
 
 Output:
-lib/canopy-stack.ts:      tableName: 'canopy-main-table',
-lib/canopy-stack.ts:      functionName: 'canopy-api-handler',
-lib/canopy-stack.ts:      apiName: 'canopy-api',
-lib/canopy-stack.ts:      bucketName: `canopy-frontend-${this.account}-${this.region}`,
+"canopy-main-table"

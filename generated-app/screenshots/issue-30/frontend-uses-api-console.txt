@@ -1,3 +1,6 @@
- * Uses VITE_API_URL environment variable for the base URL.
-const API_BASE_URL = import.meta.env.VITE_API_URL || '';
-/** Whether VITE_API_URL was provided at build/dev time. */
+NO_CONSOLE_ERRORS
+
+All Messages:
+[debug] [vite] connecting...
+[debug] [vite] connected.
+[info] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold

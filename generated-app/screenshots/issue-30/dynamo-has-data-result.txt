@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: aws dynamodb scan --table-name canopy-main-table --max-items 1 --region us-east-1 | jq .Count
+Command: aws dynamodb scan --table-name canopy-main-table --max-items 1 --region us-east-1 | jq '.Count'
 
 Output:
-71
+76

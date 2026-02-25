@@ -1,5 +1,7 @@
 RESULT: PASS
 
-Command: cd shared && npx tsc --noEmit
+Command: cd shared && npx tsc --noEmit 2>&1 && grep -l 'attachment' src/schemas/*.ts
 
 Output:
+src/schemas/attachment.ts
+src/schemas/index.ts

@@ -1,4 +1,1 @@
-lib/canopy-stack.ts:      tableName: 'canopy-main-table',
-lib/canopy-stack.ts:      functionName: 'canopy-api-handler',
-lib/canopy-stack.ts:      apiName: 'canopy-api',
-lib/canopy-stack.ts:      bucketName: `canopy-frontend-${this.account}-${this.region}`,
+"canopy-main-table"

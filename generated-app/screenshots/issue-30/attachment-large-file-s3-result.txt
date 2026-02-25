@@ -1,0 +1,7 @@
+RESULT: PASS
+
+Command: python3 -c "import base64,json; data=b'X'*512000; b64=base64.b64encode(data).decode(); payload=json.dumps({'fileName':'large-500kb.pdf','fileSize':512000,'mimeType':'application/pdf','fileData':b64}); open('/tmp/large-s3-test.json','w').write(payload)" && curl -sf -w '\n%{http_code}' -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/49b95bcb-d53d-43f2-9ec1-b145dd36bb7a/attachments -H 'Content-Type: application/json' -d @/tmp/large-s3-test.json | tail -2
+
+Output:
+{"id":"a04270cc-5b0f-4fa2-abe6-8d39897c4140","issueId":"49b95bcb-d53d-43f2-9ec1-b145dd36bb7a","fileName":"large-500kb.pdf","fileSize":512000,"mimeType":"application/pdf","uploadedBy":"ccd2f15c-35d0-4aba-b7f7-0dea6554203c","createdAt":"2026-02-25T05:00:22.675Z"}
+201

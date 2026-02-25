@@ -388,6 +388,19 @@
       "name": "E2E attachment test suite passes (5 tests)",
       "status": "pass",
       "automatedTest": "npx playwright test e2e-tests/attachment-upload.spec.ts"
+    },
+    {
+      "id": "attachment-s3-storage",
+      "category": "infrastructure",
+      "name": "CDK stack includes S3 bucket for attachment file storage with encryption",
+      "status": "pass",
+      "automatedTest": "cd infrastructure && npx jest --testNamePattern='Attachment Storage'"
+    },
+    {
+      "id": "attachment-large-file-s3",
+      "category": "backend",
+      "name": "Large file upload (500KB+) succeeds via S3 storage (previously failed with DynamoDB 400KB limit)",
+      "status": "pass"
     }
   ]
 }

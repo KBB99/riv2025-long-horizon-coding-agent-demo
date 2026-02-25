@@ -1,0 +1,10 @@
+      ○ skipped outputs API URL
+      ○ skipped outputs Frontend Bucket Name
+      ○ skipped outputs Distribution ID
+      ○ skipped outputs Distribution Domain
+
+Test Suites: 1 passed, 1 total
+Tests:       19 skipped, 2 passed, 21 total
+Snapshots:   0 total
+Time:        8.949 s, estimated 9 s
+Ran all test suites with tests matching "Attachment Storage".

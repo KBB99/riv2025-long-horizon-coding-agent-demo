@@ -1,6 +1,7 @@
 RESULT: PASS
 
-Command: curl -sf -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/49b95bcb-d53d-43f2-9ec1-b145dd36bb7a/attachments -H 'Content-Type: application/json' -d '{"fileName":"verify-test.txt","fileSize":25,"mimeType":"text/plain","fileData":"dGVzdCBmaWxlIGNvbnRlbnQ="}' | jq .id
+Command: curl -s -w '\n%{http_code}' -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/49b95bcb-d53d-43f2-9ec1-b145dd36bb7a/attachments -H 'Content-Type: application/json' -d '{"fileName":"verify.txt","fileSize":11,"mimeType":"text/plain","fileData":"SGVsbG8gV29ybGQ="}'
 
 Output:
-"25684408-93c7-418b-bba4-679174fc0399"
+{"id":"3e1f2633-2bc1-417e-82b4-3cdc3bcc1114","issueId":"49b95bcb-d53d-43f2-9ec1-b145dd36bb7a","fileName":"verify.txt","fileSize":11,"mimeType":"text/plain","uploadedBy":"23d23399-b846-4a68-adb4-b3d1f76d6019","createdAt":"2026-02-25T04:53:16.946Z"}
+201
