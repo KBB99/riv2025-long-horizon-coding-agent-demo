@@ -1,1 +1,2 @@
-"E2E Attachment Test"
+{"settings":{},"createdAt":"2026-02-25T02:26:46.009Z","isArchived":false,"issueCounter":3,"name":"Test Project Updated","description":"A test project","id":"71481434-187f-41f8-83d4-81819983d22e","key":"TST","updatedAt":"2026-02-25T03:06:39.790Z"}
+200

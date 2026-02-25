@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: grep -r 'VITE_API_URL' frontend/src/api/client.ts
+Command: grep 'VITE_API_URL' frontend/src/api/client.ts
 
 Output:
  * Uses VITE_API_URL environment variable for the base URL.
