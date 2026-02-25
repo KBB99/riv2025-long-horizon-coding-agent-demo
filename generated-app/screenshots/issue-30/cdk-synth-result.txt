@@ -1,6 +1,5 @@
 RESULT: PASS
 
-Command: cd infrastructure && npx cdk synth > /dev/null 2>&1 && echo SYNTH_OK
+Command: cd /app/workspace/agent-runtime/generated-app/infrastructure && npx cdk synth --quiet
 
 Output:
-SYNTH_OK

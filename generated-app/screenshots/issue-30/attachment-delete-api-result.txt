@@ -1,6 +1,6 @@
 RESULT: PASS
 
-Command: curl -sf -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/ad0c130e-e6c1-476a-8cc0-00d64136e2e2/attachments -H 'Content-Type: application/json' -d '{"issueId":"ad0c130e-e6c1-476a-8cc0-00d64136e2e2","fileName":"delete-test.txt","fileSize":5,"mimeType":"text/plain","fileData":"dGVzdA=="}' && echo ' UPLOAD_OK'
+Command: curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/ad0c130e-e6c1-476a-8cc0-00d64136e2e2/attachments | jq 'length'
 
 Output:
-{"id":"f2147a84-7e2b-45aa-8b86-2e26f39369c4","issueId":"ad0c130e-e6c1-476a-8cc0-00d64136e2e2","fileName":"delete-test.txt","fileSize":5,"mimeType":"text/plain","uploadedBy":"7b6b6ec5-0bae-49a2-9682-104b5c382305","createdAt":"2026-02-25T03:07:05.421Z"} UPLOAD_OK
+1

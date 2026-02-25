@@ -3,4 +3,4 @@ RESULT: PASS
 Command: curl -sf https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/issues/ad0c130e-e6c1-476a-8cc0-00d64136e2e2/attachments
 
 Output:
-[{"createdAt":"2026-02-25T03:02:27.882Z","issueId":"ad0c130e-e6c1-476a-8cc0-00d64136e2e2","fileName":"verify-test.pdf","fileSize":100,"id":"6ddf79dc-4319-4fce-ad1f-328c8ed02993","mimeType":"application/pdf","uploadedBy":"7cdebba3-943d-4e70-95b2-9d684c3dfbac"},{"createdAt":"2026-02-25T03:00:11.168Z","issueId":"ad0c130e-e6c1-476a-8cc0-00d64136e2e2","fileName":"test-doc.txt","fileSize":11,"id":"ba062447-f179-4c25-b8a9-81085f97baf2","mimeType":"text/plain","uploadedBy":"5e51cad8-ed8b-4ca9-a798-c9b6808cc414"}]
+[{"createdAt":"2026-02-25T03:20:17.237Z","issueId":"ad0c130e-e6c1-476a-8cc0-00d64136e2e2","fileName":"verify-test.pdf","fileSize":512,"id":"ae3ed830-ebf3-4eb6-bf38-7bc5206425e8","mimeType":"application/pdf","uploadedBy":"d4f263e3-28e1-4177-a225-6321417450be"}]

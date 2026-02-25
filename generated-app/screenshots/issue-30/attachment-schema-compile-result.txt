@@ -1,6 +1,5 @@
 RESULT: PASS
 
-Command: cd /app/workspace/agent-runtime/generated-app/shared && npx tsc --noEmit && echo 'ATTACHMENT_SCHEMA_OK'
+Command: cd /app/workspace/agent-runtime/generated-app/shared && npx tsc --noEmit
 
 Output:
-ATTACHMENT_SCHEMA_OK

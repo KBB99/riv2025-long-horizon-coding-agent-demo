@@ -1,3 +1,8 @@
+RESULT: PASS
+
+Command: npx playwright test e2e-tests/attachment-upload.spec.ts -g 'can delete an uploaded attachment' --timeout 30000
+
+Output:
 
 Running 1 test using 1 worker
 
