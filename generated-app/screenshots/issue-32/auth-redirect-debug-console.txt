@@ -1,0 +1,4 @@
+NO_CONSOLE_ERRORS
+
+All Messages:
+[error] Failed to load resource: the server responded with a status of 404 (Not Found)

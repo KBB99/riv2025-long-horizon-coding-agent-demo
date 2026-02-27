@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { authenticatePage } from './auth-helper';
 
 const BASE_URL = 'http://localhost:6174';
 const API_URL = 'https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com';
@@ -29,6 +30,10 @@ test.beforeAll(async ({ request }) => {
 });
 
 test.describe('Issue Attachment Feature - Backend Integration', () => {
+  test.beforeEach(async ({ page }) => {
+    await authenticatePage(page, BASE_URL);
+  });
+
   test('attachment section is visible on issue detail page', async ({ page }) => {
     await page.goto(`${BASE_URL}/project/${projectId}/issues/${issueId}`);
     await page.waitForLoadState('networkidle');

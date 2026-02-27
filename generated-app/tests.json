@@ -445,6 +445,62 @@
       "name": "E2E acceptance criteria test suite passes (3 tests)",
       "status": "pass",
       "automatedTest": "npx playwright test e2e-tests/acceptance-criteria.spec.ts"
+    },
+    {
+      "id": "auth-schema-compile",
+      "category": "shared",
+      "name": "Auth schemas (Register, Login, AuthUser, AuthTokenResponse) compile without errors",
+      "status": "pass",
+      "automatedTest": "cd shared && npx --package typescript tsc --noEmit"
+    },
+    {
+      "id": "auth-api-register",
+      "category": "backend",
+      "name": "POST /auth/register creates a new user account and returns token",
+      "status": "pass"
+    },
+    {
+      "id": "auth-api-login",
+      "category": "backend",
+      "name": "POST /auth/login authenticates user and returns token",
+      "status": "pass"
+    },
+    {
+      "id": "auth-api-me",
+      "category": "backend",
+      "name": "GET /auth/me returns current user info with valid token",
+      "status": "pass"
+    },
+    {
+      "id": "auth-login-page",
+      "category": "frontend",
+      "name": "Login page renders with email/password fields and sign-in button",
+      "status": "pass"
+    },
+    {
+      "id": "auth-signup-page",
+      "category": "frontend",
+      "name": "Signup page renders with name/email/password/confirm fields and create account button",
+      "status": "pass"
+    },
+    {
+      "id": "auth-route-protection",
+      "category": "frontend",
+      "name": "Unauthenticated users are redirected to login page",
+      "status": "pass"
+    },
+    {
+      "id": "auth-logout",
+      "category": "frontend",
+      "name": "Sign out button in user menu logs the user out and redirects to login",
+      "status": "pass"
+    },
+    {
+      "id": "auth-e2e-suite",
+      "category": "integration",
+      "name": "E2E auth test suite passes (6 tests: redirect, signup, login, error handling)",
+      "status": "pass",
+      "automatedTest": "npx playwright test e2e-tests/auth-flow.spec.ts"
     }
   ]
 }

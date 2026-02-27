@@ -1,8 +1,13 @@
 import { test, expect } from '@playwright/test';
+import { authenticatePage } from './auth-helper';
 
 const BASE = 'http://localhost:6174';
 
 test.describe('Acceptance Criteria Feature', () => {
+  test.beforeEach(async ({ page }) => {
+    await authenticatePage(page, BASE);
+  });
+
   test('CreateIssueModal shows acceptance criteria textarea', async ({ page }) => {
     await page.goto(BASE);
     await page.waitForLoadState('networkidle');

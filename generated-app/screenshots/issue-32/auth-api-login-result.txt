@@ -1,0 +1,7 @@
+RESULT: PASS
+
+Command: curl -s -w '\nHTTP_STATUS:%{http_code}' -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/auth/login -H 'Content-Type: application/json' -d '{"email":"testuser32@canopy.dev","password":"password123"}'
+
+Output:
+{"token":"eyJ1c2VySWQiOiI5MGZjZTIyYS1jOGRhLTRmNDAtYmNlZi0xZDIyNzIxZjZmYTgiLCJlbWFpbCI6InRlc3R1c2VyMzJAY2Fub3B5LmRldiIsImV4cCI6MTc3MjgyMjYyNDQzNH0.WkcELbaScA9ipVF-FAH2fKaTeXq8nCeEpgQG3Ah-4zA","user":{"id":"90fce22a-c8da-4f40-bcef-1d22721f6fa8","name":"Test User","email":"testuser32@canopy.dev","role":"member","createdAt":"2026-02-27T18:32:03.491Z"}}
+HTTP_STATUS:200

@@ -1,7 +1,82 @@
 CANOPY PROJECT MANAGEMENT APP - Progress Report
 =================================================
 
-## Status: ALL PHASES COMPLETE (Issue #31 - Add Acceptance Criteria Field to Issues)
+## Status: ALL PHASES COMPLETE (Issue #32 - Secure the website behind a login)
+
+### Issue #32 - Authentication & Login (2026-02-27):
+Key changes made:
+
+1. **Shared Schema** (`shared/src/schemas/auth.ts`):
+   - Added `RegisterSchema` (name, email, password with validation)
+   - Added `LoginSchema` (email, password)
+   - Added `AuthUserSchema` (id, name, email, role, createdAt)
+   - Added `AuthTokenResponseSchema` (token + user)
+   - Updated `endpoints.ts` with auth routes: `/auth/register`, `/auth/login`, `/auth/me`
+   - Updated `types.ts` and `index.ts` with auth type exports
+
+2. **Backend** (`backend/src/handlers/auth.ts`):
+   - Register handler: password hashing with SHA-256 + salt, email uniqueness check
+   - Login handler: password verification with timing-safe comparison
+   - GetMe handler: token verification and user data retrieval
+   - HMAC-SHA256 signed tokens (7-day expiry) using Node.js crypto (no external deps)
+   - Single-table design: USER# prefix for user records, EMAIL# for email lookup
+   - Added auth routes to `backend/src/index.ts`
+
+3. **Frontend - AuthContext** (`frontend/src/context/AuthContext.tsx`):
+   - AuthProvider with login/register/logout actions
+   - Token stored in localStorage (`canopy_auth_token`)
+   - Auto-validates existing token on app load via /auth/me
+   - Clears token on invalid/expired
+
+4. **Frontend - Login Page** (`frontend/src/pages/Login.tsx`):
+   - Beautiful forest-themed split layout (green gradient left, form right)
+   - Email/password fields with show/hide toggle
+   - Error display for invalid credentials
+   - Link to signup page
+
+5. **Frontend - Signup Page** (`frontend/src/pages/Signup.tsx`):
+   - Matching design with registration form
+   - Name, email, password, confirm password fields
+   - Client-side validation (password match, min length)
+   - Link to login page
+
+6. **Route Protection** (`frontend/src/App.tsx`):
+   - RequireAuth wrapper component on all app routes
+   - Redirects unauthenticated users to /login
+   - Public routes: /login, /signup
+   - AuthLoader shown during auth check
+
+7. **Logout** (`frontend/src/components/layout/TopNav.tsx`):
+   - Sign out button in user dropdown menu now calls auth.logout()
+   - Navigates to /login after logout
+
+8. **API Client** (`frontend/src/api/client.ts`):
+   - Added auth API functions: authRegister, authLogin, authGetMe
+   - Auto-injects Authorization: Bearer token header on all requests
+   - Token management: getAuthToken, setAuthToken helpers
+
+9. **Test Infrastructure**:
+   - Updated `playwright-test.cjs` to auto-authenticate for screenshot tests
+   - Created `e2e-tests/auth-helper.ts` for shared auth setup in E2E tests
+   - Updated existing E2E tests (acceptance-criteria, attachment-upload) with auth
+   - New E2E test suites: auth-flow.spec.ts (6 tests), auth-logout.spec.ts (1 test)
+
+10. **Tests**: 9 new tests added to tests.json (total now 78, all passing):
+    - auth-schema-compile, auth-api-register, auth-api-login, auth-api-me
+    - auth-login-page, auth-signup-page, auth-route-protection, auth-logout
+    - auth-e2e-suite
+
+### All Phase Gates Passing:
+1. shared/ compiles: OK ✅
+2. infrastructure/ synths: OK ✅
+3. infrastructure/ tests: 21/21 pass ✅
+4. backend/ compiles: OK ✅
+5. frontend/ builds: OK ✅
+6. All 78 tests verified ✅
+7. Auth API endpoints working (register, login, me) ✅
+8. E2E auth tests: 6/6 pass ✅
+9. Existing E2E tests still pass with auth ✅
+10. Deployment succeeded (commit 09d3215) ✅
 
 ### Issue #31 - Session 4 Re-verification (2026-02-25):
 - All code changes already committed from previous sessions

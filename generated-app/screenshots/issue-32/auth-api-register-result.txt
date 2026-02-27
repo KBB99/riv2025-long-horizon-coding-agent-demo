@@ -1,0 +1,7 @@
+RESULT: PASS
+
+Command: curl -s -w '\nHTTP_STATUS:%{http_code}' -X POST https://q4rf5i4bal.execute-api.us-east-1.amazonaws.com/auth/register -H 'Content-Type: application/json' -d '{"name":"Verify Test","email":"verify_reg_1772217801@canopy.dev","password":"testpass123"}'
+
+Output:
+{"token":"eyJ1c2VySWQiOiJlODA3OWE5NC1jMTEzLTRjYjQtYjJhNS1mY2UyZTg2MWY3MGIiLCJlbWFpbCI6InZlcmlmeV9yZWdfMTc3MjIxNzgwMUBjYW5vcHkuZGV2IiwiZXhwIjoxNzcyODIyNjAyMDIzfQ.SfB0s2TkfyReC30_hbQYbGvvsjeZ6MhKf4EKjztyGgE","user":{"id":"e8079a94-c113-4cb4-b2a5-fce2e861f70b","name":"Verify Test","email":"verify_reg_1772217801@canopy.dev","role":"member","createdAt":"2026-02-27T18:43:22.010Z"}}
+HTTP_STATUS:201
