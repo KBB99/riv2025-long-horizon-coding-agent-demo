@@ -53,3 +53,10 @@ export {
   MAX_ATTACHMENT_SIZE,
   ALLOWED_MIME_TYPES,
 } from './attachment';
+
+export {
+  RegisterSchema,
+  LoginSchema,
+  AuthUserSchema,
+  AuthTokenResponseSchema,
+} from './auth';

@@ -8,9 +8,10 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@canopy/shared": "*",
     "@aws-sdk/client-dynamodb": "^3.600.0",
+    "@aws-sdk/client-s3": "^3.999.0",
     "@aws-sdk/lib-dynamodb": "^3.600.0",
+    "@canopy/shared": "*",
     "zod": "^3.23.8"
   },
   "devDependencies": {

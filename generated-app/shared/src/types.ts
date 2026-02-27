@@ -43,3 +43,9 @@ export type SearchResult = z.infer<typeof schemas.SearchResultSchema>;
 export type CreateAttachment = z.infer<typeof schemas.CreateAttachmentSchema>;
 export type Attachment = z.infer<typeof schemas.AttachmentSchema>;
 export type AttachmentWithData = z.infer<typeof schemas.AttachmentWithDataSchema>;
+
+// Auth
+export type Register = z.infer<typeof schemas.RegisterSchema>;
+export type Login = z.infer<typeof schemas.LoginSchema>;
+export type AuthUser = z.infer<typeof schemas.AuthUserSchema>;
+export type AuthTokenResponse = z.infer<typeof schemas.AuthTokenResponseSchema>;

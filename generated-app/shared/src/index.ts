@@ -30,6 +30,10 @@ export type {
   CreateAttachment,
   Attachment,
   AttachmentWithData,
+  Register,
+  Login,
+  AuthUser,
+  AuthTokenResponse,
 } from './types';
 
 // Re-export endpoints

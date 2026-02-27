@@ -8,6 +8,7 @@ import {
   SearchQuerySchema, SearchResultSchema,
   PaginationSchema,
   CreateAttachmentSchema, AttachmentSchema, AttachmentWithDataSchema,
+  RegisterSchema, LoginSchema, AuthUserSchema, AuthTokenResponseSchema,
 } from './schemas';
 
 export const endpoints = {
@@ -46,4 +47,9 @@ export const endpoints = {
 
   // Search
   search:         { method: 'GET',    path: '/search',                query: SearchQuerySchema,   response: SearchResultSchema },
+
+  // Auth
+  register:       { method: 'POST',   path: '/auth/register',         body: RegisterSchema,       response: AuthTokenResponseSchema },
+  login:          { method: 'POST',   path: '/auth/login',            body: LoginSchema,          response: AuthTokenResponseSchema },
+  me:             { method: 'GET',    path: '/auth/me',               response: AuthUserSchema },
 } as const;

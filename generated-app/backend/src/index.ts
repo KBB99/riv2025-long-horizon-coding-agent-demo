@@ -1,4 +1,4 @@
-// Canopy API Lambda Handler v13 - with attachment routes
+// Canopy API Lambda Handler v14 - with auth routes
 import type { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda';
 import { listProjects, createProject, getProject, updateProject, deleteProject } from './handlers/projects';
 import { listIssues, createIssue, getIssue, updateIssue, deleteIssue, bulkUpdateIssues } from './handlers/issues';
@@ -7,6 +7,7 @@ import { getBoard, updateBoard } from './handlers/boards';
 import { addComment, listComments } from './handlers/comments';
 import { uploadAttachment, listAttachments, getAttachment, deleteAttachment } from './handlers/attachments';
 import { search } from './handlers/search';
+import { register, login, getMe } from './handlers/auth';
 import { success, error } from './lib/response';
 
 // Simple path matcher
@@ -39,8 +40,24 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
   }
 
   try {
+    // Auth routes (must come before other routes)
+    let params = matchRoute('/auth/register', path);
+    if (params) {
+      if (method === 'POST') return await register(event);
+    }
+
+    params = matchRoute('/auth/login', path);
+    if (params) {
+      if (method === 'POST') return await login(event);
+    }
+
+    params = matchRoute('/auth/me', path);
+    if (params) {
+      if (method === 'GET') return await getMe(event);
+    }
+
     // Projects
-    let params = matchRoute('/projects', path);
+    params = matchRoute('/projects', path);
     if (params) {
       if (method === 'GET') return await listProjects();
       if (method === 'POST') return await createProject(event);

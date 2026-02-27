@@ -1,5 +1,6 @@
 import { Search, Plus, TreePine, Bell, ChevronDown, Moon, Sun, Settings, LogOut } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function TopNav() {
   const { state, toggleSearch, openCreateIssue, setTheme } = useApp();
+  const { logout, user: authUser } = useAuth();
   const navigate = useNavigate();
   const user = state.currentUser;
 
@@ -71,8 +73,8 @@ export function TopNav() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <div className="px-3 py-2">
-              <p className="text-sm font-medium">{user.name}</p>
-              <p className="text-xs text-muted-foreground">{user.email}</p>
+              <p className="text-sm font-medium">{authUser?.name || user.name}</p>
+              <p className="text-xs text-muted-foreground">{authUser?.email || user.email}</p>
             </div>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => setTheme(state.theme === 'dark' ? 'light' : 'dark')}>
@@ -90,7 +92,10 @@ export function TopNav() {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => {
+              logout();
+              navigate('/login');
+            }}>
               <LogOut className="w-4 h-4 mr-2" />
               Sign out
             </DropdownMenuItem>

@@ -24,6 +24,10 @@ import type {
   SearchQuery,
   Attachment,
   AttachmentWithData,
+  Register,
+  Login,
+  AuthUser,
+  AuthTokenResponse,
 } from '@canopy/shared';
 
 // ---------------------------------------------------------------------------
@@ -87,6 +91,26 @@ interface RequestOptions {
   params?: Record<string, string | number | undefined>;
 }
 
+/** Get the stored auth token */
+export function getAuthToken(): string | null {
+  try {
+    return localStorage.getItem('canopy_auth_token');
+  } catch {
+    return null;
+  }
+}
+
+/** Set the auth token in storage */
+export function setAuthToken(token: string | null): void {
+  try {
+    if (token) {
+      localStorage.setItem('canopy_auth_token', token);
+    } else {
+      localStorage.removeItem('canopy_auth_token');
+    }
+  } catch {}
+}
+
 async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = 'GET', body, headers = {}, params } = options;
 
@@ -101,10 +125,18 @@ async function request<T>(path: string, options: RequestOptions = {}): Promise<T
     if (qs) url += `?${qs}`;
   }
 
+  // Inject auth token if available
+  const authToken = getAuthToken();
+  const authHeaders: Record<string, string> = {};
+  if (authToken) {
+    authHeaders['Authorization'] = `Bearer ${authToken}`;
+  }
+
   const response = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
+      ...authHeaders,
       ...headers,
     },
     body: body ? JSON.stringify(body) : undefined,
@@ -522,6 +554,20 @@ export async function deleteAttachment(
   );
   lsWrite('attachments', filtered);
   return { success: filtered.length < items.length };
+}
+
+// ---- Auth ----
+
+export async function authRegister(data: Register): Promise<AuthTokenResponse> {
+  return request<AuthTokenResponse>('/auth/register', { method: 'POST', body: data });
+}
+
+export async function authLogin(data: Login): Promise<AuthTokenResponse> {
+  return request<AuthTokenResponse>('/auth/login', { method: 'POST', body: data });
+}
+
+export async function authGetMe(): Promise<AuthUser> {
+  return request<AuthUser>('/auth/me');
 }
 
 // ---------------------------------------------------------------------------
