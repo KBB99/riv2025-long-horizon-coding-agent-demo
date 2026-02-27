@@ -25,6 +25,7 @@ SESSION_DURATION_HOURS ?= 1.0
 DEFAULT_MODEL ?= us.anthropic.claude-opus-4-6-v1
 PROJECT_NAME ?= canopy
 BASE_BRANCH ?= kb/improved-harness
+WORK_DIR ?= generated-app
 
 # OpenTelemetry Configuration
 # Based on: https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/observability-configure.html
@@ -99,6 +100,7 @@ show-config:
 	@echo ""
 	@echo "Agent Configuration:"
 	@echo "  PROJECT_NAME=$(PROJECT_NAME)"
+	@echo "  WORK_DIR=$(WORK_DIR)"
 	@echo "  PUSH_INTERVAL_SECONDS=$(PUSH_INTERVAL_SECONDS)"
 	@echo "  SCREENSHOT_INTERVAL_SECONDS=$(SCREENSHOT_INTERVAL_SECONDS)"
 	@echo "  SESSION_DURATION_HOURS=$(SESSION_DURATION_HOURS)"
@@ -132,6 +134,7 @@ launch:
 	AWS_PROFILE=$(AWS_PROFILE) AWS_REGION=$(CF_REGION) agentcore launch \
 		--env "ENVIRONMENT=$(ENVIRONMENT)" \
 		--env "PROJECT_NAME=$(PROJECT_NAME)" \
+		--env "WORK_DIR=$(WORK_DIR)" \
 		--env "PUSH_INTERVAL_SECONDS=$(PUSH_INTERVAL_SECONDS)" \
 		--env "SCREENSHOT_INTERVAL_SECONDS=$(SCREENSHOT_INTERVAL_SECONDS)" \
 		--env "SCREENSHOT_BUCKET=$(SCREENSHOT_BUCKET)" \
@@ -156,6 +159,7 @@ launch-local:
 	AWS_PROFILE=$(AWS_PROFILE) AWS_REGION=$(CF_REGION) agentcore launch --local \
 		--env "ENVIRONMENT=$(ENVIRONMENT)" \
 		--env "PROJECT_NAME=$(PROJECT_NAME)" \
+		--env "WORK_DIR=$(WORK_DIR)" \
 		--env "PUSH_INTERVAL_SECONDS=$(PUSH_INTERVAL_SECONDS)" \
 		--env "SCREENSHOT_INTERVAL_SECONDS=$(SCREENSHOT_INTERVAL_SECONDS)" \
 		--env "SCREENSHOT_BUCKET=$(SCREENSHOT_BUCKET)" \
@@ -207,6 +211,7 @@ update-runtime-env:
 		--environment-variables '{ \
 			"ENVIRONMENT": "$(ENVIRONMENT)", \
 			"PROJECT_NAME": "$(PROJECT_NAME)", \
+			"WORK_DIR": "$(WORK_DIR)", \
 			"BASE_BRANCH": "$(BASE_BRANCH)", \
 			"CLAUDE_CODE_USE_BEDROCK": "1", \
 			"AWS_REGION": "$(AWS_REGION)", \
@@ -283,8 +288,8 @@ reset:
 	@echo ""
 	@echo "1/7 Destroying agent's CDK stack (canopy-app-stack)..."
 	@if aws cloudformation describe-stacks --stack-name canopy-app-stack --region $(CF_REGION) --profile $(AWS_PROFILE) >/dev/null 2>&1; then \
-		if [ -d "generated-app/infrastructure" ]; then \
-			cd generated-app/infrastructure && npx cdk destroy --force canopy-app-stack 2>&1 && echo "     Stack destroyed" || echo "     cdk destroy failed, trying cloudformation delete-stack..."; \
+		if [ -d "$(WORK_DIR)/infrastructure" ]; then \
+			cd $(WORK_DIR)/infrastructure && npx cdk destroy --force canopy-app-stack 2>&1 && echo "     Stack destroyed" || echo "     cdk destroy failed, trying cloudformation delete-stack..."; \
 		fi; \
 		if aws cloudformation describe-stacks --stack-name canopy-app-stack --region $(CF_REGION) --profile $(AWS_PROFILE) >/dev/null 2>&1; then \
 			aws cloudformation delete-stack --stack-name canopy-app-stack --region $(CF_REGION) --profile $(AWS_PROFILE) 2>&1 && echo "     delete-stack issued, waiting..." || echo "     delete-stack failed (ok)"; \
