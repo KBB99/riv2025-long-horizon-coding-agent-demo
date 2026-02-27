@@ -501,6 +501,13 @@
       "name": "E2E auth test suite passes (6 tests: redirect, signup, login, error handling)",
       "status": "pass",
       "automatedTest": "npx playwright test e2e-tests/auth-flow.spec.ts"
+    },
+    {
+      "id": "auth-docs-md",
+      "category": "shared",
+      "name": "AUTHENTICATION.md file exists with comprehensive documentation of auth system",
+      "status": "pass",
+      "automatedTest": "test -f AUTHENTICATION.md && grep -q '## Overview' AUTHENTICATION.md && grep -q '## API Endpoints' AUTHENTICATION.md && grep -q '## Password Hashing' AUTHENTICATION.md && grep -q '## Token System' AUTHENTICATION.md && grep -q '## Frontend Auth Flow' AUTHENTICATION.md && grep -q '## Security Considerations' AUTHENTICATION.md && echo 'All sections present'"
     }
   ]
 }

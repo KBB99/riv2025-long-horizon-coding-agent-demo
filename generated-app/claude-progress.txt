@@ -1,7 +1,28 @@
 CANOPY PROJECT MANAGEMENT APP - Progress Report
 =================================================
 
-## Status: ALL PHASES COMPLETE (Issue #32 - Secure the website behind a login)
+## Status: ALL PHASES COMPLETE (Issue #33 - Auth documentation)
+
+### Issue #33 - Add AUTHENTICATION.md (2026-02-27):
+- Created `AUTHENTICATION.md` at the project root with comprehensive documentation covering:
+  - Overview of token-based auth approach
+  - Architecture diagram (Frontend → API Gateway → Lambda → DynamoDB)
+  - Component table mapping files to responsibilities
+  - All 3 API endpoints with request/response examples and error cases
+  - Password hashing (SHA-256 + random salt, timing-safe comparison)
+  - DynamoDB storage design (USER# and EMAIL# records in single-table)
+  - Token system (HMAC-SHA256 signed payloads, 7-day expiry)
+  - Frontend auth flow (localStorage token, automatic header injection, AuthContext)
+  - Startup flow with token validation
+  - Route protection (RequireAuth wrapper)
+  - User roles table (admin, member, viewer)
+  - Security considerations table with mitigations
+  - Production recommendations (Secrets Manager, scrypt, rate limiting, HttpOnly cookies, refresh tokens, MFA)
+- Added 1 new test to tests.json (`auth-docs-md`), total now 79
+- All existing 78 tests remain passing
+- Build passes successfully
+
+### Previous: Issue #32 - Secure the website behind a login
 
 ### Issue #32 - Authentication & Login (2026-02-27):
 Key changes made:
