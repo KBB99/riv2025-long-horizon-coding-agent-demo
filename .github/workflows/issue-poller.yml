@@ -4,10 +4,10 @@ name: Issue Poller
 # This enables reaction-based approval without requiring webhooks
 # Also checks session health and restarts dead sessions
 
-on:
-  schedule:
-    - cron: '*/5 * * * *'  # Every 5 minutes
-  workflow_dispatch:  # Manual trigger for testing
+# on:
+#   schedule:
+#     - cron: '*/5 * * * *'  # Every 5 minutes
+#   workflow_dispatch:  # Manual trigger for testing
 
 # Prevent multiple pollers from running simultaneously
 concurrency:
